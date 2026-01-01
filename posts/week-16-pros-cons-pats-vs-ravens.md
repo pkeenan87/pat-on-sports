@@ -11,7 +11,7 @@ tags:
 
 ## Pros
 
-- The patriots have their first signature come from behind win in the Mike Vrabel/Drake Maye era. I thought this game was over and we had no shot of coming back but we did it. Maye was super tough and made incredible throws to keep the offense moving. As I said I think this is Mayes best game as a pro. 380 2 TDs 70% completion under heavy duress against a tough opponent in a hostile environment on the national stage. I could go on and on
+- The patriots have their first signature come from behind win in the Mike Vrabel and Drake Maye era. I thought this game was over and we had no shot of coming back but we did it. Maye was super tough and made incredible throws to keep the offense moving. As I said I think this is Mayes best game as a pro. 380 2 TDs 70% completion under heavy duress against a tough opponent in a hostile environment on the national stage. I could go on and on
 - after being MIA for a month stefon diggs showed up big time and was the driving force behind the patriots scoring drives. I’m excited for him in the playoffs because he seems to get up for the big games
 - Stevenson quietly had a huge game. 78 total yards 6.5 yards per carry and the game winning touchdown. After losing Henderson he filled in nicely. If we have a true two headed monster at RB in the playoffs it’s a game changer
 - Klavon Chaisson made another huge play to win the game and will be the darling of defensive line coaches for years to come. That type of hustle is what championship football is made of 

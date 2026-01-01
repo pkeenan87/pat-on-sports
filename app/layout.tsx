@@ -1,4 +1,5 @@
 import "./globals.css";
+import { Suspense } from "react";
 import Header from "@/components/Header";
 import { getAllTags } from "@/lib/posts";
 
@@ -21,7 +22,9 @@ export default function RootLayout({
     return (
         <html lang="en">
             <body className="bg-slate-50 text-slate-900">
-                <Header tags={tags} />
+            <Suspense fallback={<div className="h-16 border-b bg-white" />}>
+          <Header tags={tags} />
+        </Suspense>
                 <main>{children}</main>
             </body>
         </html>

@@ -1,69 +1,61 @@
 import { getAllPosts, getPostBySlug } from "@/lib/posts";
-import Breadcrumbs from "@/components/Breadcrumbs";
+import { notFound } from "next/navigation";
 
 type PageProps = {
-    params: Promise<{ slug: string }>;
+  params: Promise<{ slug: string }>;
 };
 
 export async function generateStaticParams() {
-    const posts = getAllPosts();
-    return posts.map((post) => ({ slug: post.slug }));
+  const posts = getAllPosts();
+  return posts.map((p) => ({ slug: p.slug }));
 }
 
 export async function generateMetadata({ params }: PageProps) {
-    const { slug } = await params;
-    const post = await getPostBySlug(slug);
+  const { slug } = await params;
 
+  try {
+    const post = await getPostBySlug(slug);
     return {
-        title: post.title,
-        description: post.description,
-        openGraph: {
-            title: post.title,
-            description: post.description,
-            type: "article",
-        },
+      title: post.title,
+      description: post.description,
     };
+  } catch {
+    // ✅ don’t crash the build if metadata lookup fails
+    return {
+      title: "Post not found",
+      description: "",
+    };
+  }
 }
 
 export default async function PostPage({ params }: PageProps) {
-    const { slug } = await params;
-    const post = await getPostBySlug(slug);
+  const { slug } = await params;
 
-    return (
-        <main className="max-w-4xl mx-auto px-6 py-10">
-            <Breadcrumbs
-                items={[
-                    { label: "Home", href: "/" },
-                    { label: "Blog", href: "/blog" },
-                    { label: post.title },
-                ]}
-            />
+  let post;
+  try {
+    post = await getPostBySlug(slug);
+  } catch {
+    // ✅ show 404 instead of failing export
+    notFound();
+  }
 
-            <header className="mb-8">
-                <h1 className="text-4xl font-bold tracking-tight">
-                    {post.title}
-                </h1>
-                <p className="mt-2 text-sm text-slate-500">
-                    {post.date} · {post.author}
-                </p>
+  return (
+    <main className="max-w-4xl mx-auto px-6 py-10">
+      <header className="mb-8">
+        <h1 className="text-4xl font-bold tracking-tight">{post.title}</h1>
+        {post.date ? <p className="mt-2 text-sm text-slate-500">{post.date}</p> : null}
+      </header>
 
-                <div className="mt-4 flex flex-wrap gap-2">
-                    {(post.tags || []).map((tag: string) => (
-                        <span
-                            key={tag}
-                            className="text-xs font-medium bg-slate-100 text-slate-700 px-2 py-1 rounded-full border"
-                        >
-                            #{tag}
-                        </span>
-                    ))}
-                </div>
-            </header>
-
-            <article className="prose prose-lg max-w-3xl prose-slate">
-  <div dangerouslySetInnerHTML={{ __html: post.contentHtml }} />
-</article>
-
-
-        </main>
-    );
+      <article
+        className="
+          prose prose-lg max-w-none prose-slate
+          prose-ul:list-disc prose-ol:list-decimal
+          prose-ul:pl-6 prose-ol:pl-6
+          prose-li:my-1.5
+        "
+      >
+        <div dangerouslySetInnerHTML={{ __html: post.contentHtml }} />
+      </article>
+    </main>
+  );
 }

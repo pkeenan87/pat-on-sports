@@ -59,23 +59,27 @@ export default function Header({ tags }: HeaderProps) {
 
                     {/* Search */}
                     <form onSubmit={onSubmit} className="flex-1">
-                        <div className="relative max-w-xl ml-auto">
-                            <input
-                                value={q}
-                                onChange={(e) => setQ(e.target.value)}
-                                placeholder="Search posts (e.g., NFL, Patriots, Matchups)…"
-                                className="w-full rounded-full bg-slate-800 border border-slate-700 px-4 py-2 text-sm
-                           placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-400"
-                            />
-                            <button
-                                type="submit"
-                                className="absolute right-1 top-1 rounded-full bg-white/10 px-4 py-1.5 text-sm
-                           hover:bg-white/20 transition"
-                            >
-                                Search
-                            </button>
-                        </div>
-                    </form>
+  <div className="max-w-xl ml-auto">
+    <div className="flex items-center gap-2 rounded-full bg-slate-800 border border-slate-700 p-1">
+      <input
+        value={q}
+        onChange={(e) => setQ(e.target.value)}
+        placeholder="Search posts…"
+        className="w-full bg-transparent px-3 py-2 text-sm text-white placeholder:text-slate-400
+                   focus:outline-none"
+      />
+
+      <button
+        type="submit"
+        className="shrink-0 rounded-full bg-white/10 px-3 py-2 text-sm font-medium
+                   hover:bg-white/20 transition"
+      >
+        <span className="hidden sm:inline">Search</span>
+        <span className="sm:hidden">Go</span>
+      </button>
+    </div>
+  </div>
+</form>
                 </div>
             </header>
 

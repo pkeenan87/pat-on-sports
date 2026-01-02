@@ -2,6 +2,9 @@
 title: "Week 17 Pros & Cons: Patriots 42–Jets 10"
 date: "2025-12-28"
 description: "Weekly Patriots Pros & Cons recap (Week 17)."
+heroImage: "/images/2025/prosandcons/week-17/pats-vs-jets-hero.png"
+heroAlt: "Patriots Defense against the Jets"
+heroCaption: "The Patriots dominate the Jets in Week 17."
 tags:
   - "NFL"
   - "Pro & Cons"

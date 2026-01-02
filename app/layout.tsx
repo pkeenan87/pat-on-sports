@@ -1,15 +1,27 @@
 import "./globals.css";
 import { Suspense } from "react";
 import Header from "@/components/Header";
-import { getAllTags } from "@/lib/posts";
+import { getAllPosts, getAllTags } from "@/lib/posts";
+import type { Metadata } from "next";
 
-export const metadata = {
-    title: {
-        default: "Pat’s Sports Blog",
-        template: "%s | Pat’s Sports Blog",
-    },
-    description:
-        "In-depth analysis, previews, and opinions across the sports world.",
+const siteUrl =
+  process.env.NEXT_PUBLIC_SITE_URL ?? "https://patonsports.com";
+
+export const metadata: Metadata = {
+  metadataBase: new URL(siteUrl),
+  title: {
+    default: "Pat on Sports",
+    template: "%s | Pat on Sports",
+  },
+  description:
+    "Pat on Sports — weekly Patriots Pros & Cons, NFL analysis, previews, and takes.",
+  openGraph: {
+    type: "website",
+    siteName: "Pat on Sports",
+  },
+  twitter: {
+    card: "summary_large_image",
+  },
 };
 
 export default function RootLayout({

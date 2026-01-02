@@ -15,19 +15,17 @@ export type PostMeta = {
   date?: string;
   description?: string;
   tags: string[];
-  author?: string;
+
+  // ✅ for sharing + hero display
+  heroImage?: string;
+  heroAlt?: string;
+  heroCaption?: string;
 };
 
 export type Post = PostMeta & {
   contentHtml: string;
 };
 
-/**
- * Normalize markdown so lists/headings render consistently.
- * - Use LF newlines
- * - Ensure a blank line after headings
- * - Fix "-text" to "- text"
- */
 function normalizeMarkdown(md: string): string {
   const lines = md.replace(/\r\n/g, "\n").split("\n");
   const out: string[] = [];
@@ -35,14 +33,14 @@ function normalizeMarkdown(md: string): string {
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i];
 
-    // Fix list items missing a space: "-text" -> "- text"
+    // "-text" -> "- text"
     const listNoSpace = /^(\s*[-*+])([^\s].*)$/.exec(line);
     if (listNoSpace) {
       out.push(`${listNoSpace[1]} ${listNoSpace[2]}`);
       continue;
     }
 
-    // Ensure blank line after headings if the next line is a list item
+    // Blank line after heading if next line is a list item
     const isHeading = /^(#{1,6})\s+.+$/.test(line.trim());
     if (isHeading) {
       out.push(line);
@@ -57,7 +55,6 @@ function normalizeMarkdown(md: string): string {
     out.push(line);
   }
 
-  // Collapse 3+ blank lines -> 2
   return out.join("\n").replace(/\n{3,}/g, "\n\n").trim() + "\n";
 }
 
@@ -83,7 +80,9 @@ export function getAllPosts(): PostMeta[] {
         date: data.date ?? "",
         description: data.description ?? "",
         tags,
-        author: data.author ?? "",
+        heroImage: data.heroImage ?? "",
+        heroAlt: data.heroAlt ?? "",
+        heroCaption: data.heroCaption ?? "",
       };
     })
     .sort((a, b) => (a.date && b.date ? (a.date < b.date ? 1 : -1) : 0));
@@ -102,12 +101,11 @@ export async function getPostBySlug(slug: string): Promise<Post> {
     ? data.tags.map((t: unknown) => String(t).trim()).filter(Boolean)
     : [];
 
-  // Normalize markdown and make single newlines render as <br/>
   const normalized = normalizeMarkdown(content);
 
   const processed = await remark()
     .use(remarkGfm)
-    .use(remarkBreaks) // ✅ IMPORTANT: honor carriage returns / single newlines
+    .use(remarkBreaks) // ✅ honors single newlines
     .use(html, { sanitize: false })
     .process(normalized);
 
@@ -117,7 +115,9 @@ export async function getPostBySlug(slug: string): Promise<Post> {
     date: data.date ?? "",
     description: data.description ?? "",
     tags,
-    author: data.author ?? "",
+    heroImage: data.heroImage ?? "",
+    heroAlt: data.heroAlt ?? "",
+    heroCaption: data.heroCaption ?? "",
     contentHtml: processed.toString(),
   };
 }

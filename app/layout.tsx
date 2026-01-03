@@ -3,6 +3,7 @@ import { Suspense } from "react";
 import Header from "@/components/Header";
 import { getAllPosts, getAllTags } from "@/lib/posts";
 import type { Metadata } from "next";
+import { Analytics } from "@vercel/analytics/next"
 
 const siteUrl =
   process.env.NEXT_PUBLIC_SITE_URL ?? "https://patonsports.com";
@@ -38,6 +39,8 @@ export default function RootLayout({
           <Header tags={tags} />
         </Suspense>
                 <main>{children}</main>
+                {/* Vercel Analytics */}
+        <Analytics />
             </body>
         </html>
     );

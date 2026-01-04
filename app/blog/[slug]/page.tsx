@@ -2,6 +2,8 @@ import Image from "next/image";
 import { getAllPosts, getPostBySlug } from "@/lib/posts";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
+import CommentBox from "@/components/CommentBox";
+
 
 type PageProps = {
   params: Promise<{ slug: string }>;
@@ -122,6 +124,11 @@ export default async function PostPage({ params }: PageProps) {
       >
         <div dangerouslySetInnerHTML={{ __html: post.contentHtml }} />
       </article>
+      <section className="mt-12 border-t border-slate-200 pt-8">
+  <h2 className="text-xl font-semibold">Comments</h2>
+  <CommentBox boxId={post.slug} />
+</section>
+
     </main>
   );
 }

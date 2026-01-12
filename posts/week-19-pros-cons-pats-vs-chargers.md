@@ -1,6 +1,6 @@
 ---
 title: "Wild Card Weekend Pros & Cons: Patriots 16 – Chargers 3"
-date: "2026-01-04"
+date: "2026-01-11"
 description: "The Patriots get their first playoff win of the Mike Vrabel coaching tenure over the Chargers."
 heroImage: "/images/2025/prosandcons/week-19/pats-vs-chargers-hero.png"
 heroAlt: "Justin Herbert gets sacked by the Patriots"

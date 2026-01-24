@@ -2,7 +2,7 @@
 title: "Divisional Weekend Pros & Cons: Patriots 28 – Texans 16"
 date: "2026-01-18"
 description: "The Patriots win a crazy game in the snow over the Texans."
-heroImage: "/images/2025/prosandcons/week-20/pats-vs-texans-hero.jpg"
+heroImage: "/images/2025/prosandcons/week-20/pats-vs-texans-hero.png"
 heroAlt: "Kayshon Boutte makes an amazing catch in the snow"
 heroCaption: "Kayshon Boutte’s amazing one-handed grab seals the game for the Patriots."
 tags:

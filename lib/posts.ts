@@ -117,6 +117,7 @@ export async function getPostBySlug(slug: string): Promise<Post> {
     date: data.date ?? "",
     description: data.description ?? "",
     tags,
+    content,
     heroImage: data.heroImage ?? "",
     heroAlt: data.heroAlt ?? "",
     heroCaption: data.heroCaption ?? "",

@@ -15,6 +15,7 @@ export type PostMeta = {
   date?: string;
   description?: string;
   tags: string[];
+  content: string; // raw markdown content for search
 
   // ✅ for sharing + hero display
   heroImage?: string;
@@ -68,7 +69,7 @@ export function getAllPosts(): PostMeta[] {
       const slug = fileName.replace(/\.md$/i, "");
       const fullPath = path.join(postsDirectory, fileName);
       const raw = fs.readFileSync(fullPath, "utf8");
-      const { data } = matter(raw);
+      const { data, content } = matter(raw);
 
       const tags = Array.isArray(data.tags)
         ? data.tags.map((t: unknown) => String(t).trim()).filter(Boolean)
@@ -80,6 +81,7 @@ export function getAllPosts(): PostMeta[] {
         date: data.date ?? "",
         description: data.description ?? "",
         tags,
+        content,
         heroImage: data.heroImage ?? "",
         heroAlt: data.heroAlt ?? "",
         heroCaption: data.heroCaption ?? "",

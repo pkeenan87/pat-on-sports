@@ -1,7 +1,7 @@
 import "./globals.css";
 import { Suspense } from "react";
 import Header from "@/components/Header";
-import { getAllPosts, getAllTags } from "@/lib/posts";
+import { getAllTags } from "@/lib/posts";
 import type { Metadata } from "next";
 import { Analytics } from "@vercel/analytics/next"
 

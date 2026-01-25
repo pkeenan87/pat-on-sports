@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 
 type HeaderProps = {
     tags: string[];
@@ -17,7 +17,13 @@ export default function Header({ tags }: HeaderProps) {
     const activeQ = searchParams.get("q") || "";
 
     const [q, setQ] = useState(activeQ);
-    useEffect(() => setQ(activeQ), [activeQ]);
+    const [prevActiveQ, setPrevActiveQ] = useState(activeQ);
+
+    // Sync local state when URL query param changes (without useEffect)
+    if (activeQ !== prevActiveQ) {
+        setPrevActiveQ(activeQ);
+        setQ(activeQ);
+    }
 
     const showTagBar = useMemo(
         () => pathname === "/" || pathname === "/blog",

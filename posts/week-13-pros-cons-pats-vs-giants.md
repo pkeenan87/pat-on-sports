@@ -2,6 +2,8 @@
 title: "Week 13 Pros & Cons: Patriots 33 Giants 15"
 date: "2025-12-01"
 description: "Weekly Patriots pros & cons recap (Week 13)."
+heroImage: "/images/2025/prosandcons/week-13/pats-vs-giants-hero.jpg"
+heroAlt: "Patriots vs Giants Week 13 action"
 tags:
   - NFL
   - "Pro & Cons"

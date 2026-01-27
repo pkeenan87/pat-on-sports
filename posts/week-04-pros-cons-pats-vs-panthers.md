@@ -2,6 +2,8 @@
 title: "Week 4 Pros & Cons: Patriots 42 Panthers 13"
 date: "2025-09-28"
 description: "Weekly Patriots pros & cons recap (Week 4)."
+heroImage: "/images/2025/prosandcons/week-04/pats-vs-panthers-hero.jpg"
+heroAlt: "Patriots vs Panthers Week 4 action"
 tags:
   - NFL
   - "Pro & Cons"

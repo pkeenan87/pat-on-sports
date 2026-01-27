@@ -2,6 +2,8 @@
 title: "Week 5 Pros & Cons: Patriots 23 Bills 20"
 date: "2025-10-05"
 description: "Weekly Patriots pros & cons recap (Week 5)."
+heroImage: "/images/2025/prosandcons/week-05/pats-vs-bills-hero.jpg"
+heroAlt: "Patriots vs Bills Week 5 action"
 tags:
   - NFL
   - "Pro & Cons"

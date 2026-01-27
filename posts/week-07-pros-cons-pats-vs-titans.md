@@ -2,6 +2,8 @@
 title: "Week 7 Pros & Cons: Patriots 31 Titans 13"
 date: "2025-10-19"
 description: "Weekly Patriots pros & cons recap (Week 7)."
+heroImage: "/images/2025/prosandcons/week-07/pats-vs-titans-hero.jpg"
+heroAlt: "Patriots vs Titans Week 7 action"
 tags:
   - NFL
   - "Pro & Cons"

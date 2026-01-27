@@ -2,6 +2,8 @@
 title: "Week 6 Pros & Cons: Patriots 25 Saints 19"
 date: "2025-10-12"
 description: "Weekly Patriots pros & cons recap (Week 6)."
+heroImage: "/images/2025/prosandcons/week-06/pats-vs-saints-hero.jpg"
+heroAlt: "Patriots vs Saints Week 6 action"
 tags:
   - NFL
   - "Pro & Cons"

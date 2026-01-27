@@ -2,6 +2,8 @@
 title: "Week 11 Pros & Cons: Patriots 27 Jets 14"
 date: "2025-11-13"
 description: "Weekly Patriots pros & cons recap (Week 11)."
+heroImage: "/images/2025/prosandcons/week-11/pats-vs-jets-hero.jpg"
+heroAlt: "Patriots vs Jets Week 11 action"
 tags:
   - NFL
   - "Pro & Cons"

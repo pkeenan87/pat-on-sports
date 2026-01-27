@@ -2,6 +2,8 @@
 title: "Week 15 Pros & Cons: Patriots 31 Bills 35"
 date: "2025-12-14"
 description: "Weekly Patriots pros & cons recap (Week 15)."
+heroImage: "/images/2025/prosandcons/week-15/pats-vs-bills-hero.jpg"
+heroAlt: "Patriots vs Bills Week 15 action"
 tags:
   - NFL
   - "Pro & Cons"

@@ -2,6 +2,8 @@
 title: "Week 3 Pros & Cons: Patriots 14 Steelers 14"
 date: "2025-09-21"
 description: "Pros & cons recap for Week 3 vs the Pittsburgh Steelers."
+heroImage: "/images/2025/prosandcons/week-03/pats-vs-steelers-hero.jpg"
+heroAlt: "Patriots vs Steelers Week 3 action"
 tags: ["NFL", "Pros & Cons", "New England Patriots", "Pittsburgh Steelers"]
 ---
 

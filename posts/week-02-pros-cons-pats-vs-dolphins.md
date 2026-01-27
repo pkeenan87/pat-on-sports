@@ -2,6 +2,8 @@
 title: "Week 2 Pros & Cons: Patriots 33 Dolphins 27"
 date: "2025-09-14"
 description: "Pros & cons recap for Week 2. Miami Dolphins"
+heroImage: "/images/2025/prosandcons/week-02/pats-vs-dolphins-hero.jpg"
+heroAlt: "Patriots vs Dolphins Week 2 action"
 tags: ["NFL", "Pros & Cons", "New England Patriots", "Miami Dolphins"]
 ---
 

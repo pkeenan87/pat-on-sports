@@ -2,6 +2,8 @@
 title: "Week 12 Pros & Cons: Patriots 26 Bengals 20"
 date: "2025-11-23"
 description: "Weekly Patriots pros & cons recap (Week 12)."
+heroImage: "/images/2025/prosandcons/week-12/pats-vs-bengals-hero.jpg"
+heroAlt: "Patriots vs Bengals Week 12 action"
 tags:
   - NFL
   - "Pro & Cons"

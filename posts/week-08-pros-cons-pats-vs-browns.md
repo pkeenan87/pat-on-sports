@@ -2,6 +2,8 @@
 title: "Week 8 Pros & Cons: Patriots 32 Browns 13"
 date: "2025-10-26"
 description: "Weekly Patriots pros & cons recap (Week 8)."
+heroImage: "/images/2025/prosandcons/week-08/pats-vs-browns-hero.jpg"
+heroAlt: "Patriots vs Browns Week 8 action"
 tags:
   - NFL
   - "Pro & Cons"

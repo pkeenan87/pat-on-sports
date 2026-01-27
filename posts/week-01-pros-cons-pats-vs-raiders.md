@@ -2,6 +2,8 @@
 title: "Week 1 Pros & Cons: Patriots 13 Raiders 20"
 date: "2025-09-07"
 description: "Weekly Patriots pros & cons recap (Week 1)."
+heroImage: "/images/2025/prosandcons/week-01/pats-vs-raiders-hero.jpg"
+heroAlt: "Patriots vs Raiders Week 1 action"
 tags:
     - NFL
     - "Pro & Cons"

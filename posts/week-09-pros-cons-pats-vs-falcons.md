@@ -2,6 +2,8 @@
 title: "Week 9 Pros & Cons: Patriots 24 Falcons 23"
 date: "2025-11-02"
 description: "Weekly Patriots pros & cons recap (Week 9)."
+heroImage: "/images/2025/prosandcons/week-09/pats-vs-falcons-hero.jpg"
+heroAlt: "Patriots vs Falcons Week 9 action"
 tags:
   - NFL
   - "Pro & Cons"

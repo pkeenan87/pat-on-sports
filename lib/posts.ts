@@ -1,13 +1,6 @@
 // lib/posts.ts
-import fs from "fs";
-import path from "path";
-import matter from "gray-matter";
-import { remark } from "remark";
-import remarkGfm from "remark-gfm";
-import remarkBreaks from "remark-breaks";
-import html from "remark-html";
-
-const postsDirectory = path.join(process.cwd(), "posts");
+import type { ComponentType } from "react";
+import postModules from "@/posts";
 
 export type PostMeta = {
   slug: string;
@@ -15,119 +8,55 @@ export type PostMeta = {
   date?: string;
   description?: string;
   tags: string[];
-  content: string; // raw markdown content for search
-
-  // ✅ for sharing + hero display
+  searchContent?: string;
   heroImage?: string;
   heroAlt?: string;
   heroCaption?: string;
 };
 
 export type Post = PostMeta & {
-  contentHtml: string;
+  Content: ComponentType;
 };
 
-function normalizeMarkdown(md: string): string {
-  const lines = md.replace(/\r\n/g, "\n").split("\n");
-  const out: string[] = [];
+let cachedMetas: PostMeta[] | null = null;
 
-  for (let i = 0; i < lines.length; i++) {
-    const line = lines[i];
+export async function getAllPosts(): Promise<PostMeta[]> {
+  if (cachedMetas) return cachedMetas;
 
-    // "-text" -> "- text"
-    const listNoSpace = /^(\s*[-*+])([^\s].*)$/.exec(line);
-    if (listNoSpace) {
-      out.push(`${listNoSpace[1]} ${listNoSpace[2]}`);
-      continue;
-    }
+  const entries = Object.entries(postModules);
+  const metas: PostMeta[] = [];
 
-    // Blank line after heading if next line is a list item
-    const isHeading = /^(#{1,6})\s+.+$/.test(line.trim());
-    if (isHeading) {
-      out.push(line);
-      const next = lines[i + 1] ?? "";
-      const nextTrim = next.trim();
-      if (nextTrim.startsWith("- ") || nextTrim.startsWith("* ") || nextTrim.startsWith("+ ")) {
-        out.push("");
-      }
-      continue;
-    }
-
-    out.push(line);
+  for (const [, loader] of entries) {
+    const mod = await loader();
+    metas.push(mod.meta);
   }
 
-  return out.join("\n").replace(/\n{3,}/g, "\n\n").trim() + "\n";
-}
+  metas.sort((a, b) => {
+    if (a.date && b.date) return a.date < b.date ? 1 : -1;
+    return 0;
+  });
 
-export function getAllPosts(): PostMeta[] {
-  if (!fs.existsSync(postsDirectory)) return [];
-
-  return fs
-    .readdirSync(postsDirectory)
-    .filter((fileName) => fileName.toLowerCase().endsWith(".md"))
-    .map((fileName) => {
-      const slug = fileName.replace(/\.md$/i, "");
-      const fullPath = path.join(postsDirectory, fileName);
-      const raw = fs.readFileSync(fullPath, "utf8");
-      const { data, content } = matter(raw);
-
-      const tags = Array.isArray(data.tags)
-        ? data.tags.map((t: unknown) => String(t).trim()).filter(Boolean)
-        : [];
-
-      return {
-        slug,
-        title: data.title ?? "Untitled",
-        date: data.date ?? "",
-        description: data.description ?? "",
-        tags,
-        content,
-        heroImage: data.heroImage ?? "",
-        heroAlt: data.heroAlt ?? "",
-        heroCaption: data.heroCaption ?? "",
-      };
-    })
-    .sort((a, b) => (a.date && b.date ? (a.date < b.date ? 1 : -1) : 0));
+  cachedMetas = metas;
+  return metas;
 }
 
 export async function getPostBySlug(slug: string): Promise<Post> {
   if (!slug) throw new Error("getPostBySlug: slug is missing");
 
-  const fullPath = path.join(postsDirectory, `${slug}.md`);
-  if (!fs.existsSync(fullPath)) throw new Error(`Post not found: ${slug}`);
+  const loader = postModules[slug];
+  if (!loader) throw new Error(`Post not found: ${slug}`);
 
-  const raw = fs.readFileSync(fullPath, "utf8");
-  const { data, content } = matter(raw);
-
-  const tags = Array.isArray(data.tags)
-    ? data.tags.map((t: unknown) => String(t).trim()).filter(Boolean)
-    : [];
-
-  const normalized = normalizeMarkdown(content);
-
-  const processed = await remark()
-    .use(remarkGfm)
-    .use(remarkBreaks) // ✅ honors single newlines
-    .use(html, { sanitize: false })
-    .process(normalized);
-
+  const mod = await loader();
   return {
-    slug,
-    title: data.title ?? "Untitled",
-    date: data.date ?? "",
-    description: data.description ?? "",
-    tags,
-    content,
-    heroImage: data.heroImage ?? "",
-    heroAlt: data.heroAlt ?? "",
-    heroCaption: data.heroCaption ?? "",
-    contentHtml: processed.toString(),
+    ...mod.meta,
+    Content: mod.default,
   };
 }
 
-export function getAllTags(): string[] {
+export async function getAllTags(): Promise<string[]> {
+  const posts = await getAllPosts();
   const set = new Set<string>();
-  for (const post of getAllPosts()) {
+  for (const post of posts) {
     for (const tag of post.tags || []) {
       const cleaned = String(tag).trim();
       if (cleaned) set.add(cleaned);

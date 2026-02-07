@@ -32,7 +32,7 @@ export default async function BlogIndex({ searchParams }: BlogPageProps) {
         const matchesTag = tag ? (p.tags || []).includes(tag) : true;
         const haystack = `${p.title} ${p.description} ${(p.tags || []).join(
             " "
-        )}`.toLowerCase();
+        )} ${p.searchContent || ""}`.toLowerCase();
         const matchesQ = q ? haystack.includes(q) : true;
         return matchesTag && matchesQ;
     });

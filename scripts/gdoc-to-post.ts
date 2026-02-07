@@ -264,6 +264,24 @@ function blocksToJsx(
   return parts.join("\n\n");
 }
 
+function blocksToSearchContent(blocks: ContentBlock[]): string {
+  const parts: string[] = [];
+  for (const block of blocks) {
+    switch (block.type) {
+      case "heading":
+      case "paragraph":
+        parts.push(block.text);
+        break;
+      case "list":
+        for (const item of block.items) {
+          parts.push(item);
+        }
+        break;
+    }
+  }
+  return parts.join(" ");
+}
+
 function generatePostFile(
   meta: {
     slug: string;
@@ -275,6 +293,7 @@ function generatePostFile(
     heroAlt: string;
     heroCaption: string;
   },
+  blocks: ContentBlock[],
   jsxContent: string,
   hasImages: boolean
 ): string {
@@ -282,12 +301,15 @@ function generatePostFile(
     .map((t) => `"${escapeStringLiteral(t)}"`)
     .join(", ");
 
+  const searchContent = blocksToSearchContent(blocks);
+
   const metaLines = [
     `  slug: "${escapeStringLiteral(meta.slug)}",`,
     `  title: "${escapeStringLiteral(meta.title)}",`,
     `  date: "${escapeStringLiteral(meta.date)}",`,
     `  description: "${escapeStringLiteral(meta.description)}",`,
     `  tags: [${tagsArray}],`,
+    `  searchContent: "${escapeStringLiteral(searchContent)}",`,
   ];
 
   if (meta.heroImage) {
@@ -609,6 +631,7 @@ async function main() {
         heroAlt,
         heroCaption,
       },
+      blocks,
       jsxContent,
       hasImages
     );

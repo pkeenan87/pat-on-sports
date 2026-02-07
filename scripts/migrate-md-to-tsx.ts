@@ -168,6 +168,34 @@ function blocksToJsx(blocks: Block[], indent: string = "      "): string {
   return jsxParts.join("\n\n");
 }
 
+function stripMarkdownFormatting(text: string): string {
+  return text
+    .replace(/\*\*(.+?)\*\*/g, "$1")
+    .replace(/__(.+?)__/g, "$1")
+    .replace(/(?<!\*)\*(?!\*)(.+?)(?<!\*)\*(?!\*)/g, "$1")
+    .replace(/(?<!_)_(?!_)(.+?)(?<!_)_(?!_)/g, "$1");
+}
+
+function blocksToPlainText(blocks: Block[]): string {
+  const parts: string[] = [];
+  for (const block of blocks) {
+    switch (block.type) {
+      case "heading":
+        parts.push(stripMarkdownFormatting(block.text));
+        break;
+      case "paragraph":
+        parts.push(stripMarkdownFormatting(block.text));
+        break;
+      case "list":
+        for (const item of block.items) {
+          parts.push(stripMarkdownFormatting(item));
+        }
+        break;
+    }
+  }
+  return parts.join(" ");
+}
+
 function generateTsxFile(
   slug: string,
   frontmatter: Record<string, unknown>,
@@ -188,6 +216,7 @@ function generateTsxFile(
 
   const blocks = parseMarkdownToBlocks(markdownContent);
   const jsxContent = blocksToJsx(blocks);
+  const searchContent = blocksToPlainText(blocks);
 
   const tagsArray = meta.tags.map((t) => `"${escapeStringLiteral(t)}"`).join(", ");
 
@@ -197,6 +226,7 @@ function generateTsxFile(
     `  date: "${escapeStringLiteral(meta.date)}",`,
     `  description: "${escapeStringLiteral(meta.description)}",`,
     `  tags: [${tagsArray}],`,
+    `  searchContent: "${escapeStringLiteral(searchContent)}",`,
   ];
 
   if (meta.heroImage) {

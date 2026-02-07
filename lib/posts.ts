@@ -8,6 +8,7 @@ export type PostMeta = {
   date?: string;
   description?: string;
   tags: string[];
+  searchContent?: string;
   heroImage?: string;
   heroAlt?: string;
   heroCaption?: string;

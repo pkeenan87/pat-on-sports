@@ -16,8 +16,8 @@ function getCategory(tags: string[]): { label: string; color: string } {
     return { label: "NFL", color: "bg-slate-700" };
 }
 
-export default function HomePage() {
-    const posts = getAllPosts();
+export default async function HomePage() {
+    const posts = await getAllPosts();
 
     return (
         <main className="max-w-6xl mx-auto px-6 py-12">

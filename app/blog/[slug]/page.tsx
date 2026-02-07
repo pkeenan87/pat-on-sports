@@ -9,7 +9,7 @@ type PageProps = {
 };
 
 export async function generateStaticParams() {
-    const posts = getAllPosts();
+    const posts = await getAllPosts();
     return posts.map((p) => ({ slug: p.slug }));
 }
 
@@ -79,6 +79,8 @@ export default async function PostPage({ params }: PageProps) {
         notFound();
     }
 
+    const PostContent = post.Content;
+
     return (
         <main className="max-w-4xl mx-auto px-4 sm:px-6 py-8 sm:py-10">
             {/* TITLE + DATE */}
@@ -125,7 +127,7 @@ export default async function PostPage({ params }: PageProps) {
           prose-li:my-1.5
         "
             >
-                <div dangerouslySetInnerHTML={{ __html: post.contentHtml }} />
+                <PostContent />
             </article>
             <section className="mt-12 border-t border-slate-200 pt-8">
                 <h2 className="text-xl font-semibold">Comments</h2>

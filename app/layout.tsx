@@ -25,12 +25,12 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
     children,
 }: {
     children: React.ReactNode;
 }) {
-    const tags = getAllTags(); // ✅ server-side: reads markdown tags
+    const tags = await getAllTags();
 
     return (
         <html lang="en">

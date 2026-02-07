@@ -1,0 +1,34 @@
+import { PostMeta } from "@/lib/posts";
+
+export const meta: PostMeta = {
+  slug: "week-13-pros-cons-pats-vs-giants",
+  title: "Week 13 Pros & Cons: Patriots 33 Giants 15",
+  date: "2025-12-01",
+  description: "Weekly Patriots pros & cons recap (Week 13).",
+  tags: ["NFL", "Pro & Cons", "New England Patriots", "New York Giants"],
+  heroImage: "/images/2025/prosandcons/week-13/pats-vs-giants-hero.jpg",
+  heroAlt: "Patriots vs Giants Week 13 action",
+};
+
+export default function Post() {
+  return (
+    <>
+      <h2>Pros</h2>
+
+      <ul>
+        <li>The defense is swarming and physical. This unit is mean and is starting to lay the lumber every week.</li>
+        <li>Special teams blew the game open early with a big return from Jennings and a TD from Marcus Jones.</li>
+        <li>Jaylin Hawkins might be our best blitzing defensive back since Milloy/Harrison—he gets home constantly.</li>
+        <li>Drake Maye quietly threw for just under 300 yards, 2 TDs (one called back), and ~70% completion. Deep balls + better distribution underneath.</li>
+        <li>Offensive line held up better than expected. Vederian Lowe played his best game (shockingly). Reminder: coaching matters—Marrone may be an underrated addition.</li>
+      </ul>
+
+      <h2>Cons</h2>
+
+      <ul>
+        <li>Red zone woes continue. We score better from 25–30 than from the 5. Would like more 2-TE sets (Hooper + Henry).</li>
+        <li>Second half was basically garbage time after a dominant first half.</li>
+      </ul>
+    </>
+  );
+}

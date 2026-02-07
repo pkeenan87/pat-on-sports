@@ -26,13 +26,13 @@ export default async function BlogIndex({ searchParams }: BlogPageProps) {
     const tag = sp.tag?.trim() || "";
     const q = sp.q?.trim().toLowerCase() || "";
 
-    const posts = getAllPosts();
+    const posts = await getAllPosts();
 
     const filtered = posts.filter((p) => {
         const matchesTag = tag ? (p.tags || []).includes(tag) : true;
         const haystack = `${p.title} ${p.description} ${(p.tags || []).join(
             " "
-        )} ${p.content}`.toLowerCase();
+        )}`.toLowerCase();
         const matchesQ = q ? haystack.includes(q) : true;
         return matchesTag && matchesQ;
     });

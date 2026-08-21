@@ -143,10 +143,20 @@ export function readFilterParams(search: string): {
   category: CategoryLabel | "";
 } {
   const sp = new URLSearchParams(search);
-  return {
-    q: sp.get("q") || "",
-    category: normalizeCategoryParam(sp.get("category") || sp.get("tag") || ""),
-  };
+  const q = sp.get("q") || "";
+  const categoryParam = sp.get("category");
+  if (categoryParam) {
+    return { q, category: normalizeCategoryParam(categoryParam) };
+  }
+
+  const tagParam = sp.get("tag");
+  if (!tagParam) return { q, category: "" };
+
+  const fromTag = normalizeCategoryParam(tagParam);
+  // Old ?tag=NFL matched every post. Mapping it onto the NFL category now
+  // empties the archive, because recaps classify as Pros & Cons or Preview.
+  if (fromTag === "NFL") return { q, category: "" };
+  return { q, category: fromTag };
 }
 
 export function blogFilterUrl(q: string, category: string): string {

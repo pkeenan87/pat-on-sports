@@ -137,6 +137,15 @@ describe("src/lib/posts.ts", () => {
       q: "",
       category: "Pros & Cons",
     });
+    expect(readFilterParams("?tag=Preview")).toEqual({
+      q: "",
+      category: "Preview",
+    });
+    expect(readFilterParams("?tag=NFL")).toEqual({ q: "", category: "" });
+    expect(readFilterParams("?category=NFL")).toEqual({
+      q: "",
+      category: "NFL",
+    });
   });
 
   it("blogFilterUrl omits empty params", () => {

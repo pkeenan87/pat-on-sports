@@ -44,7 +44,11 @@ const posts = sortPostsByDate((await getCollection("blog")).map(toPostMeta));
   <script is:inline>
     (function () {
       var sp = new URLSearchParams(location.search);
-      var raw = sp.get("category") || sp.get("tag") || "";
+      var categoryParam = sp.get("category");
+      var tagParam = sp.get("tag") || "";
+      // Legacy ?tag=NFL used to match every post; don't hide the archive.
+      if (!categoryParam && tagParam.toLowerCase() === "nfl") return;
+      var raw = categoryParam || tagParam;
       var cat = raw;
       if (raw === "Pro & Cons" || raw === "pros-cons") cat = "Pros & Cons";
       if (!cat) return;

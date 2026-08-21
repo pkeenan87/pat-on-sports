@@ -1,8 +1,8 @@
 ---
-title: "Week 5 Pros & Cons: Patriots 23 Bills 20"
+title: "Week 5: Patriots 23 – Bills 20"
 date: 2025-10-05
-description: "Weekly Patriots pros & cons recap (Week 5)."
-tags: ["NFL", "Pro & Cons", "New England Patriots", "Buffalo Bills"]
+description: "A game-winning drive in Buffalo. Gonzalez and Diggs delivered; Gibson is out for the year."
+tags: ["NFL", "Pros & Cons", "New England Patriots", "Buffalo Bills"]
 heroImage: "/images/2025/prosandcons/week-05/pats-vs-bills-hero.jpg"
 heroAlt: "Patriots vs Bills Week 5 action"
 ---

@@ -1,8 +1,8 @@
 ---
-title: "Week 7 Pros & Cons: Patriots 31 Titans 13"
+title: "Week 7: Patriots 31 – Titans 13"
 date: 2025-10-19
-description: "Weekly Patriots pros & cons recap (Week 7)."
-tags: ["NFL", "Pro & Cons", "New England Patriots", "Tennessee Titans"]
+description: "Maye completed 91 percent of his throws as the line dominated Tennessee."
+tags: ["NFL", "Pros & Cons", "New England Patriots", "Tennessee Titans"]
 heroImage: "/images/2025/prosandcons/week-07/pats-vs-titans-hero.jpg"
 heroAlt: "Patriots vs Titans Week 7 action"
 ---

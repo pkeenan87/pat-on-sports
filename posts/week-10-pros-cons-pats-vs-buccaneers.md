@@ -1,8 +1,8 @@
 ---
-title: "Week 10 Pros & Cons: Patriots 28 Buccaneers 23"
+title: "Week 10: Patriots 28 – Buccaneers 23"
 date: 2025-11-09
-description: "Weekly Patriots pros & cons recap (Week 10)."
-tags: ["NFL", "Pro & Cons", "New England Patriots", "Tampa Bay Buccaneers"]
+description: "A road win in Tampa. Hollins topped 100 yards and the line allowed one sack against Bowles."
+tags: ["NFL", "Pros & Cons", "New England Patriots", "Tampa Bay Buccaneers"]
 heroImage: "/images/2025/prosandcons/week-10/pats-vs-buccaneers-hero.jpg"
 heroAlt: "Patriots vs Buccaneers Week 10 action"
 ---

@@ -449,7 +449,11 @@ async function main() {
     const description =
       flags.description || (await prompt.ask("Short description/excerpt"));
     const tagsInput =
-      flags.tags || (await prompt.ask("Tags (comma-separated)", "NFL"));
+      flags.tags ||
+      (await prompt.ask(
+        "Tags (comma-separated)",
+        "NFL, Pros & Cons, New England Patriots"
+      ));
     const tags = tagsInput
       .split(",")
       .map((t) => t.trim())

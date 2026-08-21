@@ -1,5 +1,5 @@
 ---
-title: "Conference Championship Weekend Pros & Cons: Patriots 10 – Broncos 7"
+title: "Conference Championship: Patriots 10 – Broncos 7"
 date: 2026-01-25
 description: "Patriots win ugly to advance to the Super Bowl."
 tags: ["NFL", "Pros & Cons", "New England Patriots", "Denver Broncos"]

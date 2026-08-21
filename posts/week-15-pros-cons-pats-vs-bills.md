@@ -1,8 +1,8 @@
 ---
-title: "Week 15 Pros & Cons: Patriots 31 Bills 35"
+title: "Week 15: Patriots 31 – Bills 35"
 date: 2025-12-14
-description: "Weekly Patriots pros & cons recap (Week 15)."
-tags: ["NFL", "Pro & Cons", "New England Patriots", "Buffalo Bills"]
+description: "A 21-point collapse in Buffalo. The run game finally showed up; the second-half passing game did not."
+tags: ["NFL", "Pros & Cons", "New England Patriots", "Buffalo Bills"]
 heroImage: "/images/2025/prosandcons/week-15/pats-vs-bills-hero.jpg"
 heroAlt: "Patriots vs Bills Week 15 action"
 ---

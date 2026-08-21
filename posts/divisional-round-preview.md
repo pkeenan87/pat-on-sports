@@ -1,8 +1,8 @@
 ---
-title: "NFL Divisional Round Preview"
+title: "Divisional Round Preview"
 date: 2026-01-16
-description: "Preview of the playoffs games this weekend."
-tags: ["NFL", "Divisional Round", "New England Patriots", "Houston Texans", "Buffalo Bills", "Denver Broncos", "Los Angeles Rams", "Chicago Bears", "San Francisco 49ers", "Seattle Seahawks"]
+description: "Four games, four picks — including Patriots–Texans — on the best weekend of the year."
+tags: ["NFL", "Preview", "New England Patriots", "Houston Texans", "Buffalo Bills", "Denver Broncos", "Los Angeles Rams", "Chicago Bears", "San Francisco 49ers", "Seattle Seahawks"]
 heroImage: "/images/2025/previews/divisional/divisional-round-hero.webp"
 heroAlt: "Three playoff quarterbacks get ready to play this weekend"
 heroCaption: "It's the most wonderful time of the year, the divisional round is here."

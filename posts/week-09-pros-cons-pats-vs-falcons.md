@@ -1,8 +1,8 @@
 ---
-title: "Week 9 Pros & Cons: Patriots 24 Falcons 23"
+title: "Week 9: Patriots 24 – Falcons 23"
 date: 2025-11-02
-description: "Weekly Patriots pros & cons recap (Week 9)."
-tags: ["NFL", "Pro & Cons", "New England Patriots", "Atlanta Falcons"]
+description: "An ugly 24–23 win: the run defense stuffed Bijan, but the offensive line is a problem."
+tags: ["NFL", "Pros & Cons", "New England Patriots", "Atlanta Falcons"]
 heroImage: "/images/2025/prosandcons/week-09/pats-vs-falcons-hero.jpg"
 heroAlt: "Patriots vs Falcons Week 9 action"
 ---

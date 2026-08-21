@@ -1,0 +1,78 @@
+---
+import { getCollection, render } from "astro:content";
+import CommentBox from "../../components/CommentBox";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { formatPostDate, toPostMeta } from "../../lib/posts";
+
+export async function getStaticPaths() {
+  const posts = await getCollection("blog");
+  return posts.map((post) => ({
+    params: { slug: post.id },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const meta = toPostMeta(post);
+const { Content } = await render(post);
+const publishedTime = post.data.date
+  ? new Date(post.data.date).toISOString()
+  : undefined;
+---
+
+<BaseLayout
+  title={meta.title}
+  description={meta.description?.trim() ||
+    "Weekly Patriots Pros & Cons from Pat on Sports."}
+  image={meta.heroImage?.trim() || "/images/og-default.png"}
+  imageAlt={meta.heroAlt || meta.title}
+  canonical={`/blog/${meta.slug}`}
+  type="article"
+  publishedTime={publishedTime}
+  tags={meta.tags}
+>
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 py-8 sm:py-10">
+    <header class="mb-4 sm:mb-6">
+      <h1 class="text-3xl sm:text-4xl font-bold tracking-tight">
+        {meta.title}
+      </h1>
+      {
+        meta.date ? (
+          <p class="mt-2 text-sm text-slate-500">{formatPostDate(meta.date)}</p>
+        ) : null
+      }
+    </header>
+
+    <div class="mb-5 sm:mb-7 h-px bg-slate-200"></div>
+
+    {
+      meta.heroImage ? (
+        <figure class="mb-8 animate-fade-in-up">
+          <div class="relative w-full aspect-[16/9] overflow-hidden rounded-xl bg-slate-100 shadow-sm ring-1 ring-slate-200">
+            <img
+              src={meta.heroImage}
+              alt={meta.heroAlt || meta.title}
+              class="absolute inset-0 h-full w-full object-cover"
+            />
+          </div>
+          {meta.heroCaption ? (
+            <figcaption class="mt-2 text-sm text-slate-500 text-center">
+              {meta.heroCaption}
+            </figcaption>
+          ) : null}
+        </figure>
+      ) : null
+    }
+
+    <article
+      class="prose prose-lg max-w-none prose-slate prose-ul:list-disc prose-ol:list-decimal prose-ul:pl-6 prose-ol:pl-6 prose-li:my-1.5"
+    >
+      <Content />
+    </article>
+
+    <section class="mt-12 border-t border-slate-200 pt-8">
+      <h2 class="text-xl font-semibold">Comments</h2>
+      <CommentBox client:only="react" boxId={meta.slug} />
+    </section>
+  </div>
+</BaseLayout>

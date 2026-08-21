@@ -54,22 +54,17 @@ function slugify(text: string): string {
     .replace(/^-|-$/g, "");
 }
 
-function escapeJsx(text: string): string {
-  return text
-    .replace(/&amp;/g, "&")
-    .replace(/&lt;/g, "<")
-    .replace(/&gt;/g, ">")
-    .replace(/&nbsp;/g, " ")
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/{/g, "&#123;")
-    .replace(/}/g, "&#125;")
-    .replace(/"/g, "&quot;");
+function yamlQuote(value: string): string {
+  return JSON.stringify(value);
 }
 
-function escapeStringLiteral(text: string): string {
-  return text.replace(/\\/g, "\\\\").replace(/"/g, '\\"').replace(/\n/g, "\\n");
+function inlineToMarkdown(text: string): string {
+  return text
+    .replace(/<strong><em>(.*?)<\/em><\/strong>/g, "***$1***")
+    .replace(/<em><strong>(.*?)<\/strong><\/em>/g, "***$1***")
+    .replace(/<strong>(.*?)<\/strong>/g, "**$1**")
+    .replace(/<em>(.*?)<\/em>/g, "*$1*")
+    .replace(/<a href="(.*?)">(.*?)<\/a>/g, "[$2]($1)");
 }
 
 // ─── Google Docs HTML parsing ────────────────────────────────────────
@@ -220,71 +215,42 @@ function parseGoogleDocsHtml(
   return blocks;
 }
 
-// ─── JSX generation ──────────────────────────────────────────────────
-function blocksToJsx(
-  blocks: ContentBlock[],
-  indent: string = "      "
-): string {
+// ─── Markdown generation ─────────────────────────────────────────────
+function blocksToMarkdown(blocks: ContentBlock[]): string {
   const parts: string[] = [];
 
   for (const block of blocks) {
     switch (block.type) {
       case "heading": {
-        const tag = `h${block.level}`;
-        parts.push(`${indent}<${tag}>${escapeJsx(block.text)}</${tag}>`);
+        const level = Math.min(Math.max(block.level, 1), 6);
+        parts.push(`${"#".repeat(level)} ${inlineToMarkdown(block.text).trim()}`);
         break;
       }
       case "paragraph": {
-        parts.push(`${indent}<p>${escapeJsx(block.text)}</p>`);
+        parts.push(inlineToMarkdown(block.text).trim());
         break;
       }
       case "list": {
-        const tag = block.ordered ? "ol" : "ul";
-        const itemsJsx = block.items
-          .map((item) => `${indent}  <li>${escapeJsx(item)}</li>`)
-          .join("\n");
-        parts.push(`${indent}<${tag}>\n${itemsJsx}\n${indent}</${tag}>`);
+        const lines = block.items.map((item, i) => {
+          const text = inlineToMarkdown(item).trim();
+          return block.ordered ? `${i + 1}. ${text}` : `- ${text}`;
+        });
+        parts.push(lines.join("\n"));
         break;
       }
       case "image": {
-        parts.push(
-          `${indent}<Image\n` +
-          `${indent}  src="${block.src}"\n` +
-          `${indent}  alt="${escapeJsx(block.alt)}"\n` +
-          `${indent}  width={800}\n` +
-          `${indent}  height={450}\n` +
-          `${indent}  className="rounded-lg my-4"\n` +
-          `${indent}/>`
-        );
+        const alt = inlineToMarkdown(block.alt).trim();
+        parts.push(`![${alt}](${block.src})`);
         break;
       }
     }
   }
 
-  return parts.join("\n\n");
-}
-
-function blocksToSearchContent(blocks: ContentBlock[]): string {
-  const parts: string[] = [];
-  for (const block of blocks) {
-    switch (block.type) {
-      case "heading":
-      case "paragraph":
-        parts.push(block.text);
-        break;
-      case "list":
-        for (const item of block.items) {
-          parts.push(item);
-        }
-        break;
-    }
-  }
-  return parts.join(" ");
+  return parts.join("\n\n") + "\n";
 }
 
 function generatePostFile(
   meta: {
-    slug: string;
     title: string;
     date: string;
     description: string;
@@ -293,60 +259,22 @@ function generatePostFile(
     heroAlt: string;
     heroCaption: string;
   },
-  blocks: ContentBlock[],
-  jsxContent: string,
-  hasImages: boolean
+  body: string
 ): string {
-  const tagsArray = meta.tags
-    .map((t) => `"${escapeStringLiteral(t)}"`)
-    .join(", ");
-
-  const searchContent = blocksToSearchContent(blocks);
-
-  const metaLines = [
-    `  slug: "${escapeStringLiteral(meta.slug)}",`,
-    `  title: "${escapeStringLiteral(meta.title)}",`,
-    `  date: "${escapeStringLiteral(meta.date)}",`,
-    `  description: "${escapeStringLiteral(meta.description)}",`,
-    `  tags: [${tagsArray}],`,
-    `  searchContent: "${escapeStringLiteral(searchContent)}",`,
+  const lines = [
+    "---",
+    `title: ${yamlQuote(meta.title)}`,
+    `date: ${meta.date}`,
+    `description: ${yamlQuote(meta.description)}`,
+    `tags: [${meta.tags.map((t) => yamlQuote(t)).join(", ")}]`,
   ];
 
-  if (meta.heroImage) {
-    metaLines.push(
-      `  heroImage: "${escapeStringLiteral(meta.heroImage)}",`
-    );
-  }
-  if (meta.heroAlt) {
-    metaLines.push(`  heroAlt: "${escapeStringLiteral(meta.heroAlt)}",`);
-  }
-  if (meta.heroCaption) {
-    metaLines.push(
-      `  heroCaption: "${escapeStringLiteral(meta.heroCaption)}",`
-    );
-  }
+  if (meta.heroImage) lines.push(`heroImage: ${yamlQuote(meta.heroImage)}`);
+  if (meta.heroAlt) lines.push(`heroAlt: ${yamlQuote(meta.heroAlt)}`);
+  if (meta.heroCaption) lines.push(`heroCaption: ${yamlQuote(meta.heroCaption)}`);
 
-  const imports = [
-    `import { PostMeta } from "@/lib/posts";`,
-  ];
-  if (hasImages) {
-    imports.push(`import Image from "next/image";`);
-  }
-
-  return `${imports.join("\n")}
-
-export const meta: PostMeta = {
-${metaLines.join("\n")}
-};
-
-export default function Post() {
-  return (
-    <>
-${jsxContent}
-    </>
-  );
-}
-`;
+  lines.push("---", "", body.replace(/\n$/, ""), "");
+  return lines.join("\n");
 }
 
 // ─── Image extraction ────────────────────────────────────────────────
@@ -475,34 +403,6 @@ function processHtmlFile(
   return { htmlContent, imageMap };
 }
 
-// ─── Registry update ─────────────────────────────────────────────────
-function updateRegistry(slug: string) {
-  const registryPath = path.join(process.cwd(), "posts", "index.ts");
-
-  if (!fs.existsSync(registryPath)) {
-    console.log("  Warning: posts/index.ts not found. Skipping registry update.");
-    return;
-  }
-
-  let content = fs.readFileSync(registryPath, "utf8");
-
-  // Check if slug is already registered
-  if (content.includes(`"${slug}"`)) {
-    console.log(`  Registry already contains "${slug}". Skipping.`);
-    return;
-  }
-
-  // Insert before the closing of postModules
-  const insertLine = `  "${slug}": () => import("./${slug}"),`;
-  content = content.replace(
-    /^(const postModules.*?= \{)\n/m,
-    `$1\n${insertLine}\n`
-  );
-
-  fs.writeFileSync(registryPath, content, "utf8");
-  console.log(`  Updated registry: posts/index.ts`);
-}
-
 // ─── Main ────────────────────────────────────────────────────────────
 async function main() {
   const { inputFile, flags } = parseArgs();
@@ -573,7 +473,6 @@ async function main() {
 
     // Parse HTML to content blocks
     const blocks = parseGoogleDocsHtml(htmlContent, imageMap);
-    const hasImages = blocks.some((b) => b.type === "image");
 
     // Determine hero image
     let heroImage = "";
@@ -616,13 +515,9 @@ async function main() {
         flags["hero-caption"] || (await prompt.ask("Hero image caption", ""));
     }
 
-    // Generate JSX content
-    const jsxContent = blocksToJsx(blocks);
-
-    // Generate the post file
+    const markdownBody = blocksToMarkdown(blocks);
     const postContent = generatePostFile(
       {
-        slug,
         title,
         date,
         description,
@@ -631,21 +526,15 @@ async function main() {
         heroAlt,
         heroCaption,
       },
-      blocks,
-      jsxContent,
-      hasImages
+      markdownBody
     );
 
-    // Write the post file
-    const postPath = path.join(process.cwd(), "posts", `${slug}.tsx`);
+    const postPath = path.join(process.cwd(), "posts", `${slug}.md`);
     fs.writeFileSync(postPath, postContent, "utf8");
-    console.log(`\nCreated post: posts/${slug}.tsx`);
-
-    // Update the registry
-    updateRegistry(slug);
+    console.log(`\nCreated post: posts/${slug}.md`);
 
     console.log("\nDone! Next steps:");
-    console.log(`  1. Review the generated file: posts/${slug}.tsx`);
+    console.log(`  1. Review the generated file: posts/${slug}.md`);
     console.log("  2. Run 'npm run build' to verify");
     console.log(`  3. Preview with 'npm run dev' and visit /blog/${slug}`);
   } finally {

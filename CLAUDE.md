@@ -2,40 +2,45 @@
 
 ## Project Overview
 
-This is a **Next.js 16 sports blog** focused on New England Patriots analysis. It's a content-driven static site that transforms Markdown posts into a searchable, filterable blog.
+This is an **Astro sports blog** focused on New England Patriots analysis. It's a content-driven static site that transforms Markdown posts into a searchable, filterable blog.
 
-**Tech Stack**: Next.js 16.1.1 (App Router), React 19, TypeScript 5 (strict), Tailwind CSS 4, Vitest
+**Tech Stack**: Astro 5, React 19 (islands), TypeScript 5 (strict), Tailwind CSS 4, Vitest
 
 ## Quick Commands
 
 ```bash
-npm run dev          # Start dev server at localhost:3000
-npm run build        # Production build
-npm run lint         # ESLint check
-npm run test         # Vitest watch mode
-npm run test:run     # Vitest single run
+npm run dev # Start dev server at localhost:4321
+npm run build # Production build
+npm run preview # Preview the production build
+npm run lint # astro check
+npm run test # Vitest watch mode
+npm run test:run # Vitest single run
 npm run test:coverage # Coverage report
+npm run new-post -- ./export.zip # Convert a Google Doc HTML/zip export to Markdown
 ```
 
 ## Project Structure
 
 ```
-app/                  # Next.js App Router pages
-  blog/[slug]/        # Dynamic post pages
-components/           # React components (Header, CommentBox, Breadcrumbs)
-lib/                  # Utilities - posts.ts is the core Markdown parser
+src/                  # Astro app (pages, layouts, components, content config)
+  pages/              # File-based routes
+  components/         # Astro + React islands (Header, CommentBox, PostCard)
+  layouts/            # BaseLayout
+  lib/                # Post helpers (sort, tags, search filter)
+  content.config.ts   # Blog collection schema
 posts/                # Markdown content files (blog posts)
 public/images/        # Hero images for posts
-test/                 # Unit tests
-types/                # TypeScript type definitions
+scripts/              # Google Docs -> Markdown converter
+test/                 # Vitest setup
 ```
 
 ## Key Files
 
-- `lib/posts.ts` - Core post parsing logic (getAllPosts, getPostBySlug, getAllTags)
-- `app/blog/[slug]/page.tsx` - Dynamic post rendering with static generation
-- `app/blog/page.tsx` - Blog index with search and tag filtering
-- `components/Header.tsx` - Navigation with search bar and tag filters
+- `src/content.config.ts` - Blog collection loader + Zod schema
+- `src/lib/posts.ts` - Sort, tags, category badges, search filter
+- `src/pages/blog/[slug].astro` - Static post pages
+- `src/pages/blog/index.astro` - Blog index with client-side search/tag filtering
+- `src/components/Header.tsx` - Navigation with search bar and tag filters
 
 ## Content Format
 
@@ -44,29 +49,31 @@ Posts use YAML front matter in `/posts/`:
 ```markdown
 ---
 title: "Post Title"
-date: "2025-01-25"
+date: 2025-01-25
 description: "Brief description"
 tags:
   - NFL
   - "New England Patriots"
-heroImage: "/images/week-01/hero.jpg"  # Optional
-heroAlt: "Alt text"                     # Optional
-heroCaption: "Caption"                  # Optional
+heroImage: "/images/week-01/hero.jpg" # Optional
+heroAlt: "Alt text" # Optional
+heroCaption: "Caption" # Optional
 ---
 
 Content here...
 ```
 
+The slug is the filename (without `.md`). No registry file is required.
+
 ## Development Notes
 
-- All post data flows through `lib/posts.ts` (single source of truth)
-- Posts are statically generated at build time via `generateStaticParams()`
-- Markdown uses remark-gfm (GitHub Flavored) and remark-breaks (line breaks)
-- Tests mock the `fs` module since posts directory is computed at import time
-- Place tests in `/test/` with `.test.ts` or `.test.tsx` naming
+- All post metadata flows through the `blog` content collection
+- Posts are statically generated at build time via `getStaticPaths()`
+- Search and tag filters are client-side (`?q=` and `?tag=` on `/blog`)
+- Header and CommentBox are React islands; everything else is static HTML
+- Public env vars: `PUBLIC_SITE_URL`, `PUBLIC_COMMENTBOX_PROJECT_ID`
 
 ## Testing
 
 Framework: Vitest + React Testing Library + jsdom
 
-When testing `lib/posts.ts`, mock `process.cwd()` before importing since the posts directory path is computed at module load time.
+Place tests next to source (`src/**/*.test.ts`) or in `/test/` with `.test.ts` / `.test.tsx` naming.

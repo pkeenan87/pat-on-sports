@@ -1,10 +1,10 @@
-import { defineConfig } from "vitest/config";
 import path from "path";
+import { defineConfig } from "vitest/config";
 
 export default defineConfig({
   resolve: {
     alias: {
-      "@": path.resolve(__dirname, "./"),
+      "@": path.resolve(__dirname, "./src"),
     },
   },
   test: {
@@ -17,8 +17,8 @@ export default defineConfig({
       reporter: ["text", "html", "lcov"],
       exclude: [
         "node_modules/**",
-        ".next/**",
-        "out/**",
+        "dist/**",
+        ".astro/**",
         "public/**",
         "**/*.d.ts",
         "**/test/**",

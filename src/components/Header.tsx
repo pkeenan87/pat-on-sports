@@ -17,9 +17,10 @@ function readSearchParams(): { q: string; tag: string } {
 }
 
 export default function Header({ tags, pathname }: HeaderProps) {
-  const initial = readSearchParams();
-  const [q, setQ] = useState(initial.q);
-  const [activeTag, setActiveTag] = useState(initial.tag);
+  // Start empty so SSR/prerender HTML matches the first client render, then
+  // apply ?q= / ?tag= after hydration.
+  const [q, setQ] = useState("");
+  const [activeTag, setActiveTag] = useState("");
 
   useEffect(() => {
     const next = readSearchParams();

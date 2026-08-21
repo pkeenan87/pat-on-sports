@@ -47,4 +47,18 @@ describe("Header", () => {
     fireEvent.click(screen.getByText("#NFL"));
     expect(assign).toHaveBeenCalledWith("/blog?tag=NFL");
   });
+
+  it("applies query params after mount so SSR markup stays empty", () => {
+    vi.stubGlobal("location", {
+      search: "?q=Maye&tag=NFL",
+      pathname: "/blog",
+      assign,
+    });
+
+    render(<Header tags={["NFL", "Preview"]} pathname="/blog" />);
+
+    expect(screen.getByPlaceholderText("Search posts…")).toHaveValue("Maye");
+    expect(screen.getByText("#NFL")).toHaveClass("bg-slate-900");
+    expect(screen.getByText("All")).not.toHaveClass("bg-slate-900");
+  });
 });

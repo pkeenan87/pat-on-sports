@@ -1,12 +1,12 @@
-# Sports Blog (Next.js + Markdown)
+# Pat on Sports (Astro + Markdown)
 
-This is a Markdown-driven sports blog built with Next.js App Router and Tailwind CSS.
+A Markdown-driven Patriots blog built with Astro and Tailwind CSS.
 
 ## Features
-- Markdown blog posts
+- Markdown posts with typed content collections
 - Homepage card layout
-- Tags system
-- SEO metadata (OpenGraph-ready)
+- Search and tag filters
+- SEO metadata (Open Graph)
 - Static generation
 
 ## Getting Started
@@ -14,3 +14,5 @@ This is a Markdown-driven sports blog built with Next.js App Router and Tailwind
 npm install
 npm run dev
 ```
+
+New posts: add a file to `posts/` with YAML frontmatter, or convert a Google Doc export with `npm run new-post -- ./export.zip`.

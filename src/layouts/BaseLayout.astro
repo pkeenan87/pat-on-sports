@@ -1,0 +1,81 @@
+---
+import Analytics from "@vercel/analytics/astro";
+import { getCollection } from "astro:content";
+import Header from "../components/Header";
+import {
+  getUniqueTags,
+  sortPostsByDate,
+  toPostMeta,
+} from "../lib/posts";
+import "../styles/global.css";
+
+type Props = {
+  title?: string;
+  description?: string;
+  image?: string;
+  imageAlt?: string;
+  canonical?: string;
+  type?: "website" | "article";
+  publishedTime?: string;
+  tags?: string[];
+};
+
+const {
+  title,
+  description = "Pat on Sports — weekly Patriots Pros & Cons, NFL analysis, previews, and takes.",
+  image = "/images/og-default.png",
+  imageAlt,
+  canonical,
+  type = "website",
+  publishedTime,
+  tags = [],
+} = Astro.props;
+
+const siteUrl = Astro.site ?? new URL("https://patonsports.com");
+const pageTitle = title ? `${title} | Pat on Sports` : "Pat on Sports";
+const canonicalUrl = new URL(canonical ?? Astro.url.pathname, siteUrl).href;
+const ogImage = new URL(image, siteUrl).href;
+const ogTitle = title ?? "Pat on Sports";
+
+const posts = sortPostsByDate(
+  (await getCollection("blog")).map(toPostMeta)
+);
+const allTags = getUniqueTags(posts);
+const pathname = Astro.url.pathname.replace(/\/$/, "") || "/";
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/png" href="/icon.png" />
+    <link rel="canonical" href={canonicalUrl} />
+    <title>{pageTitle}</title>
+    <meta name="description" content={description} />
+    <meta property="og:type" content={type} />
+    <meta property="og:site_name" content="Pat on Sports" />
+    <meta property="og:title" content={ogTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:image" content={ogImage} />
+    {imageAlt && <meta property="og:image:alt" content={imageAlt} />}
+    {
+      publishedTime && (
+        <meta property="article:published_time" content={publishedTime} />
+      )
+    }
+    {tags.map((tag) => <meta property="article:tag" content={tag} />)}
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={ogTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+  </head>
+  <body class="bg-slate-50 text-slate-900">
+    <Header tags={allTags} pathname={pathname} client:load />
+    <main>
+      <slot />
+    </main>
+    <Analytics />
+  </body>
+</html>

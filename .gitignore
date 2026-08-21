@@ -8,11 +8,10 @@ node_modules/
 .yarn-unplugged/
 
 # =========================
-# Next.js
+# Astro
 # =========================
-.next/
-out/
-.next-env.d.ts
+dist/
+.astro/
 
 # =========================
 # Environment files

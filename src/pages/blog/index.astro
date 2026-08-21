@@ -1,0 +1,39 @@
+---
+import BlogFilter from "../../components/BlogFilter";
+import PostCard from "../../components/PostCard.astro";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { sortPostsByDate, toPostMeta } from "../../lib/posts";
+import { getCollection } from "astro:content";
+
+const posts = sortPostsByDate((await getCollection("blog")).map(toPostMeta));
+---
+
+<BaseLayout title="Blog">
+  <div class="max-w-7xl mx-auto px-6 py-10">
+    <div class="flex items-baseline justify-between gap-4 mb-6">
+      <h1 class="text-3xl font-bold">Blog</h1>
+      <div id="blog-count" class="text-sm text-slate-500">
+        {posts.length} post{posts.length === 1 ? "" : "s"}
+      </div>
+    </div>
+
+    <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+      {
+        posts.map((post) => (
+          <div data-post-slug={post.slug}>
+            <PostCard post={post} />
+          </div>
+        ))
+      }
+    </div>
+
+    <div
+      id="blog-empty"
+      hidden
+      class="mt-10 rounded-xl border bg-white p-8 text-slate-600"
+    >
+      No posts match your filters. Try clearing the tag or search.
+    </div>
+  </div>
+  <BlogFilter client:load posts={posts} />
+</BaseLayout>

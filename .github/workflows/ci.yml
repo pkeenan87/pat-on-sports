@@ -29,5 +29,4 @@ jobs:
       - name: Build
         run: npm run build
         env:
-          # Set a safe default so build doesn't fail if your layout expects it.
-          NEXT_PUBLIC_SITE_URL: https://patonsports.com
+          PUBLIC_SITE_URL: https://patonsports.com

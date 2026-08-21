@@ -1,9 +1,17 @@
 import { describe, expect, it } from "vitest";
 import {
+  blogFilterUrl,
   filterPosts,
+  formatDisplayDate,
   formatPostDate,
+  getAdjacentPosts,
   getCategory,
+  getRelatedPosts,
+  getUniqueCategories,
   getUniqueTags,
+  normalizeCategoryParam,
+  parsePatriotsResult,
+  readFilterParams,
   sortPostsByDate,
   toPostMeta,
   type BlogEntry,
@@ -12,7 +20,7 @@ import {
 
 const week17: PostMeta = {
   slug: "week-17-pros-cons-pats-vs-jets",
-  title: "Week 17 Pros & Cons: Patriots 42–Jets 10",
+  title: "Week 17: Patriots 42 – Jets 10",
   date: "2025-12-28",
   description: "Week 17 recap.",
   heroImage: "/images/week-17/hero.jpg",
@@ -29,6 +37,15 @@ const week16: PostMeta = {
   description: "Week 16 recap.",
   tags: ["NFL", "New England Patriots", "Older Tag"],
   searchContent: "A defensive slugfest in Baltimore.",
+};
+
+const preview: PostMeta = {
+  slug: "divisional-round-preview",
+  title: "Divisional Round Preview",
+  date: "2026-01-16",
+  description: "Preview of the playoff games this weekend.",
+  tags: ["NFL", "Preview", "New England Patriots"],
+  searchContent: "Four games this weekend.",
 };
 
 describe("src/lib/posts.ts", () => {
@@ -73,19 +90,69 @@ describe("src/lib/posts.ts", () => {
     ]);
   });
 
+  it("getUniqueCategories returns badge labels in display order", () => {
+    expect(getUniqueCategories([week17, week16, preview])).toEqual([
+      "Pros & Cons",
+      "Preview",
+      "NFL",
+    ]);
+    expect(getUniqueCategories([week17, preview])).toEqual([
+      "Pros & Cons",
+      "Preview",
+    ]);
+  });
+
   it("getCategory maps Pros & Cons, Preview, and default NFL badges", () => {
     expect(getCategory(["NFL", "Pro & Cons"]).label).toBe("Pros & Cons");
-    expect(getCategory(["NFL", "Pros & Cons"]).color).toBe("bg-blue-600");
+    expect(getCategory(["NFL", "Pros & Cons"]).color).toBe("bg-navy");
     expect(getCategory(["Divisional Round", "Preview"]).label).toBe("Preview");
     expect(getCategory(["NFL"]).label).toBe("NFL");
   });
 
-  it("filterPosts matches tag and full-text query", () => {
-    const posts = [week17, week16];
+  it("normalizeCategoryParam maps aliases and ignores opponent names", () => {
+    expect(normalizeCategoryParam("Pro & Cons")).toBe("Pros & Cons");
+    expect(normalizeCategoryParam("pros-cons")).toBe("Pros & Cons");
+    expect(normalizeCategoryParam("Preview")).toBe("Preview");
+    expect(normalizeCategoryParam("NFL")).toBe("NFL");
+    expect(normalizeCategoryParam("Buffalo Bills")).toBe("");
+  });
+
+  it("filterPosts matches category labels and full-text query", () => {
+    const posts = [week17, week16, preview];
     expect(filterPosts(posts, "", "Pro & Cons")).toEqual([week17]);
+    expect(filterPosts(posts, "", "Preview")).toEqual([preview]);
+    expect(filterPosts(posts, "", "NFL")).toEqual([week16]);
     expect(filterPosts(posts, "baltimore", "")).toEqual([week16]);
-    expect(filterPosts(posts, "maye", "Pro & Cons")).toEqual([week17]);
+    expect(filterPosts(posts, "maye", "Pros & Cons")).toEqual([week17]);
     expect(filterPosts(posts, "xyz", "")).toEqual([]);
+    expect(filterPosts(posts, "", "Buffalo Bills")).toEqual(posts);
+  });
+
+  it("readFilterParams prefers category over legacy tag", () => {
+    expect(readFilterParams("?q=Maye&category=Preview")).toEqual({
+      q: "Maye",
+      category: "Preview",
+    });
+    expect(readFilterParams("?tag=Pro+%26+Cons")).toEqual({
+      q: "",
+      category: "Pros & Cons",
+    });
+    expect(readFilterParams("?tag=Preview")).toEqual({
+      q: "",
+      category: "Preview",
+    });
+    expect(readFilterParams("?tag=NFL")).toEqual({ q: "", category: "" });
+    expect(readFilterParams("?category=NFL")).toEqual({
+      q: "",
+      category: "NFL",
+    });
+  });
+
+  it("blogFilterUrl omits empty params", () => {
+    expect(blogFilterUrl("", "")).toBe("/blog");
+    expect(blogFilterUrl("Maye", "Pros & Cons")).toBe(
+      "/blog?q=Maye&category=Pros+%26+Cons"
+    );
   });
 
   it("formatPostDate keeps YYYY-MM-DD for Date and string inputs", () => {
@@ -94,5 +161,41 @@ describe("src/lib/posts.ts", () => {
       "2025-12-28"
     );
     expect(formatPostDate(undefined)).toBeUndefined();
+  });
+
+  it("formatDisplayDate renders a human-readable UTC date", () => {
+    expect(formatDisplayDate("2026-01-25")).toBe("Jan 25, 2026");
+    expect(formatDisplayDate(undefined)).toBeUndefined();
+  });
+
+  it("parsePatriotsResult reads W/L/T from scorelines", () => {
+    expect(parsePatriotsResult("Week 1: Patriots 13 – Raiders 20")).toEqual({
+      pats: 13,
+      opp: 20,
+      result: "L",
+    });
+    expect(parsePatriotsResult("Week 17: Patriots 42–Jets 10")).toEqual({
+      pats: 42,
+      opp: 10,
+      result: "W",
+    });
+    expect(parsePatriotsResult("Week 3: Patriots 14 Steelers 14")).toEqual({
+      pats: 14,
+      opp: 14,
+      result: "T",
+    });
+    expect(parsePatriotsResult("Divisional Round Preview")).toBeNull();
+  });
+
+  it("getAdjacentPosts and getRelatedPosts walk a newest-first list", () => {
+    const posts = [preview, week17, week16];
+    expect(getAdjacentPosts(posts, week17.slug)).toEqual({
+      newer: preview,
+      older: week16,
+    });
+    expect(getRelatedPosts(posts, week17, 3).map((p) => p.slug)).toEqual([]);
+    expect(getRelatedPosts([week17, { ...week16, tags: week17.tags }], week17)).toHaveLength(
+      1
+    );
   });
 });

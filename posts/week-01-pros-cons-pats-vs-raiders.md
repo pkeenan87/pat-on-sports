@@ -1,8 +1,8 @@
 ---
-title: "Week 1 Pros & Cons: Patriots 13 Raiders 20"
+title: "Week 1: Patriots 13 – Raiders 20"
 date: 2025-09-07
-description: "Weekly Patriots pros & cons recap (Week 1)."
-tags: ["NFL", "Pro & Cons", "New England Patriots", "Las Vegas Raiders"]
+description: "Boutte and the pass rush showed up; Maye’s mechanics and a dead run game did not."
+tags: ["NFL", "Pros & Cons", "New England Patriots", "Las Vegas Raiders"]
 heroImage: "/images/2025/prosandcons/week-01/pats-vs-raiders-hero.jpg"
 heroAlt: "Patriots vs Raiders Week 1 action"
 ---

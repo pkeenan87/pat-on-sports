@@ -1,9 +1,10 @@
 ---
 import Analytics from "@vercel/analytics/astro";
 import { getCollection } from "astro:content";
+import Footer from "../components/Footer.astro";
 import Header from "../components/Header";
 import {
-  getUniqueTags,
+  getUniqueCategories,
   sortPostsByDate,
   toPostMeta,
 } from "../lib/posts";
@@ -40,7 +41,7 @@ const ogTitle = title ?? "Pat on Sports";
 const posts = sortPostsByDate(
   (await getCollection("blog")).map(toPostMeta)
 );
-const allTags = getUniqueTags(posts);
+const categories = getUniqueCategories(posts);
 const pathname = Astro.url.pathname.replace(/\/$/, "") || "/";
 ---
 
@@ -51,6 +52,13 @@ const pathname = Astro.url.pathname.replace(/\/$/, "") || "/";
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" type="image/png" href="/icon.png" />
     <link rel="canonical" href={canonicalUrl} />
+    <link rel="alternate" type="application/rss+xml" title="Pat on Sports" href="/rss.xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&display=swap"
+      rel="stylesheet"
+    />
     <title>{pageTitle}</title>
     <meta name="description" content={description} />
     <meta property="og:type" content={type} />
@@ -71,11 +79,18 @@ const pathname = Astro.url.pathname.replace(/\/$/, "") || "/";
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImage} />
   </head>
-  <body class="bg-slate-50 text-slate-900">
-    <Header tags={allTags} pathname={pathname} client:load />
-    <main>
+  <body class="min-h-screen flex flex-col bg-paper text-ink">
+    <a
+      href="#main-content"
+      class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[60] focus:bg-white focus:px-3 focus:py-2 focus:text-navy"
+    >
+      Skip to content
+    </a>
+    <Header categories={categories} pathname={pathname} client:load />
+    <main id="main-content" class="flex-1">
       <slot />
     </main>
+    <Footer />
     <Analytics />
   </body>
 </html>

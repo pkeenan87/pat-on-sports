@@ -1,8 +1,8 @@
 ---
-title: "Week 6 Pros & Cons: Patriots 25 Saints 19"
+title: "Week 6: Patriots 25 – Saints 19"
 date: 2025-10-12
-description: "Weekly Patriots pros & cons recap (Week 6)."
-tags: ["NFL", "Pro & Cons", "New England Patriots", "New Orleans Saints"]
+description: "Maye’s deep ball opened up, and the defense bent without breaking against the Saints."
+tags: ["NFL", "Pros & Cons", "New England Patriots", "New Orleans Saints"]
 heroImage: "/images/2025/prosandcons/week-06/pats-vs-saints-hero.jpg"
 heroAlt: "Patriots vs Saints Week 6 action"
 ---

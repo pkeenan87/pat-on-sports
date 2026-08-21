@@ -1,47 +1,88 @@
 ---
-import { getCategory, type PostMeta } from "../lib/posts";
+import {
+  formatDisplayDate,
+  getCategory,
+  parsePatriotsResult,
+  type PostMeta,
+} from "../lib/posts";
 
 type Props = {
   post: PostMeta;
+  featured?: boolean;
 };
 
-const { post } = Astro.props;
+const { post, featured = false } = Astro.props;
 const category = getCategory(post.tags);
+const result = parsePatriotsResult(post.title);
+const displayDate = formatDisplayDate(post.date);
 ---
 
-<a href={`/blog/${post.slug}`} class="group">
+<a href={`/blog/${post.slug}`} class="group block h-full">
   <article
-    class="rounded-xl border bg-white shadow-sm hover:shadow-lg transition-shadow overflow-hidden h-full flex flex-col"
+    class:list={[
+      "overflow-hidden h-full bg-white border border-silver/40 transition-colors group-hover:border-navy/30",
+      featured ? "rounded-2xl md:grid md:grid-cols-2" : "rounded-xl flex flex-col",
+    ]}
   >
-    <div class="relative aspect-[16/9] bg-slate-200">
+    <div
+      class:list={[
+        "relative bg-navy-muted overflow-hidden",
+        featured ? "aspect-[16/9] md:aspect-auto md:min-h-[22rem]" : "aspect-[16/9]",
+      ]}
+    >
       {
         post.heroImage ? (
           <img
             src={post.heroImage}
             alt={post.heroAlt || post.title}
+            width="1200"
+            height="675"
             class="absolute inset-0 h-full w-full object-cover group-hover:scale-105 transition-transform duration-300"
           />
         ) : (
-          <div class="absolute inset-0 flex items-center justify-center text-slate-400">
-            <span class="text-5xl">🏈</span>
-          </div>
+          <div class="absolute inset-0 bg-navy" />
         )
       }
       <span
-        class={`absolute top-3 left-3 ${category.color} text-white text-xs font-semibold px-3 py-1 rounded-full shadow`}
+        class={`absolute top-3 left-3 ${category.color} text-white text-[11px] font-display font-bold tracking-[0.14em] uppercase px-2.5 py-1 rounded-full`}
       >
         {category.label}
       </span>
     </div>
 
-    <div class="p-5 flex-1 flex flex-col">
-      <p class="text-sm text-slate-500 mb-2">{post.date}</p>
+    <div class:list={["flex-1 flex flex-col", featured ? "p-6 md:p-8 justify-center" : "p-5"]}>
+      <p class="flex items-center gap-2 text-xs font-medium text-navy-muted mb-2">
+        {
+          result && (
+            <span
+              class:list={[
+                "font-display text-[11px] font-bold tracking-widest",
+                result.result === "W" && "text-navy",
+                result.result === "L" && "text-red",
+                result.result === "T" && "text-navy-muted",
+              ]}
+            >
+              {result.result}
+            </span>
+          )
+        }
+        {result && displayDate && <span aria-hidden="true">·</span>}
+        {displayDate && <time datetime={post.date}>{displayDate}</time>}
+      </p>
       <h2
-        class="text-lg font-semibold text-slate-900 group-hover:text-blue-600 transition-colors line-clamp-2 mb-2"
+        class:list={[
+          "font-display font-bold tracking-wide text-navy group-hover:text-red transition-colors",
+          featured ? "text-3xl md:text-4xl mb-3" : "text-xl line-clamp-2 mb-2",
+        ]}
       >
         {post.title}
       </h2>
-      <p class="text-slate-600 text-sm line-clamp-2 flex-1">
+      <p
+        class:list={[
+          "text-navy-muted",
+          featured ? "text-base line-clamp-3" : "text-sm line-clamp-2 flex-1",
+        ]}
+      >
         {post.description}
       </p>
     </div>

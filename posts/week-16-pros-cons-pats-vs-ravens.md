@@ -1,8 +1,8 @@
 ---
-title: "Week 16 Pros & Cons: Patriots 28 Ravens 24"
+title: "Week 16: Patriots 28 – Ravens 24"
 date: 2025-12-21
-description: "Weekly Patriots pros & cons recap (Week 16)."
-tags: ["NFL", "Pro & Cons", "New England Patriots", "Baltimore Ravens"]
+description: "Maye’s 380-yard comeback in Baltimore — the signature win of the Vrabel era so far."
+tags: ["NFL", "Pros & Cons", "New England Patriots", "Baltimore Ravens"]
 heroImage: "/images/2025/prosandcons/week-16/pats-vs-ravens-hero.png"
 heroAlt: "Mike Vrable celebrates in the locker room after win over the Ravens"
 heroCaption: "The Patriots get their best win of the year with a Fourth Quarter comeback to beat the Ravens."

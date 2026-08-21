@@ -1,42 +1,64 @@
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
 
-/* ----------------------------------------
-   Base document styles
----------------------------------------- */
+@theme {
+  --font-sans: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Barlow Condensed", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Source Serif 4", ui-serif, Georgia, serif;
+
+  --color-navy: #0c2340;
+  --color-navy-deep: #081628;
+  --color-navy-muted: #1b3654;
+  --color-red: #c60c30;
+  --color-silver: #a2aaad;
+  --color-paper: #f4f1ea;
+  --color-ink: #0c2340;
+}
+
 @layer base {
   html {
     scroll-behavior: smooth;
   }
 
   body {
-    @apply bg-slate-50 text-slate-900 antialiased;
+    @apply bg-paper text-ink antialiased font-sans;
+  }
+
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-red;
   }
 }
 
-/* ----------------------------------------
-   Blog typography polish
----------------------------------------- */
 @layer components {
-  /* Restore bullets if a reset removes them */
+  .font-display {
+    font-family: var(--font-display);
+  }
+
   .prose ul,
   .prose ol {
     list-style: revert;
     padding-left: revert;
   }
 
-  /* Headings */
   .prose h1,
   .prose h2,
   .prose h3 {
-    @apply font-bold tracking-tight;
+    @apply font-display font-bold tracking-wide text-navy;
   }
 
   .prose h2 {
-    @apply uppercase text-sm tracking-wider text-slate-900 border-b border-slate-200 pb-1 mt-10;
+    @apply text-2xl mt-10 mb-4 border-b border-silver/40 pb-2;
   }
 
-  /* Lists */
+  .prose h3 {
+    @apply text-xl mt-8 mb-3;
+  }
+
+  .prose p,
+  .prose li {
+    font-family: var(--font-serif);
+  }
+
   .prose ul {
     @apply list-disc pl-6;
   }
@@ -49,23 +71,20 @@
     @apply my-1.5 leading-relaxed;
   }
 
-  /* Links */
   .prose a {
-    @apply text-blue-700 underline underline-offset-2 hover:text-blue-900;
+    @apply text-navy underline underline-offset-2 hover:text-red;
   }
 
-  /* Blockquotes */
   .prose blockquote {
-    @apply border-l-4 border-slate-300 pl-4 italic text-slate-600;
+    @apply border-l-4 border-red pl-4 italic text-navy-muted;
   }
 
-  /* Code */
   .prose pre {
-    @apply bg-slate-900 text-slate-100 rounded-lg p-4 overflow-x-auto;
+    @apply bg-navy text-paper rounded-lg p-4 overflow-x-auto;
   }
 
   .prose code {
-    @apply bg-slate-100 text-slate-800 px-1 py-0.5 rounded;
+    @apply bg-white text-navy px-1 py-0.5 rounded;
   }
 }
 

@@ -4,61 +4,92 @@ import Header from "./Header";
 
 describe("Header", () => {
   const assign = vi.fn();
+  const replaceState = vi.fn();
 
   beforeEach(() => {
     assign.mockReset();
+    replaceState.mockReset();
     vi.stubGlobal("location", {
       search: "",
       pathname: "/",
       assign,
     });
+    vi.stubGlobal("history", {
+      replaceState,
+    });
   });
 
-  it("renders the site title, search, and tags on listing pages", () => {
-    render(<Header tags={["NFL", "Preview"]} pathname="/" />);
+  it("renders the wordmark, search, nav, and category chips on listing pages", () => {
+    render(<Header categories={["Pros & Cons", "Preview"]} pathname="/" />);
 
     expect(screen.getByText("Pat on Sports")).toBeInTheDocument();
-    expect(screen.getByPlaceholderText("Search posts…")).toBeInTheDocument();
-    expect(screen.getByText("Filter:")).toBeInTheDocument();
-    expect(screen.getByText("#NFL")).toBeInTheDocument();
-    expect(screen.getByText("#Preview")).toBeInTheDocument();
+    expect(screen.getByLabelText("Search posts")).toBeInTheDocument();
+    expect(screen.getByRole("navigation", { name: "Primary" })).toBeInTheDocument();
+    expect(screen.getByRole("group", { name: "Filter by category" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Pros & Cons" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Preview" })).toBeInTheDocument();
   });
 
-  it("hides the tag bar on post pages", () => {
-    render(<Header tags={["NFL"]} pathname="/blog/week-01" />);
-    expect(screen.queryByText("Filter:")).not.toBeInTheDocument();
+  it("hides category chips on post pages", () => {
+    render(<Header categories={["Pros & Cons"]} pathname="/blog/week-01" />);
+    expect(
+      screen.queryByRole("group", { name: "Filter by category" })
+    ).not.toBeInTheDocument();
   });
 
-  it("navigates to /blog with the search query", () => {
-    render(<Header tags={["NFL"]} pathname="/" />);
+  it("navigates to /blog when searching from the homepage", () => {
+    render(<Header categories={["Pros & Cons"]} pathname="/" />);
 
-    fireEvent.change(screen.getByPlaceholderText("Search posts…"), {
+    fireEvent.change(screen.getByLabelText("Search posts"), {
       target: { value: "Maye" },
     });
-    fireEvent.submit(
-      screen.getByPlaceholderText("Search posts…").closest("form")!
-    );
+    fireEvent.submit(screen.getByLabelText("Search posts").closest("form")!);
 
     expect(assign).toHaveBeenCalledWith("/blog?q=Maye");
   });
 
-  it("navigates to /blog when a tag is selected", () => {
-    render(<Header tags={["NFL"]} pathname="/" />);
-    fireEvent.click(screen.getByText("#NFL"));
-    expect(assign).toHaveBeenCalledWith("/blog?tag=NFL");
+  it("navigates to /blog when a category is selected off the archive", () => {
+    render(<Header categories={["Pros & Cons"]} pathname="/" />);
+    fireEvent.click(screen.getByRole("button", { name: "Pros & Cons" }));
+    expect(assign).toHaveBeenCalledWith("/blog?category=Pros+%26+Cons");
   });
 
-  it("applies query params after mount so SSR markup stays empty", () => {
+  it("filters in place on the archive without a full navigation", () => {
     vi.stubGlobal("location", {
-      search: "?q=Maye&tag=NFL",
+      search: "",
       pathname: "/blog",
       assign,
     });
 
-    render(<Header tags={["NFL", "Preview"]} pathname="/blog" />);
+    render(<Header categories={["Pros & Cons", "Preview"]} pathname="/blog" />);
+    fireEvent.click(screen.getByRole("button", { name: "Preview" }));
 
-    expect(screen.getByPlaceholderText("Search posts…")).toHaveValue("Maye");
-    expect(screen.getByText("#NFL")).toHaveClass("bg-slate-900");
-    expect(screen.getByText("All")).not.toHaveClass("bg-slate-900");
+    expect(assign).not.toHaveBeenCalled();
+    expect(replaceState).toHaveBeenCalledWith({}, "", "/blog?category=Preview");
+    expect(screen.getByRole("button", { name: "Preview" })).toHaveAttribute(
+      "aria-pressed",
+      "true"
+    );
+  });
+
+  it("applies query params after mount so SSR markup stays empty", () => {
+    vi.stubGlobal("location", {
+      search: "?q=Maye&category=Pros+%26+Cons",
+      pathname: "/blog",
+      assign,
+    });
+    vi.stubGlobal("history", { replaceState });
+
+    render(<Header categories={["Pros & Cons", "Preview"]} pathname="/blog" />);
+
+    expect(screen.getByLabelText("Search posts")).toHaveValue("Maye");
+    expect(screen.getByRole("button", { name: "Pros & Cons" })).toHaveAttribute(
+      "aria-pressed",
+      "true"
+    );
+    expect(screen.getByRole("button", { name: "All" })).toHaveAttribute(
+      "aria-pressed",
+      "false"
+    );
   });
 });

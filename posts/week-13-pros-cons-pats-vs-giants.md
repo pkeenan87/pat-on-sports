@@ -1,8 +1,8 @@
 ---
-title: "Week 13 Pros & Cons: Patriots 33 Giants 15"
+title: "Week 13: Patriots 33 – Giants 15"
 date: 2025-12-01
-description: "Weekly Patriots pros & cons recap (Week 13)."
-tags: ["NFL", "Pro & Cons", "New England Patriots", "New York Giants"]
+description: "Special teams blew it open early and the defense laid the lumber against the Giants."
+tags: ["NFL", "Pros & Cons", "New England Patriots", "New York Giants"]
 heroImage: "/images/2025/prosandcons/week-13/pats-vs-giants-hero.jpg"
 heroAlt: "Patriots vs Giants Week 13 action"
 ---

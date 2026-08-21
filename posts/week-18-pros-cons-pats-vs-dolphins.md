@@ -1,8 +1,8 @@
 ---
-title: "Week 18 Pros & Cons: Patriots 38 – Dolphins 10"
+title: "Week 18: Patriots 38 – Dolphins 10"
 date: 2026-01-04
 description: "The Patriots squish the fish and finish with 14 wins on the season."
-tags: ["NFL", "Pro & Cons", "New England Patriots", "Miami Dolphins"]
+tags: ["NFL", "Pros & Cons", "New England Patriots", "Miami Dolphins"]
 heroImage: "/images/2025/prosandcons/week-18/pats-vs-dolphins-hero.webp"
 heroAlt: "Patriots RB Stevenson scores a touchdown"
 heroCaption: "Patriots close out the season with a nice over the dolphins. Stevenson could not be stopped."

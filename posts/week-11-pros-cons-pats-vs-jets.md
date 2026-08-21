@@ -1,8 +1,8 @@
 ---
-title: "Week 11 Pros & Cons: Patriots 27 Jets 14"
+title: "Week 11: Patriots 27 – Jets 14"
 date: 2025-11-13
-description: "Weekly Patriots pros & cons recap (Week 11)."
-tags: ["NFL", "Pro & Cons", "New England Patriots", "New York Jets"]
+description: "Thursday night, death by a thousand cuts: Henderson scored three and the line allowed zero sacks."
+tags: ["NFL", "Pros & Cons", "New England Patriots", "New York Jets"]
 heroImage: "/images/2025/prosandcons/week-11/pats-vs-jets-hero.jpg"
 heroAlt: "Patriots vs Jets Week 11 action"
 ---

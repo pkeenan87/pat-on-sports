@@ -1,8 +1,8 @@
 ---
-title: "Week 4 Pros & Cons: Patriots 42 Panthers 13"
+title: "Week 4: Patriots 42 – Panthers 13"
 date: 2025-09-28
-description: "Weekly Patriots pros & cons recap (Week 4)."
-tags: ["NFL", "Pro & Cons", "New England Patriots", "Carolina Panthers"]
+description: "Maye was efficient, Jones returned a kick, and Diggs broke out in a 42–13 rout."
+tags: ["NFL", "Pros & Cons", "New England Patriots", "Carolina Panthers"]
 heroImage: "/images/2025/prosandcons/week-04/pats-vs-panthers-hero.jpg"
 heroAlt: "Patriots vs Panthers Week 4 action"
 ---

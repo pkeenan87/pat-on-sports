@@ -1,8 +1,8 @@
 ---
-title: "Week 12 Pros & Cons: Patriots 26 Bengals 20"
+title: "Week 12: Patriots 26 – Bengals 20"
 date: 2025-11-23
-description: "Weekly Patriots pros & cons recap (Week 12)."
-tags: ["NFL", "Pro & Cons", "New England Patriots", "Cincinnati Bengals"]
+description: "Marcus Jones’s pick-six and a stout night against Flacco, even as the left side got banged up."
+tags: ["NFL", "Pros & Cons", "New England Patriots", "Cincinnati Bengals"]
 heroImage: "/images/2025/prosandcons/week-12/pats-vs-bengals-hero.jpg"
 heroAlt: "Patriots vs Bengals Week 12 action"
 ---

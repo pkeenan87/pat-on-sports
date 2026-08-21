@@ -1,8 +1,8 @@
 ---
-title: "Week 8 Pros & Cons: Patriots 32 Browns 13"
+title: "Week 8: Patriots 32 – Browns 13"
 date: 2025-10-26
-description: "Weekly Patriots pros & cons recap (Week 8)."
-tags: ["NFL", "Pro & Cons", "New England Patriots", "Cleveland Browns"]
+description: "Maye threw three second-half touchdowns and Spillane picked one as Cleveland faded."
+tags: ["NFL", "Pros & Cons", "New England Patriots", "Cleveland Browns"]
 heroImage: "/images/2025/prosandcons/week-08/pats-vs-browns-hero.jpg"
 heroAlt: "Patriots vs Browns Week 8 action"
 ---

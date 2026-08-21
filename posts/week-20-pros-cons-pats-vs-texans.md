@@ -1,5 +1,5 @@
 ---
-title: "Divisional Weekend Pros & Cons: Patriots 28 – Texans 16"
+title: "Divisional Round: Patriots 28 – Texans 16"
 date: 2026-01-18
 description: "The Patriots win a crazy game in the snow over the Texans."
 tags: ["NFL", "Pros & Cons", "New England Patriots", "Houston Texans"]

@@ -2,17 +2,22 @@
 import BlogFilter from "../../components/BlogFilter";
 import PostCard from "../../components/PostCard.astro";
 import BaseLayout from "../../layouts/BaseLayout.astro";
-import { sortPostsByDate, toPostMeta } from "../../lib/posts";
+import { getCategory, sortPostsByDate, toPostMeta } from "../../lib/posts";
 import { getCollection } from "astro:content";
 
 const posts = sortPostsByDate((await getCollection("blog")).map(toPostMeta));
 ---
 
-<BaseLayout title="Blog">
-  <div class="max-w-7xl mx-auto px-6 py-10">
+<BaseLayout
+  title="Archive"
+  description="Every Patriots Pros & Cons recap and NFL preview from Pat on Sports."
+>
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 py-10">
     <div class="flex items-baseline justify-between gap-4 mb-6">
-      <h1 class="text-3xl font-bold">Blog</h1>
-      <div id="blog-count" class="text-sm text-slate-500">
+      <h1 class="font-display text-3xl sm:text-4xl font-bold tracking-wide uppercase text-navy">
+        Archive
+      </h1>
+      <div id="blog-count" class="text-sm text-navy-muted" aria-live="polite">
         {posts.length} post{posts.length === 1 ? "" : "s"}
       </div>
     </div>
@@ -20,7 +25,7 @@ const posts = sortPostsByDate((await getCollection("blog")).map(toPostMeta));
     <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
       {
         posts.map((post) => (
-          <div data-post-slug={post.slug}>
+          <div data-post-slug={post.slug} data-category={getCategory(post.tags).label}>
             <PostCard post={post} />
           </div>
         ))
@@ -30,10 +35,26 @@ const posts = sortPostsByDate((await getCollection("blog")).map(toPostMeta));
     <div
       id="blog-empty"
       hidden
-      class="mt-10 rounded-xl border bg-white p-8 text-slate-600"
+      class="mt-10 rounded-xl border border-silver/40 bg-white p-8 text-navy-muted"
     >
-      No posts match your filters. Try clearing the tag or search.
+      No posts match your filters. Try clearing the category or search.
     </div>
   </div>
   <BlogFilter client:load posts={posts} />
+  <script is:inline>
+    (function () {
+      var sp = new URLSearchParams(location.search);
+      var categoryParam = sp.get("category");
+      var tagParam = sp.get("tag") || "";
+      // Legacy ?tag=NFL used to match every post; don't hide the archive.
+      if (!categoryParam && tagParam.toLowerCase() === "nfl") return;
+      var raw = categoryParam || tagParam;
+      var cat = raw;
+      if (raw === "Pro & Cons" || raw === "pros-cons") cat = "Pros & Cons";
+      if (!cat) return;
+      document.querySelectorAll("[data-category]").forEach(function (el) {
+        el.hidden = el.getAttribute("data-category") !== cat;
+      });
+    })();
+  </script>
 </BaseLayout>

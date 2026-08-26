@@ -12,6 +12,7 @@ export type PostMeta = {
   heroImage?: string;
   heroAlt?: string;
   heroCaption?: string;
+  audio?: string;
 };
 
 export type BlogEntry = {
@@ -25,6 +26,7 @@ export type BlogEntry = {
     heroImage?: string;
     heroAlt?: string;
     heroCaption?: string;
+    audio?: string;
   };
 };
 
@@ -81,6 +83,7 @@ export function toPostMeta(entry: BlogEntry): PostMeta {
     heroImage: entry.data.heroImage,
     heroAlt: entry.data.heroAlt,
     heroCaption: entry.data.heroCaption,
+    audio: entry.data.audio,
   };
 }
 

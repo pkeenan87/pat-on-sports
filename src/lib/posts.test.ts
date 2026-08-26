@@ -26,6 +26,7 @@ const week17: PostMeta = {
   heroImage: "/images/week-17/hero.jpg",
   heroAlt: "Hero alt text",
   heroCaption: "Hero caption",
+  audio: "/audio/week-17-pros-cons-pats-vs-jets.m4a",
   tags: ["NFL", "Pro & Cons", "New England Patriots", "New York Jets"],
   searchContent: "Maye threw five touchdowns against the Jets.",
 };
@@ -68,6 +69,7 @@ describe("src/lib/posts.ts", () => {
         heroImage: week17.heroImage,
         heroAlt: week17.heroAlt,
         heroCaption: week17.heroCaption,
+        audio: week17.audio,
       },
     };
 
@@ -75,7 +77,22 @@ describe("src/lib/posts.ts", () => {
     expect(post.slug).toBe("week-17-pros-cons-pats-vs-jets");
     expect(post.date).toBe("2025-12-28");
     expect(post.heroImage).toBe("/images/week-17/hero.jpg");
+    expect(post.audio).toBe("/audio/week-17-pros-cons-pats-vs-jets.m4a");
     expect(post.searchContent).toContain("five touchdowns");
+  });
+
+  it("toPostMeta omits audio when the entry has none", () => {
+    const entry: BlogEntry = {
+      id: "week-16",
+      data: {
+        title: week16.title,
+        date: new Date("2025-12-21T00:00:00.000Z"),
+        description: week16.description ?? "",
+        tags: week16.tags,
+      },
+    };
+
+    expect(toPostMeta(entry).audio).toBeUndefined();
   });
 
   it("getUniqueTags returns a sorted, de-duped list of tags across posts", () => {

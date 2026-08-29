@@ -20,16 +20,11 @@ const displayDate = formatDisplayDate(post.date);
 <a href={`/blog/${post.slug}`} class="group block h-full">
   <article
     class:list={[
-      "overflow-hidden h-full bg-white border border-silver/40 transition-colors group-hover:border-navy/30",
-      featured ? "rounded-2xl md:grid md:grid-cols-2" : "rounded-xl flex flex-col",
+      "overflow-hidden h-full bg-white border border-silver/40 transition-colors group-hover:border-navy/30 flex flex-col",
+      featured ? "rounded-2xl" : "rounded-xl",
     ]}
   >
-    <div
-      class:list={[
-        "relative bg-navy-muted overflow-hidden",
-        featured ? "aspect-[16/9] md:aspect-auto md:min-h-[22rem]" : "aspect-[16/9]",
-      ]}
-    >
+    <div class="relative bg-navy-muted overflow-hidden aspect-[16/9]">
       {
         post.heroImage ? (
           <img

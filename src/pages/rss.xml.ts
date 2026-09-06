@@ -34,7 +34,7 @@ export const GET: APIRoute = async () => {
   <channel>
     <title>Pat on Sports</title>
     <link>${site}</link>
-    <description>Weekly Patriots Pros &amp; Cons, previews, and takes.</description>
+    <description>Weekly Patriots and UCLA recaps, previews, and takes.</description>
     <language>en-us</language>
 ${items}
   </channel>

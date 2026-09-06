@@ -20,7 +20,9 @@ describe("Header", () => {
   });
 
   it("renders the wordmark, search, nav, and category chips on listing pages", () => {
-    render(<Header categories={["Pros & Cons", "Preview"]} pathname="/" />);
+    render(
+      <Header categories={["Pros & Cons", "Preview", "UCLA"]} pathname="/" />
+    );
 
     expect(screen.getByText("Pat on Sports")).toBeInTheDocument();
     expect(screen.getByLabelText("Search posts")).toBeInTheDocument();
@@ -28,6 +30,7 @@ describe("Header", () => {
     expect(screen.getByRole("group", { name: "Filter by category" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Pros & Cons" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Preview" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "UCLA" })).toBeInTheDocument();
   });
 
   it("hides category chips on post pages", () => {

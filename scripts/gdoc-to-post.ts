@@ -415,7 +415,7 @@ async function main() {
     console.log("  --title     Post title");
     console.log("  --slug      URL slug (auto-generated from title if omitted)");
     console.log("  --date      Publication date (YYYY-MM-DD, defaults to today)");
-    console.log("  --tags      Comma-separated tags");
+    console.log("  --tags      Comma-separated tags (Patriots: NFL, Pros & Cons, New England Patriots; UCLA: NCAAF, UCLA Bruins, Opponent)");
     console.log("  --description   Short description/excerpt");
     console.log("  --hero      Hero image filename (from extracted images)");
     console.log("  --hero-alt  Hero image alt text");

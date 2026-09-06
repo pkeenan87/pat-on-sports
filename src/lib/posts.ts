@@ -1,4 +1,4 @@
-export const CATEGORY_ORDER = ["Pros & Cons", "Preview", "NFL"] as const;
+export const CATEGORY_ORDER = ["Pros & Cons", "Preview", "NFL", "UCLA"] as const;
 
 export type CategoryLabel = (typeof CATEGORY_ORDER)[number];
 
@@ -47,6 +47,7 @@ const CATEGORY_COLORS: Record<CategoryLabel, string> = {
   "Pros & Cons": "bg-navy",
   Preview: "bg-red",
   NFL: "bg-navy-muted",
+  UCLA: "bg-ucla",
 };
 
 export function formatPostDate(
@@ -111,6 +112,14 @@ export function getUniqueTags(posts: { tags?: string[] }[]): string[] {
 
 export function getCategory(tags: string[]): Category {
   const tagSet = new Set(tags.map((t) => t.toLowerCase()));
+  if (
+    tagSet.has("ucla bruins") ||
+    tagSet.has("ucla") ||
+    tagSet.has("ncaaf") ||
+    tagSet.has("college football")
+  ) {
+    return { label: "UCLA", color: CATEGORY_COLORS.UCLA };
+  }
   if (tagSet.has("pros & cons") || tagSet.has("pro & cons")) {
     return { label: "Pros & Cons", color: CATEGORY_COLORS["Pros & Cons"] };
   }
@@ -138,6 +147,7 @@ export function normalizeCategoryParam(value: string): CategoryLabel | "" {
   }
   if (v === "preview" || v.includes("preview")) return "Preview";
   if (v === "nfl") return "NFL";
+  if (v === "ucla" || v === "ucla bruins" || v === "ncaaf") return "UCLA";
   return "";
 }
 
@@ -192,7 +202,7 @@ export function filterPosts(
 
 export function parsePatriotsResult(title: string): PatriotsResult | null {
   const match = title.match(
-    /Patriots\s+(\d+)\s*[–—-]?\s*[A-Za-z.][A-Za-z.'-]*(?:\s+[A-Za-z.][A-Za-z.'-]*)?\s+(\d+)/i
+    /(?:Patriots|Bruins)\s+(\d+)\s*[–—-]?\s*[A-Za-z.][A-Za-z.'-]*(?:\s+[A-Za-z.][A-Za-z.'-]*)?\s+(\d+)/i
   );
   if (!match) return null;
   const pats = Number(match[1]);

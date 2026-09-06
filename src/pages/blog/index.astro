@@ -10,7 +10,7 @@ const posts = sortPostsByDate((await getCollection("blog")).map(toPostMeta));
 
 <BaseLayout
   title="Archive"
-  description="Every Patriots Pros & Cons recap and NFL preview from Pat on Sports."
+  description="Every Patriots and UCLA recap from Pat on Sports."
 >
   <div class="max-w-7xl mx-auto px-4 sm:px-6 py-10">
     <div class="flex items-baseline justify-between gap-4 mb-6">
@@ -51,6 +51,7 @@ const posts = sortPostsByDate((await getCollection("blog")).map(toPostMeta));
       var raw = categoryParam || tagParam;
       var cat = raw;
       if (raw === "Pro & Cons" || raw === "pros-cons") cat = "Pros & Cons";
+      if (raw === "UCLA Bruins" || raw === "NCAAF" || raw === "ncaaf") cat = "UCLA";
       if (!cat) return;
       document.querySelectorAll("[data-category]").forEach(function (el) {
         el.hidden = el.getAttribute("data-category") !== cat;

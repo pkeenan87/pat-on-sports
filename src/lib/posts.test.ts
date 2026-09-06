@@ -49,6 +49,15 @@ const preview: PostMeta = {
   searchContent: "Four games this weekend.",
 };
 
+const uclaRecap: PostMeta = {
+  slug: "ucla-bruins-recap-bruins-45-golden-bears-24",
+  title: "UCLA Recap: Bruins 45 – Golden Bears 24",
+  date: "2026-09-06",
+  description: "A 45–24 win that was closer than the scoreboard suggests.",
+  tags: ["NCAAF", "UCLA Bruins", "California Golden Bears"],
+  searchContent: "Chesney’s Bruins rushed for 277 yards.",
+};
+
 describe("src/lib/posts.ts", () => {
   it("sortPostsByDate returns metadata sorted by date desc", () => {
     const posts = sortPostsByDate([week16, week17]);
@@ -108,10 +117,11 @@ describe("src/lib/posts.ts", () => {
   });
 
   it("getUniqueCategories returns badge labels in display order", () => {
-    expect(getUniqueCategories([week17, week16, preview])).toEqual([
+    expect(getUniqueCategories([week17, week16, preview, uclaRecap])).toEqual([
       "Pros & Cons",
       "Preview",
       "NFL",
+      "UCLA",
     ]);
     expect(getUniqueCategories([week17, preview])).toEqual([
       "Pros & Cons",
@@ -119,11 +129,16 @@ describe("src/lib/posts.ts", () => {
     ]);
   });
 
-  it("getCategory maps Pros & Cons, Preview, and default NFL badges", () => {
+  it("getCategory maps Pros & Cons, Preview, UCLA, and default NFL badges", () => {
     expect(getCategory(["NFL", "Pro & Cons"]).label).toBe("Pros & Cons");
     expect(getCategory(["NFL", "Pros & Cons"]).color).toBe("bg-navy");
     expect(getCategory(["Divisional Round", "Preview"]).label).toBe("Preview");
     expect(getCategory(["NFL"]).label).toBe("NFL");
+    expect(getCategory(["NCAAF", "UCLA Bruins"]).label).toBe("UCLA");
+    expect(getCategory(["NCAAF", "UCLA Bruins"]).color).toBe("bg-ucla");
+    expect(getCategory(["NCAAF", "Pros & Cons", "UCLA Bruins"]).label).toBe(
+      "UCLA"
+    );
   });
 
   it("normalizeCategoryParam maps aliases and ignores opponent names", () => {
@@ -131,14 +146,18 @@ describe("src/lib/posts.ts", () => {
     expect(normalizeCategoryParam("pros-cons")).toBe("Pros & Cons");
     expect(normalizeCategoryParam("Preview")).toBe("Preview");
     expect(normalizeCategoryParam("NFL")).toBe("NFL");
+    expect(normalizeCategoryParam("UCLA")).toBe("UCLA");
+    expect(normalizeCategoryParam("UCLA Bruins")).toBe("UCLA");
+    expect(normalizeCategoryParam("NCAAF")).toBe("UCLA");
     expect(normalizeCategoryParam("Buffalo Bills")).toBe("");
   });
 
   it("filterPosts matches category labels and full-text query", () => {
-    const posts = [week17, week16, preview];
+    const posts = [week17, week16, preview, uclaRecap];
     expect(filterPosts(posts, "", "Pro & Cons")).toEqual([week17]);
     expect(filterPosts(posts, "", "Preview")).toEqual([preview]);
     expect(filterPosts(posts, "", "NFL")).toEqual([week16]);
+    expect(filterPosts(posts, "", "UCLA")).toEqual([uclaRecap]);
     expect(filterPosts(posts, "baltimore", "")).toEqual([week16]);
     expect(filterPosts(posts, "maye", "Pros & Cons")).toEqual([week17]);
     expect(filterPosts(posts, "xyz", "")).toEqual([]);
@@ -162,6 +181,14 @@ describe("src/lib/posts.ts", () => {
     expect(readFilterParams("?category=NFL")).toEqual({
       q: "",
       category: "NFL",
+    });
+    expect(readFilterParams("?category=UCLA")).toEqual({
+      q: "",
+      category: "UCLA",
+    });
+    expect(readFilterParams("?tag=UCLA+Bruins")).toEqual({
+      q: "",
+      category: "UCLA",
     });
   });
 
@@ -202,6 +229,13 @@ describe("src/lib/posts.ts", () => {
       result: "T",
     });
     expect(parsePatriotsResult("Divisional Round Preview")).toBeNull();
+    expect(
+      parsePatriotsResult("UCLA Recap: Bruins 45 – Golden Bears 24")
+    ).toEqual({
+      pats: 45,
+      opp: 24,
+      result: "W",
+    });
   });
 
   it("getAdjacentPosts and getRelatedPosts walk a newest-first list", () => {

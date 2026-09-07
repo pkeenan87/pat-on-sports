@@ -21,7 +21,7 @@
     "@tailwindcss/vite": "^4.1.18",
     "@vercel/analytics": "^1.6.1",
     "adm-zip": "^0.5.16",
-    "astro": "^5.16.6",
+    "astro": "^7.1.1",
     "commentbox.io": "^2.1.0",
     "node-html-parser": "^7.0.2",
     "react": "19.2.3",

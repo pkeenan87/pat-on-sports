@@ -3,6 +3,9 @@ title: "Week 1: Patriots 10 – Seahawks 13"
 date: 2026-09-10
 description: "A painful road loss where the defense showed up, and Maye's three INTs handed Seattle the win."
 tags: ["NFL", "Pros & Cons", "New England Patriots", "Seattle Seahawks"]
+heroImage: "/images/2026/prosandcons/week-01/pats-vs-seahawks-hero.jpg"
+heroAlt: "Drake Maye holds his helmet after the Patriots' Week 1 loss to the Seahawks"
+heroCaption: "Turnovers and missed opportunities cost the patriots an opening night win"
 ---
 
 This one stings. Did I expect the patriots to win this game before kickoff? No. Cross country trip against a top team is never a game you expect to win. Did I expect to win after halftime? Absolutely! Darnold goes down early, the defense was playing well, all we have to do was not screw this one up! But that's exactly what we did…

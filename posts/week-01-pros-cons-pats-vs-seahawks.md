@@ -4,7 +4,7 @@ date: 2026-09-10
 description: "A painful road loss where the defense showed up, and Maye's three INTs handed Seattle the win."
 tags: ["NFL", "Pros & Cons", "New England Patriots", "Seattle Seahawks"]
 heroImage: "/images/2026/prosandcons/week-01/pats-vs-seahawks-hero.jpg"
-heroAlt: "Drake Maye holds his helmet after the Patriots' Week 1 loss to the Seahawks"
+heroAlt: "Seahawks cornerback Josh Jobe intercepts Drake Maye in the end zone to seal Seattle's Week 1 win"
 heroCaption: "Turnovers and missed opportunities cost the patriots an opening night win"
 ---
 

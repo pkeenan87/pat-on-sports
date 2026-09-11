@@ -6,6 +6,12 @@ tags: ["NFL", "Pros & Cons", "New England Patriots", "Seattle Seahawks"]
 heroImage: "/images/2026/prosandcons/week-01/pats-vs-seahawks-hero.jpg"
 heroAlt: "Seahawks cornerback Josh Jobe intercepts Drake Maye in the end zone to seal Seattle's Week 1 win"
 heroCaption: "Turnovers and missed opportunities cost the Patriots an opening night win"
+season: 2026
+week: 1
+opponent: "Seattle Seahawks"
+scoreUs: 10
+scoreThem: 13
+result: "L"
 ---
 
 This one stings. Did I expect the Patriots to win this game before kickoff? No. Cross country trip against a top team is never a game you expect to win. Did I expect to win after halftime? Absolutely! Darnold goes down early, the defense was playing well, all we have to do was not screw this one up! But that's exactly what we did…

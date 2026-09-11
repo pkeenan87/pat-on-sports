@@ -2,29 +2,22 @@
 import { getCollection } from "astro:content";
 import PostCard from "../components/PostCard.astro";
 import BaseLayout from "../layouts/BaseLayout.astro";
-import {
-  categoryUrl,
-  getCategory,
-  isPatriotsPost,
-  isUclaPost,
-  sortPostsByDate,
-  toPostMeta,
-} from "../lib/posts";
+import { is2025RunPost, sortPostsByDate, toPostMeta } from "../lib/posts";
 
 const posts = sortPostsByDate((await getCollection("blog")).map(toPostMeta));
-const patriots = posts.filter(isPatriotsPost);
-const ucla = posts.filter(isUclaPost);
-const featured = patriots[0];
-const featuredSupporting = patriots.slice(1, 3);
-const from2025 = patriots
-  .filter(
-    (post) =>
-      post.slug !== featured?.slug &&
-      !featuredSupporting.some((item) => item.slug === post.slug) &&
-      (post.season === 2025 ||
-        getCategory(post.tags).label === "Pros & Cons" ||
-        getCategory(post.tags).label === "Preview")
-  )
+const latestPool = posts.filter((post) => !is2025RunPost(post));
+const run2025Pool = posts.filter(is2025RunPost);
+
+const featured = latestPool[0] ?? posts[0];
+const supporting = latestPool.slice(1, 3);
+const heroSlugs = new Set(
+  [featured, ...supporting].filter(Boolean).map((post) => post.slug)
+);
+const latestRest = latestPool
+  .filter((post) => !heroSlugs.has(post.slug))
+  .slice(0, 9);
+const from2025 = run2025Pool
+  .filter((post) => !heroSlugs.has(post.slug))
   .slice(0, 6);
 const audioFeature = posts.find((post) => post.audio?.trim());
 ---
@@ -43,9 +36,9 @@ const audioFeature = posts.find((post) => post.audio?.trim());
             <PostCard post={featured} featured eager />
           </div>
           {
-            featuredSupporting.length > 0 && (
+            supporting.length > 0 && (
               <div class="flex flex-col gap-6">
-                {featuredSupporting.map((post) => (
+                {supporting.map((post) => (
                   <PostCard post={post} />
                 ))}
               </div>
@@ -80,21 +73,18 @@ const audioFeature = posts.find((post) => post.audio?.trim());
     }
 
     {
-      ucla.length > 0 && (
+      latestRest.length > 0 && (
         <section class="mt-12">
           <div class="flex items-baseline justify-between gap-4 mb-6">
             <h2 class="font-display text-2xl font-bold tracking-wide uppercase text-navy">
-              UCLA
+              Latest
             </h2>
-            <a
-              href={categoryUrl("UCLA")}
-              class="text-sm font-medium text-navy-muted hover:text-red"
-            >
-              All UCLA
+            <a href="/blog" class="text-sm font-medium text-navy-muted hover:text-red">
+              Full archive
             </a>
           </div>
           <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {ucla.slice(0, 3).map((post) => (
+            {latestRest.map((post) => (
               <PostCard post={post} />
             ))}
           </div>
@@ -131,7 +121,7 @@ const audioFeature = posts.find((post) => post.audio?.trim());
       </h2>
       <p class="mt-3 max-w-2xl text-navy-muted font-serif">
         A one-person column on the Patriots and UCLA — what worked, what didn’t,
-        and what it means next week.
+        and what it means next week. Use the filters up top to browse by format.
       </p>
       <a
         href="/about"

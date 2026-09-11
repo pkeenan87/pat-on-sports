@@ -21,7 +21,7 @@ describe("Header", () => {
 
   it("renders the wordmark, search, nav, and category chips on listing pages", () => {
     render(
-      <Header categories={["Pros & Cons", "Preview", "UCLA"]} pathname="/" />
+      <Header categories={["Pros & Cons", "Preview", "NFL"]} pathname="/" />
     );
 
     expect(screen.getByText("Pat on Sports")).toBeInTheDocument();
@@ -30,7 +30,7 @@ describe("Header", () => {
     expect(screen.getByRole("group", { name: "Filter by category" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Pros & Cons" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Preview" })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "UCLA" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "NFL" })).toBeInTheDocument();
   });
 
   it("hides category chips on post pages", () => {
@@ -118,14 +118,17 @@ describe("Header", () => {
   it("marks the active category from a category route", () => {
     vi.stubGlobal("location", {
       search: "",
-      pathname: "/category/ucla",
+      pathname: "/category/preview",
       assign,
     });
 
     render(
-      <Header categories={["Pros & Cons", "UCLA"]} pathname="/category/ucla" />
+      <Header
+        categories={["Pros & Cons", "Preview"]}
+        pathname="/category/preview"
+      />
     );
-    expect(screen.getByRole("button", { name: "UCLA" })).toHaveAttribute(
+    expect(screen.getByRole("button", { name: "Preview" })).toHaveAttribute(
       "aria-pressed",
       "true"
     );

@@ -1,4 +1,4 @@
-export const CATEGORY_ORDER = ["Pros & Cons", "Preview", "NFL", "UCLA"] as const;
+export const CATEGORY_ORDER = ["Pros & Cons", "Preview", "NFL"] as const;
 
 export type CategoryLabel = (typeof CATEGORY_ORDER)[number];
 
@@ -65,14 +65,12 @@ const CATEGORY_COLORS: Record<CategoryLabel, string> = {
   "Pros & Cons": "bg-navy",
   Preview: "bg-red",
   NFL: "bg-navy-muted",
-  UCLA: "bg-ucla",
 };
 
 const CATEGORY_SLUGS: Record<CategoryLabel, string> = {
   "Pros & Cons": "pros-cons",
   Preview: "preview",
   NFL: "nfl",
-  UCLA: "ucla",
 };
 
 const CATEGORY_TAG_NAMES = new Set([
@@ -81,8 +79,6 @@ const CATEGORY_TAG_NAMES = new Set([
   "pros & cons",
   "pro & cons",
   "preview",
-  "ucla",
-  "ucla bruins",
   "college football",
   "new england patriots",
 ]);
@@ -203,18 +199,6 @@ export function findTagBySlug(tags: string[], slug: string): string | undefined 
 
 export function getCategory(tags: string[]): Category {
   const tagSet = new Set(tags.map((t) => t.toLowerCase()));
-  if (
-    tagSet.has("ucla bruins") ||
-    tagSet.has("ucla") ||
-    tagSet.has("ncaaf") ||
-    tagSet.has("college football")
-  ) {
-    return {
-      label: "UCLA",
-      color: CATEGORY_COLORS.UCLA,
-      slug: CATEGORY_SLUGS.UCLA,
-    };
-  }
   if (tagSet.has("pros & cons") || tagSet.has("pro & cons")) {
     return {
       label: "Pros & Cons",
@@ -266,7 +250,6 @@ export function normalizeCategoryParam(value: string): CategoryLabel | "" {
   }
   if (v === "preview" || v.includes("preview")) return "Preview";
   if (v === "nfl") return "NFL";
-  if (v === "ucla" || v === "ucla bruins" || v === "ncaaf") return "UCLA";
   return "";
 }
 
@@ -422,16 +405,13 @@ export function getRelatedPosts(
 
   if (scored.length > 0) return scored.slice(0, limit);
 
-  // Fallback for singleton categories (Preview, UCLA, NFL): nearby Patriots posts.
-  return posts
-    .filter((post) => post.slug !== current.slug && isPatriotsPost(post))
-    .slice(0, limit);
+  // Fallback for singleton categories (Preview, NFL): nearby recent posts.
+  return posts.filter((post) => post.slug !== current.slug).slice(0, limit);
 }
 
-export function isPatriotsPost(post: PostMeta): boolean {
-  return getCategory(post.tags).label !== "UCLA";
-}
-
-export function isUclaPost(post: PostMeta): boolean {
-  return getCategory(post.tags).label === "UCLA";
+/** Weekly/playoff recaps from the 2025 Super Bowl run (homepage shelf). */
+export function is2025RunPost(post: PostMeta): boolean {
+  if (post.season !== 2025) return false;
+  const label = getCategory(post.tags).label;
+  return label === "Pros & Cons" || label === "Preview";
 }

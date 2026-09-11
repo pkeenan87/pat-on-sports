@@ -1,4 +1,4 @@
-export const CATEGORY_ORDER = ["Pros & Cons", "Preview", "NFL"] as const;
+export const CATEGORY_ORDER = ["Pros & Cons", "Preview", "NFL", "UCLA"] as const;
 
 export type CategoryLabel = (typeof CATEGORY_ORDER)[number];
 
@@ -65,12 +65,14 @@ const CATEGORY_COLORS: Record<CategoryLabel, string> = {
   "Pros & Cons": "bg-navy",
   Preview: "bg-red",
   NFL: "bg-navy-muted",
+  UCLA: "bg-ucla",
 };
 
 const CATEGORY_SLUGS: Record<CategoryLabel, string> = {
   "Pros & Cons": "pros-cons",
   Preview: "preview",
   NFL: "nfl",
+  UCLA: "ucla",
 };
 
 const CATEGORY_TAG_NAMES = new Set([
@@ -79,6 +81,8 @@ const CATEGORY_TAG_NAMES = new Set([
   "pros & cons",
   "pro & cons",
   "preview",
+  "ucla",
+  "ucla bruins",
   "college football",
   "new england patriots",
 ]);
@@ -199,6 +203,18 @@ export function findTagBySlug(tags: string[], slug: string): string | undefined 
 
 export function getCategory(tags: string[]): Category {
   const tagSet = new Set(tags.map((t) => t.toLowerCase()));
+  if (
+    tagSet.has("ucla bruins") ||
+    tagSet.has("ucla") ||
+    tagSet.has("ncaaf") ||
+    tagSet.has("college football")
+  ) {
+    return {
+      label: "UCLA",
+      color: CATEGORY_COLORS.UCLA,
+      slug: CATEGORY_SLUGS.UCLA,
+    };
+  }
   if (tagSet.has("pros & cons") || tagSet.has("pro & cons")) {
     return {
       label: "Pros & Cons",
@@ -250,6 +266,7 @@ export function normalizeCategoryParam(value: string): CategoryLabel | "" {
   }
   if (v === "preview" || v.includes("preview")) return "Preview";
   if (v === "nfl") return "NFL";
+  if (v === "ucla" || v === "ucla bruins" || v === "ncaaf") return "UCLA";
   return "";
 }
 

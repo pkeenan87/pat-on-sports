@@ -180,7 +180,9 @@ export default function Header({ categories, pathname }: HeaderProps) {
                     selected
                       ? category === "Preview"
                         ? "bg-red text-white"
-                        : "bg-white text-navy"
+                        : category === "UCLA"
+                          ? "bg-ucla text-white"
+                          : "bg-white text-navy"
                       : "text-white/75 hover:text-white hover:bg-white/10"
                   }`}
                 >

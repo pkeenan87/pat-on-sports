@@ -52,6 +52,7 @@ const posts = sortPostsByDate((await getCollection("blog")).map(toPostMeta));
       var raw = categoryParam || tagParam;
       var cat = raw;
       if (raw === "Pro & Cons" || raw === "pros-cons") cat = "Pros & Cons";
+      if (raw === "UCLA Bruins" || raw === "NCAAF" || raw === "ncaaf") cat = "UCLA";
       // Category-only: hide immediately. Search waits for BlogFilter hydration.
       if (!cat || q) return;
       var visible = 0;

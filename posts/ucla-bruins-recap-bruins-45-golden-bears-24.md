@@ -6,6 +6,12 @@ tags: ["NCAAF", "UCLA Bruins", "California Golden Bears"]
 heroImage: "/images/2026/ucla/bruins-vs-cal-hero.jpg"
 heroAlt: "UCLA running back Wayne Knight in the season opener against California"
 heroCaption: "Wayne Knight. Photo: Isabella Serafini / UCLA Athletics."
+season: 2026
+week: 1
+opponent: "California Golden Bears"
+scoreUs: 45
+scoreThem: 24
+result: "W"
 ---
 
 I have never had a favorite college football team but lately I have turned into a traveling Bob Chesney fan and have switched my allegiance this year to UCLA after being a James Madison fan the past two years and a Holy Cross fan before that. Bob Chesney is objectively a top three coach in college football (Bob Sr. being number one, Bob Jr. at two, and Curt Cignetti a distant third), and I have objectively chosen to be a fan of any team that he coaches. This year, I will do my best to recap the UCLA games each week even though I am a brand new fan. Luckily there are a decent amount of JMU transfers that I am familiar with and have followed Nico the QB since Tennessee so I can get by for a couple weeks until I actually know what I am talking about. Ok, let’s see how this goes.

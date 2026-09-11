@@ -2,6 +2,8 @@ export const CATEGORY_ORDER = ["Pros & Cons", "Preview", "NFL", "UCLA"] as const
 
 export type CategoryLabel = (typeof CATEGORY_ORDER)[number];
 
+export type GameResult = "W" | "L" | "T";
+
 export type PostMeta = {
   slug: string;
   title: string;
@@ -13,6 +15,14 @@ export type PostMeta = {
   heroAlt?: string;
   heroCaption?: string;
   audio?: string;
+  season?: number;
+  week?: number;
+  opponent?: string;
+  scoreUs?: number;
+  scoreThem?: number;
+  result?: GameResult;
+  round?: string;
+  readingTimeMinutes?: number;
 };
 
 export type BlogEntry = {
@@ -27,18 +37,26 @@ export type BlogEntry = {
     heroAlt?: string;
     heroCaption?: string;
     audio?: string;
+    season?: number;
+    week?: number;
+    opponent?: string;
+    scoreUs?: number;
+    scoreThem?: number;
+    result?: GameResult;
+    round?: string;
   };
 };
 
 export type Category = {
   label: CategoryLabel;
   color: string;
+  slug: string;
 };
 
 export type PatriotsResult = {
   pats: number;
   opp: number;
-  result: "W" | "L" | "T";
+  result: GameResult;
 };
 
 export const BLOG_FILTER_EVENT = "pos-blog-filter";
@@ -49,6 +67,27 @@ const CATEGORY_COLORS: Record<CategoryLabel, string> = {
   NFL: "bg-navy-muted",
   UCLA: "bg-ucla",
 };
+
+const CATEGORY_SLUGS: Record<CategoryLabel, string> = {
+  "Pros & Cons": "pros-cons",
+  Preview: "preview",
+  NFL: "nfl",
+  UCLA: "ucla",
+};
+
+const CATEGORY_TAG_NAMES = new Set([
+  "nfl",
+  "ncaaf",
+  "pros & cons",
+  "pro & cons",
+  "preview",
+  "ucla",
+  "ucla bruins",
+  "college football",
+  "new england patriots",
+]);
+
+const WORDS_PER_MINUTE = 220;
 
 export function formatPostDate(
   date: Date | string | undefined
@@ -73,6 +112,33 @@ export function formatDisplayDate(
   });
 }
 
+export function stripMarkdown(value: string): string {
+  return value
+    .replace(/```[\s\S]*?```/g, " ")
+    .replace(/`[^`]*`/g, " ")
+    .replace(/!\[[^\]]*]\([^)]+\)/g, " ")
+    .replace(/\[[^\]]*]\([^)]+\)/g, " ")
+    .replace(/^#{1,6}\s+/gm, "")
+    .replace(/^>\s+/gm, "")
+    .replace(/^[-*+]\s+/gm, "")
+    .replace(/^\d+\.\s+/gm, "")
+    .replace(/[*_~]+/g, "")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+export function estimateReadingTimeMinutes(body: string | undefined): number {
+  const text = stripMarkdown(body ?? "");
+  const words = text ? text.split(/\s+/).filter(Boolean).length : 0;
+  return Math.max(1, Math.ceil(words / WORDS_PER_MINUTE));
+}
+
+export function toSearchContent(body: string | undefined): string {
+  const cleaned = stripMarkdown(body ?? "");
+  if (cleaned.length <= 1200) return cleaned;
+  return cleaned.slice(0, 1200);
+}
+
 export function toPostMeta(entry: BlogEntry): PostMeta {
   return {
     slug: entry.id,
@@ -80,11 +146,19 @@ export function toPostMeta(entry: BlogEntry): PostMeta {
     date: formatPostDate(entry.data.date),
     description: entry.data.description,
     tags: entry.data.tags ?? [],
-    searchContent: entry.body ?? "",
+    searchContent: toSearchContent(entry.body),
     heroImage: entry.data.heroImage,
     heroAlt: entry.data.heroAlt,
     heroCaption: entry.data.heroCaption,
     audio: entry.data.audio,
+    season: entry.data.season,
+    week: entry.data.week,
+    opponent: entry.data.opponent,
+    scoreUs: entry.data.scoreUs,
+    scoreThem: entry.data.scoreThem,
+    result: entry.data.result,
+    round: entry.data.round,
+    readingTimeMinutes: estimateReadingTimeMinutes(entry.body),
   };
 }
 
@@ -110,6 +184,23 @@ export function getUniqueTags(posts: { tags?: string[] }[]): string[] {
   return Array.from(set).sort((a, b) => a.localeCompare(b));
 }
 
+export function getOpponentTags(tags: string[]): string[] {
+  return tags.filter((tag) => !CATEGORY_TAG_NAMES.has(tag.toLowerCase()));
+}
+
+export function tagToSlug(tag: string): string {
+  return tag
+    .trim()
+    .toLowerCase()
+    .replace(/&/g, "and")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}
+
+export function findTagBySlug(tags: string[], slug: string): string | undefined {
+  return tags.find((tag) => tagToSlug(tag) === slug);
+}
+
 export function getCategory(tags: string[]): Category {
   const tagSet = new Set(tags.map((t) => t.toLowerCase()));
   if (
@@ -118,18 +209,46 @@ export function getCategory(tags: string[]): Category {
     tagSet.has("ncaaf") ||
     tagSet.has("college football")
   ) {
-    return { label: "UCLA", color: CATEGORY_COLORS.UCLA };
+    return {
+      label: "UCLA",
+      color: CATEGORY_COLORS.UCLA,
+      slug: CATEGORY_SLUGS.UCLA,
+    };
   }
   if (tagSet.has("pros & cons") || tagSet.has("pro & cons")) {
-    return { label: "Pros & Cons", color: CATEGORY_COLORS["Pros & Cons"] };
+    return {
+      label: "Pros & Cons",
+      color: CATEGORY_COLORS["Pros & Cons"],
+      slug: CATEGORY_SLUGS["Pros & Cons"],
+    };
   }
   if (
     tagSet.has("preview") ||
     tags.some((t) => t.toLowerCase().includes("preview"))
   ) {
-    return { label: "Preview", color: CATEGORY_COLORS.Preview };
+    return {
+      label: "Preview",
+      color: CATEGORY_COLORS.Preview,
+      slug: CATEGORY_SLUGS.Preview,
+    };
   }
-  return { label: "NFL", color: CATEGORY_COLORS.NFL };
+  return {
+    label: "NFL",
+    color: CATEGORY_COLORS.NFL,
+    slug: CATEGORY_SLUGS.NFL,
+  };
+}
+
+export function categoryToSlug(label: CategoryLabel): string {
+  return CATEGORY_SLUGS[label];
+}
+
+export function slugToCategory(slug: string): CategoryLabel | "" {
+  const normalized = slug.trim().toLowerCase();
+  for (const label of CATEGORY_ORDER) {
+    if (CATEGORY_SLUGS[label] === normalized) return label;
+  }
+  return normalizeCategoryParam(normalized);
 }
 
 export function getUniqueCategories(
@@ -180,12 +299,30 @@ export function blogFilterUrl(q: string, category: string): string {
   return qs ? `/blog?${qs}` : "/blog";
 }
 
+export function categoryUrl(category: CategoryLabel | ""): string {
+  if (!category) return "/blog";
+  return `/category/${categoryToSlug(category)}`;
+}
+
+export function matchesSearchQuery(
+  haystack: string,
+  query: string
+): boolean {
+  const tokens = query
+    .trim()
+    .toLowerCase()
+    .split(/\s+/)
+    .filter(Boolean);
+  if (tokens.length === 0) return true;
+  const normalized = haystack.toLowerCase();
+  return tokens.every((token) => normalized.includes(token));
+}
+
 export function filterPosts(
   posts: PostMeta[],
   q: string,
   category: string
 ): PostMeta[] {
-  const query = q.trim().toLowerCase();
   const active = normalizeCategoryParam(category);
 
   return posts.filter((p) => {
@@ -194,8 +331,8 @@ export function filterPosts(
       : true;
     const haystack = `${p.title} ${p.description} ${(p.tags || []).join(" ")} ${
       p.searchContent || ""
-    }`.toLowerCase();
-    const matchesQ = query ? haystack.includes(query) : true;
+    }`;
+    const matchesQ = matchesSearchQuery(haystack, q);
     return matchesCategory && matchesQ;
   });
 }
@@ -212,6 +349,25 @@ export function parsePatriotsResult(title: string): PatriotsResult | null {
   return { pats, opp, result };
 }
 
+export function getPostResult(post: PostMeta): PatriotsResult | null {
+  if (
+    typeof post.scoreUs === "number" &&
+    typeof post.scoreThem === "number" &&
+    post.result
+  ) {
+    return {
+      pats: post.scoreUs,
+      opp: post.scoreThem,
+      result: post.result,
+    };
+  }
+  return parsePatriotsResult(post.title);
+}
+
+export function formatScoreline(result: PatriotsResult): string {
+  return `${result.result} ${result.pats}–${result.opp}`;
+}
+
 export function getAdjacentPosts<T extends { slug: string }>(
   posts: T[],
   slug: string
@@ -224,17 +380,58 @@ export function getAdjacentPosts<T extends { slug: string }>(
   };
 }
 
+function sharedOpponentCount(a: PostMeta, b: PostMeta): number {
+  const aTags = new Set(
+    [
+      ...(a.opponent ? [a.opponent.toLowerCase()] : []),
+      ...getOpponentTags(a.tags).map((t) => t.toLowerCase()),
+    ]
+  );
+  const bTags = [
+    ...(b.opponent ? [b.opponent.toLowerCase()] : []),
+    ...getOpponentTags(b.tags).map((t) => t.toLowerCase()),
+  ];
+  return bTags.filter((tag) => aTags.has(tag)).length;
+}
+
 export function getRelatedPosts(
   posts: PostMeta[],
   current: PostMeta,
   limit = 3
 ): PostMeta[] {
   const category = getCategory(current.tags).label;
+  const scored = posts
+    .filter((post) => post.slug !== current.slug)
+    .map((post) => {
+      const sameCategory = getCategory(post.tags).label === category ? 1 : 0;
+      const opponents = sharedOpponentCount(current, post);
+      const sameSeason =
+        current.season && post.season && current.season === post.season ? 1 : 0;
+      const base = opponents * 10 + sameCategory * 3;
+      return {
+        post,
+        score: base > 0 ? base + sameSeason : 0,
+      };
+    })
+    .filter((item) => item.score > 0)
+    .sort((a, b) => {
+      if (b.score !== a.score) return b.score - a.score;
+      return (b.post.date ?? "") < (a.post.date ?? "") ? -1 : 1;
+    })
+    .map((item) => item.post);
+
+  if (scored.length > 0) return scored.slice(0, limit);
+
+  // Fallback for singleton categories (Preview, UCLA, NFL): nearby Patriots posts.
   return posts
-    .filter(
-      (post) =>
-        post.slug !== current.slug &&
-        getCategory(post.tags).label === category
-    )
+    .filter((post) => post.slug !== current.slug && isPatriotsPost(post))
     .slice(0, limit);
+}
+
+export function isPatriotsPost(post: PostMeta): boolean {
+  return getCategory(post.tags).label !== "UCLA";
+}
+
+export function isUclaPost(post: PostMeta): boolean {
+  return getCategory(post.tags).label === "UCLA";
 }

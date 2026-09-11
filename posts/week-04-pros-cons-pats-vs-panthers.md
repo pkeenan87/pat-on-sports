@@ -5,6 +5,12 @@ description: "Maye was efficient, Jones returned a kick, and Diggs broke out in 
 tags: ["NFL", "Pros & Cons", "New England Patriots", "Carolina Panthers"]
 heroImage: "/images/2025/prosandcons/week-04/pats-vs-panthers-hero.jpg"
 heroAlt: "Patriots vs Panthers Week 4 action"
+season: 2025
+week: 4
+opponent: "Carolina Panthers"
+scoreUs: 42
+scoreThem: 13
+result: "W"
 ---
 ## Pros
 

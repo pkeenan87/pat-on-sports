@@ -1,0 +1,62 @@
+---
+import { getCollection } from "astro:content";
+import PostCard from "../../components/PostCard.astro";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import {
+  CATEGORY_ORDER,
+  categoryToSlug,
+  getCategory,
+  slugToCategory,
+  sortPostsByDate,
+  toPostMeta,
+  type CategoryLabel,
+} from "../../lib/posts";
+
+export async function getStaticPaths() {
+  return CATEGORY_ORDER.map((label) => ({
+    params: { category: categoryToSlug(label) },
+  }));
+}
+
+const categorySlug = Astro.params.category ?? "";
+const label = slugToCategory(categorySlug) as CategoryLabel;
+const posts = sortPostsByDate((await getCollection("blog")).map(toPostMeta)).filter(
+  (post) => getCategory(post.tags).label === label
+);
+---
+
+<BaseLayout
+  title={label}
+  description={`${label} posts from Pat on Sports.`}
+  canonical={`/category/${categorySlug}`}
+>
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 py-10">
+    <div class="flex items-baseline justify-between gap-4 mb-6">
+      <div>
+        <p class="text-[11px] font-display font-bold tracking-[0.14em] uppercase text-red mb-2">
+          Category
+        </p>
+        <h1 class="font-display text-3xl sm:text-4xl font-bold tracking-wide uppercase text-navy">
+          {label}
+        </h1>
+      </div>
+      <p class="text-sm text-navy-muted">
+        {posts.length} post{posts.length === 1 ? "" : "s"}
+      </p>
+    </div>
+
+    {
+      posts.length > 0 ? (
+        <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          {posts.map((post) => (
+            <PostCard post={post} />
+          ))}
+        </div>
+      ) : (
+        <p class="rounded-xl border border-silver/40 bg-white p-8 text-navy-muted">
+          No posts in this category yet.
+        </p>
+      )
+    }
+  </div>
+</BaseLayout>

@@ -5,6 +5,12 @@ description: "Thursday night, death by a thousand cuts: Henderson scored three a
 tags: ["NFL", "Pros & Cons", "New England Patriots", "New York Jets"]
 heroImage: "/images/2025/prosandcons/week-11/pats-vs-jets-hero.jpg"
 heroAlt: "Patriots vs Jets Week 11 action"
+season: 2025
+week: 11
+opponent: "New York Jets"
+scoreUs: 27
+scoreThem: 14
+result: "W"
 ---
 ## Pros
 

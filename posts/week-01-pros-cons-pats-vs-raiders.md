@@ -5,6 +5,12 @@ description: "Boutte and the pass rush showed up; Maye’s mechanics and a dead 
 tags: ["NFL", "Pros & Cons", "New England Patriots", "Las Vegas Raiders"]
 heroImage: "/images/2025/prosandcons/week-01/pats-vs-raiders-hero.jpg"
 heroAlt: "Patriots vs Raiders Week 1 action"
+season: 2025
+week: 1
+opponent: "Las Vegas Raiders"
+scoreUs: 13
+scoreThem: 20
+result: "L"
 ---
 ## Pros
 

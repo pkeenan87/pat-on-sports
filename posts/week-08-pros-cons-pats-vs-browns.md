@@ -5,6 +5,12 @@ description: "Maye threw three second-half touchdowns and Spillane picked one as
 tags: ["NFL", "Pros & Cons", "New England Patriots", "Cleveland Browns"]
 heroImage: "/images/2025/prosandcons/week-08/pats-vs-browns-hero.jpg"
 heroAlt: "Patriots vs Browns Week 8 action"
+season: 2025
+week: 8
+opponent: "Cleveland Browns"
+scoreUs: 32
+scoreThem: 13
+result: "W"
 ---
 ## Pros
 

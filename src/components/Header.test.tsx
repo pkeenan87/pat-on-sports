@@ -51,13 +51,38 @@ describe("Header", () => {
     expect(assign).toHaveBeenCalledWith("/blog?q=Maye");
   });
 
-  it("navigates to /blog when a category is selected off the archive", () => {
+  it("navigates to a category URL when a category is selected off the archive", () => {
     render(<Header categories={["Pros & Cons"]} pathname="/" />);
     fireEvent.click(screen.getByRole("button", { name: "Pros & Cons" }));
-    expect(assign).toHaveBeenCalledWith("/blog?category=Pros+%26+Cons");
+    expect(assign).toHaveBeenCalledWith("/category/pros-cons");
   });
 
-  it("filters in place on the archive without a full navigation", () => {
+  it("filters in place on the archive when searching with a category", () => {
+    vi.stubGlobal("location", {
+      search: "",
+      pathname: "/blog",
+      assign,
+    });
+
+    render(<Header categories={["Pros & Cons", "Preview"]} pathname="/blog" />);
+    fireEvent.change(screen.getByLabelText("Search posts"), {
+      target: { value: "Maye" },
+    });
+    fireEvent.click(screen.getByRole("button", { name: "Preview" }));
+
+    expect(assign).not.toHaveBeenCalled();
+    expect(replaceState).toHaveBeenCalledWith(
+      {},
+      "",
+      "/blog?q=Maye&category=Preview"
+    );
+    expect(screen.getByRole("button", { name: "Preview" })).toHaveAttribute(
+      "aria-pressed",
+      "true"
+    );
+  });
+
+  it("navigates to a category page from the archive when there is no query", () => {
     vi.stubGlobal("location", {
       search: "",
       pathname: "/blog",
@@ -66,13 +91,7 @@ describe("Header", () => {
 
     render(<Header categories={["Pros & Cons", "Preview"]} pathname="/blog" />);
     fireEvent.click(screen.getByRole("button", { name: "Preview" }));
-
-    expect(assign).not.toHaveBeenCalled();
-    expect(replaceState).toHaveBeenCalledWith({}, "", "/blog?category=Preview");
-    expect(screen.getByRole("button", { name: "Preview" })).toHaveAttribute(
-      "aria-pressed",
-      "true"
-    );
+    expect(assign).toHaveBeenCalledWith("/category/preview");
   });
 
   it("applies query params after mount so SSR markup stays empty", () => {
@@ -93,6 +112,22 @@ describe("Header", () => {
     expect(screen.getByRole("button", { name: "All" })).toHaveAttribute(
       "aria-pressed",
       "false"
+    );
+  });
+
+  it("marks the active category from a category route", () => {
+    vi.stubGlobal("location", {
+      search: "",
+      pathname: "/category/ucla",
+      assign,
+    });
+
+    render(
+      <Header categories={["Pros & Cons", "UCLA"]} pathname="/category/ucla" />
+    );
+    expect(screen.getByRole("button", { name: "UCLA" })).toHaveAttribute(
+      "aria-pressed",
+      "true"
     );
   });
 });

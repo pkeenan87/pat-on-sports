@@ -3,9 +3,15 @@ title: "Week 17: Patriots 42 – Jets 10"
 date: 2025-12-28
 description: "Maye threw five touchdowns in three quarters as the Patriots buried the Jets 42–10."
 tags: ["NFL", "Pros & Cons", "New England Patriots", "New York Jets"]
-heroImage: "/images/2025/prosandcons/week-17/pats-vs-jets-hero.png"
+heroImage: "/images/2025/prosandcons/week-17/pats-vs-jets-hero.webp"
 heroAlt: "Patriots Defense against the Jets"
 heroCaption: "The Patriots dominate the Jets in Week 17."
+season: 2025
+week: 17
+opponent: "New York Jets"
+scoreUs: 42
+scoreThem: 10
+result: "W"
 ---
 ## Pros
 

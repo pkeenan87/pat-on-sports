@@ -1,0 +1,42 @@
+---
+type Props = {
+  pros: string[];
+  cons: string[];
+};
+
+const { pros, cons } = Astro.props;
+---
+
+<div class="pros-cons not-prose grid gap-4 sm:grid-cols-2 my-8">
+  <section class="pros-cons__panel pros-cons__panel--pros rounded-xl border border-navy/15 bg-white overflow-hidden">
+    <h2 class="font-display text-lg font-bold tracking-[0.14em] uppercase bg-navy text-white px-4 py-3 m-0 border-0">
+      Pros
+    </h2>
+    <ul class="m-0 px-4 py-3 space-y-2.5 list-none">
+      {
+        pros.map((item) => (
+          <li class="flex gap-2.5 text-[0.95rem] leading-relaxed text-ink font-serif">
+            <span class="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-navy" aria-hidden="true" />
+            <span>{item}</span>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+
+  <section class="pros-cons__panel pros-cons__panel--cons rounded-xl border border-red/20 bg-white overflow-hidden">
+    <h2 class="font-display text-lg font-bold tracking-[0.14em] uppercase bg-red text-white px-4 py-3 m-0 border-0">
+      Cons
+    </h2>
+    <ul class="m-0 px-4 py-3 space-y-2.5 list-none">
+      {
+        cons.map((item) => (
+          <li class="flex gap-2.5 text-[0.95rem] leading-relaxed text-ink font-serif">
+            <span class="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-red" aria-hidden="true" />
+            <span>{item}</span>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+</div>

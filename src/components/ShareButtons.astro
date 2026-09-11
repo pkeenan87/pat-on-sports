@@ -1,0 +1,50 @@
+---
+type Props = {
+  title: string;
+  url: string;
+};
+
+const { title, url } = Astro.props;
+const tweetUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(title)}&url=${encodeURIComponent(url)}`;
+---
+
+<div class="flex flex-wrap items-center gap-2" data-share-root>
+  <span class="text-[11px] font-display font-bold tracking-[0.14em] uppercase text-navy-muted mr-1">
+    Share
+  </span>
+  <button
+    type="button"
+    data-share-copy
+    data-share-url={url}
+    class="rounded-full border border-silver/50 bg-white px-3 py-1.5 text-xs font-semibold text-navy hover:border-navy/30"
+  >
+    Copy link
+  </button>
+  <a
+    href={tweetUrl}
+    target="_blank"
+    rel="noopener noreferrer"
+    class="rounded-full border border-silver/50 bg-white px-3 py-1.5 text-xs font-semibold text-navy hover:border-navy/30"
+  >
+    Post on X
+  </a>
+</div>
+
+<script>
+  document.querySelectorAll<HTMLButtonElement>("[data-share-copy]").forEach((button) => {
+    button.addEventListener("click", async () => {
+      const shareUrl = button.dataset.shareUrl;
+      if (!shareUrl) return;
+      try {
+        await navigator.clipboard.writeText(shareUrl);
+        const original = button.textContent;
+        button.textContent = "Copied";
+        window.setTimeout(() => {
+          button.textContent = original;
+        }, 1600);
+      } catch {
+        button.textContent = "Copy failed";
+      }
+    });
+  });
+</script>

@@ -1,5 +1,6 @@
 ---
 const year = new Date().getFullYear();
+const twitter = import.meta.env.PUBLIC_TWITTER_SITE;
 ---
 
 <footer class="mt-auto border-t border-silver/40 bg-white">
@@ -19,12 +20,30 @@ const year = new Date().getFullYear();
       <a class="text-navy hover:text-red" href="/blog">Archive</a>
       <a class="text-navy hover:text-red" href="/about">About</a>
       <a class="text-navy hover:text-red" href="/rss.xml">RSS</a>
+      {
+        twitter ? (
+          <a
+            class="text-navy hover:text-red"
+            href={`https://x.com/${String(twitter).replace(/^@/, "")}`}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            X
+          </a>
+        ) : null
+      }
     </nav>
   </div>
   <div class="border-t border-silver/30">
-    <p class="max-w-7xl mx-auto px-4 sm:px-6 py-3 text-xs text-navy-muted">
-      © {year} Pat on Sports. Independent commentary — not affiliated with the NFL,
-      the New England Patriots, the NCAA, or UCLA.
-    </p>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
+      <p class="text-xs text-navy-muted">
+        © {year} Pat on Sports. Independent commentary — not affiliated with the NFL,
+        the New England Patriots, the NCAA, or UCLA.
+      </p>
+      <p class="sm:ml-auto text-xs text-navy-muted">
+        New posts after each game ·
+        <a class="underline underline-offset-2 hover:text-red" href="/rss.xml">Subscribe via RSS</a>
+      </p>
+    </div>
   </div>
 </footer>

@@ -13,6 +13,13 @@ const blog = defineCollection({
     heroAlt: z.string().optional(),
     heroCaption: z.string().optional(),
     audio: z.string().optional(),
+    season: z.number().int().optional(),
+    week: z.number().int().optional(),
+    opponent: z.string().optional(),
+    scoreUs: z.number().int().optional(),
+    scoreThem: z.number().int().optional(),
+    result: z.enum(["W", "L", "T"]).optional(),
+    round: z.string().optional(),
   }),
 });
 

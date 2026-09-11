@@ -1,19 +1,28 @@
 import { describe, expect, it } from "vitest";
 import {
   blogFilterUrl,
+  categoryToSlug,
+  categoryUrl,
   filterPosts,
   formatDisplayDate,
   formatPostDate,
+  formatScoreline,
   getAdjacentPosts,
   getCategory,
+  getOpponentTags,
+  getPostResult,
   getRelatedPosts,
   getUniqueCategories,
   getUniqueTags,
+  matchesSearchQuery,
   normalizeCategoryParam,
   parsePatriotsResult,
   readFilterParams,
+  slugToCategory,
   sortPostsByDate,
+  tagToSlug,
   toPostMeta,
+  toSearchContent,
   type BlogEntry,
   type PostMeta,
 } from "./posts";
@@ -29,6 +38,13 @@ const week17: PostMeta = {
   audio: "/audio/week-17-pros-cons-pats-vs-jets.m4a",
   tags: ["NFL", "Pro & Cons", "New England Patriots", "New York Jets"],
   searchContent: "Maye threw five touchdowns against the Jets.",
+  season: 2025,
+  week: 17,
+  opponent: "New York Jets",
+  scoreUs: 42,
+  scoreThem: 10,
+  result: "W",
+  readingTimeMinutes: 1,
 };
 
 const week16: PostMeta = {
@@ -38,6 +54,38 @@ const week16: PostMeta = {
   description: "Week 16 recap.",
   tags: ["NFL", "New England Patriots", "Older Tag"],
   searchContent: "A defensive slugfest in Baltimore.",
+  season: 2025,
+  week: 16,
+};
+
+const week05: PostMeta = {
+  slug: "week-05",
+  title: "Week 5: Patriots 23 – Bills 20",
+  date: "2025-10-05",
+  description: "Week 5 recap.",
+  tags: ["NFL", "Pros & Cons", "New England Patriots", "Buffalo Bills"],
+  searchContent: "Close win over Buffalo.",
+  season: 2025,
+  week: 5,
+  opponent: "Buffalo Bills",
+  scoreUs: 23,
+  scoreThem: 20,
+  result: "W",
+};
+
+const week15: PostMeta = {
+  slug: "week-15",
+  title: "Week 15: Patriots 31 – Bills 35",
+  date: "2025-12-14",
+  description: "Week 15 recap.",
+  tags: ["NFL", "Pros & Cons", "New England Patriots", "Buffalo Bills"],
+  searchContent: "Loss to Buffalo.",
+  season: 2025,
+  week: 15,
+  opponent: "Buffalo Bills",
+  scoreUs: 31,
+  scoreThem: 35,
+  result: "L",
 };
 
 const preview: PostMeta = {
@@ -47,6 +95,7 @@ const preview: PostMeta = {
   description: "Preview of the playoff games this weekend.",
   tags: ["NFL", "Preview", "New England Patriots"],
   searchContent: "Four games this weekend.",
+  season: 2025,
 };
 
 const uclaRecap: PostMeta = {
@@ -56,6 +105,11 @@ const uclaRecap: PostMeta = {
   description: "A 45–24 win that was closer than the scoreboard suggests.",
   tags: ["NCAAF", "UCLA Bruins", "California Golden Bears"],
   searchContent: "Chesney’s Bruins rushed for 277 yards.",
+  season: 2026,
+  opponent: "California Golden Bears",
+  scoreUs: 45,
+  scoreThem: 24,
+  result: "W",
 };
 
 describe("src/lib/posts.ts", () => {
@@ -79,6 +133,12 @@ describe("src/lib/posts.ts", () => {
         heroAlt: week17.heroAlt,
         heroCaption: week17.heroCaption,
         audio: week17.audio,
+        season: 2025,
+        week: 17,
+        opponent: "New York Jets",
+        scoreUs: 42,
+        scoreThem: 10,
+        result: "W",
       },
     };
 
@@ -88,6 +148,9 @@ describe("src/lib/posts.ts", () => {
     expect(post.heroImage).toBe("/images/week-17/hero.jpg");
     expect(post.audio).toBe("/audio/week-17-pros-cons-pats-vs-jets.m4a");
     expect(post.searchContent).toContain("five touchdowns");
+    expect(post.readingTimeMinutes).toBeGreaterThanOrEqual(1);
+    expect(post.scoreUs).toBe(42);
+    expect(post.result).toBe("W");
   });
 
   it("toPostMeta omits audio when the entry has none", () => {
@@ -104,6 +167,12 @@ describe("src/lib/posts.ts", () => {
     expect(toPostMeta(entry).audio).toBeUndefined();
   });
 
+  it("toSearchContent strips markdown and truncates", () => {
+    expect(toSearchContent("## Pros\n\n- **Maye** was great")).toContain("Maye");
+    expect(toSearchContent("## Pros\n\n- **Maye** was great")).not.toContain("**");
+    expect(toSearchContent("a ".repeat(800)).length).toBeLessThanOrEqual(1200);
+  });
+
   it("getUniqueTags returns a sorted, de-duped list of tags across posts", () => {
     const tags = getUniqueTags([week17, week16]);
     expect(tags.filter((t) => t === "NFL")).toHaveLength(1);
@@ -114,6 +183,11 @@ describe("src/lib/posts.ts", () => {
       "Older Tag",
       "Pro & Cons",
     ]);
+  });
+
+  it("getOpponentTags drops category and home-team labels", () => {
+    expect(getOpponentTags(week17.tags)).toEqual(["New York Jets"]);
+    expect(getOpponentTags(uclaRecap.tags)).toEqual(["California Golden Bears"]);
   });
 
   it("getUniqueCategories returns badge labels in display order", () => {
@@ -132,6 +206,7 @@ describe("src/lib/posts.ts", () => {
   it("getCategory maps Pros & Cons, Preview, UCLA, and default NFL badges", () => {
     expect(getCategory(["NFL", "Pro & Cons"]).label).toBe("Pros & Cons");
     expect(getCategory(["NFL", "Pros & Cons"]).color).toBe("bg-navy");
+    expect(getCategory(["NFL", "Pros & Cons"]).slug).toBe("pros-cons");
     expect(getCategory(["Divisional Round", "Preview"]).label).toBe("Preview");
     expect(getCategory(["NFL"]).label).toBe("NFL");
     expect(getCategory(["NCAAF", "UCLA Bruins"]).label).toBe("UCLA");
@@ -139,6 +214,13 @@ describe("src/lib/posts.ts", () => {
     expect(getCategory(["NCAAF", "Pros & Cons", "UCLA Bruins"]).label).toBe(
       "UCLA"
     );
+  });
+
+  it("category slug helpers round-trip", () => {
+    expect(categoryToSlug("Pros & Cons")).toBe("pros-cons");
+    expect(slugToCategory("pros-cons")).toBe("Pros & Cons");
+    expect(categoryUrl("UCLA")).toBe("/category/ucla");
+    expect(tagToSlug("New York Jets")).toBe("new-york-jets");
   });
 
   it("normalizeCategoryParam maps aliases and ignores opponent names", () => {
@@ -152,7 +234,7 @@ describe("src/lib/posts.ts", () => {
     expect(normalizeCategoryParam("Buffalo Bills")).toBe("");
   });
 
-  it("filterPosts matches category labels and full-text query", () => {
+  it("filterPosts matches category labels and tokenized full-text query", () => {
     const posts = [week17, week16, preview, uclaRecap];
     expect(filterPosts(posts, "", "Pro & Cons")).toEqual([week17]);
     expect(filterPosts(posts, "", "Preview")).toEqual([preview]);
@@ -160,8 +242,18 @@ describe("src/lib/posts.ts", () => {
     expect(filterPosts(posts, "", "UCLA")).toEqual([uclaRecap]);
     expect(filterPosts(posts, "baltimore", "")).toEqual([week16]);
     expect(filterPosts(posts, "maye", "Pros & Cons")).toEqual([week17]);
+    expect(filterPosts(posts, "five touchdowns", "")).toEqual([week17]);
     expect(filterPosts(posts, "xyz", "")).toEqual([]);
     expect(filterPosts(posts, "", "Buffalo Bills")).toEqual(posts);
+  });
+
+  it("matchesSearchQuery requires every token", () => {
+    expect(matchesSearchQuery("Maye threw five touchdowns", "maye touchdowns")).toBe(
+      true
+    );
+    expect(matchesSearchQuery("Maye threw five touchdowns", "maye buffalo")).toBe(
+      false
+    );
   });
 
   it("readFilterParams prefers category over legacy tag", () => {
@@ -238,15 +330,31 @@ describe("src/lib/posts.ts", () => {
     });
   });
 
+  it("getPostResult prefers schema scores over title parsing", () => {
+    expect(getPostResult(week17)).toEqual({
+      pats: 42,
+      opp: 10,
+      result: "W",
+    });
+    expect(formatScoreline(getPostResult(week17)!)).toBe("W 42–10");
+    expect(getPostResult(week16)).toBeNull();
+  });
+
   it("getAdjacentPosts and getRelatedPosts walk a newest-first list", () => {
     const posts = [preview, week17, week16];
     expect(getAdjacentPosts(posts, week17.slug)).toEqual({
       newer: preview,
       older: week16,
     });
-    expect(getRelatedPosts(posts, week17, 3).map((p) => p.slug)).toEqual([]);
-    expect(getRelatedPosts([week17, { ...week16, tags: week17.tags }], week17)).toHaveLength(
-      1
-    );
+    expect(getRelatedPosts(posts, week17, 3).map((p) => p.slug)).toEqual([
+      "divisional-round-preview",
+      "week-16",
+    ]);
+    expect(
+      getRelatedPosts([week15, week05, week17], week15).map((p) => p.slug)
+    ).toEqual(["week-05", "week-17-pros-cons-pats-vs-jets"]);
+    expect(
+      getRelatedPosts([preview, week17, uclaRecap], preview).map((p) => p.slug)
+    ).toEqual(["week-17-pros-cons-pats-vs-jets"]);
   });
 });

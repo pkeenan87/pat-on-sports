@@ -44,6 +44,7 @@ const posts = sortPostsByDate((await getCollection("blog")).map(toPostMeta));
   <script is:inline>
     (function () {
       var sp = new URLSearchParams(location.search);
+      var q = (sp.get("q") || "").trim();
       var categoryParam = sp.get("category");
       var tagParam = sp.get("tag") || "";
       // Legacy ?tag=NFL used to match every post; don't hide the archive.
@@ -52,10 +53,21 @@ const posts = sortPostsByDate((await getCollection("blog")).map(toPostMeta));
       var cat = raw;
       if (raw === "Pro & Cons" || raw === "pros-cons") cat = "Pros & Cons";
       if (raw === "UCLA Bruins" || raw === "NCAAF" || raw === "ncaaf") cat = "UCLA";
-      if (!cat) return;
+      // Category-only: hide immediately. Search waits for BlogFilter hydration.
+      if (!cat || q) return;
+      var visible = 0;
       document.querySelectorAll("[data-category]").forEach(function (el) {
-        el.hidden = el.getAttribute("data-category") !== cat;
+        var show = el.getAttribute("data-category") === cat;
+        el.hidden = !show;
+        if (show) visible += 1;
       });
+      var countEl = document.getElementById("blog-count");
+      if (countEl) {
+        countEl.textContent =
+          visible + " post" + (visible === 1 ? "" : "s") + " · " + cat;
+      }
+      var empty = document.getElementById("blog-empty");
+      if (empty) empty.hidden = visible !== 0;
     })();
   </script>
 </BaseLayout>

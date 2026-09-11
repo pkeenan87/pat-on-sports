@@ -1,0 +1,68 @@
+---
+import { getCollection } from "astro:content";
+import PostCard from "../../components/PostCard.astro";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import {
+  findTagBySlug,
+  getOpponentTags,
+  getUniqueTags,
+  sortPostsByDate,
+  tagToSlug,
+  toPostMeta,
+} from "../../lib/posts";
+
+export async function getStaticPaths() {
+  const posts = (await getCollection("blog")).map(toPostMeta);
+  const tags = getUniqueTags(posts).flatMap((tag) => getOpponentTags([tag]));
+  const unique = Array.from(new Set(tags.map(tagToSlug)));
+  return unique.map((tag) => ({
+    params: { tag },
+  }));
+}
+
+const tagSlug = Astro.params.tag ?? "";
+const allPosts = sortPostsByDate((await getCollection("blog")).map(toPostMeta));
+const allOpponentTags = getUniqueTags(allPosts).flatMap((tag) =>
+  getOpponentTags([tag])
+);
+const tagLabel = findTagBySlug(allOpponentTags, tagSlug) ?? tagSlug;
+const posts = allPosts.filter((post) =>
+  getOpponentTags(post.tags).some((tag) => tagToSlug(tag) === tagSlug)
+);
+---
+
+<BaseLayout
+  title={tagLabel}
+  description={`Posts tagged ${tagLabel} on Pat on Sports.`}
+  canonical={`/tag/${tagSlug}`}
+>
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 py-10">
+    <div class="flex items-baseline justify-between gap-4 mb-6">
+      <div>
+        <p class="text-[11px] font-display font-bold tracking-[0.14em] uppercase text-red mb-2">
+          Opponent / topic
+        </p>
+        <h1 class="font-display text-3xl sm:text-4xl font-bold tracking-wide uppercase text-navy">
+          {tagLabel}
+        </h1>
+      </div>
+      <p class="text-sm text-navy-muted">
+        {posts.length} post{posts.length === 1 ? "" : "s"}
+      </p>
+    </div>
+
+    {
+      posts.length > 0 ? (
+        <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          {posts.map((post) => (
+            <PostCard post={post} />
+          ))}
+        </div>
+      ) : (
+        <p class="rounded-xl border border-silver/40 bg-white p-8 text-navy-muted">
+          No posts with this tag.
+        </p>
+      )
+    }
+  </div>
+</BaseLayout>

@@ -1,5 +1,6 @@
 ---
 import Analytics from "@vercel/analytics/astro";
+import { ClientRouter } from "astro:transitions";
 import { getCollection } from "astro:content";
 import Footer from "../components/Footer.astro";
 import Header from "../components/Header";
@@ -15,21 +16,27 @@ type Props = {
   description?: string;
   image?: string;
   imageAlt?: string;
+  imageWidth?: number;
+  imageHeight?: number;
   canonical?: string;
   type?: "website" | "article";
   publishedTime?: string;
   tags?: string[];
+  jsonLd?: Record<string, unknown> | Record<string, unknown>[];
 };
 
 const {
   title,
   description = "Pat on Sports — weekly Patriots and UCLA recaps, NFL analysis, previews, and takes.",
-  image = "/images/og-default.png",
+  image = "/images/patriots-og-default.webp",
   imageAlt,
+  imageWidth,
+  imageHeight,
   canonical,
   type = "website",
   publishedTime,
   tags = [],
+  jsonLd,
 } = Astro.props;
 
 const siteUrl = Astro.site ?? new URL("https://patonsports.com");
@@ -37,12 +44,18 @@ const pageTitle = title ? `${title} | Pat on Sports` : "Pat on Sports";
 const canonicalUrl = new URL(canonical ?? Astro.url.pathname, siteUrl).href;
 const ogImage = new URL(image, siteUrl).href;
 const ogTitle = title ?? "Pat on Sports";
+const twitterSite = import.meta.env.PUBLIC_TWITTER_SITE;
 
 const posts = sortPostsByDate(
   (await getCollection("blog")).map(toPostMeta)
 );
 const categories = getUniqueCategories(posts);
 const pathname = Astro.url.pathname.replace(/\/$/, "") || "/";
+const jsonLdBlocks = jsonLd
+  ? Array.isArray(jsonLd)
+    ? jsonLd
+    : [jsonLd]
+  : [];
 ---
 
 <!doctype html>
@@ -51,6 +64,7 @@ const pathname = Astro.url.pathname.replace(/\/$/, "") || "/";
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" type="image/png" href="/icon.png" />
+    <link rel="apple-touch-icon" href="/icon.png" />
     <link rel="canonical" href={canonicalUrl} />
     <link rel="alternate" type="application/rss+xml" title="Pat on Sports" href="/rss.xml" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -67,6 +81,8 @@ const pathname = Astro.url.pathname.replace(/\/$/, "") || "/";
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonicalUrl} />
     <meta property="og:image" content={ogImage} />
+    {imageWidth && <meta property="og:image:width" content={String(imageWidth)} />}
+    {imageHeight && <meta property="og:image:height" content={String(imageHeight)} />}
     {imageAlt && <meta property="og:image:alt" content={imageAlt} />}
     {
       publishedTime && (
@@ -75,9 +91,16 @@ const pathname = Astro.url.pathname.replace(/\/$/, "") || "/";
     }
     {tags.map((tag) => <meta property="article:tag" content={tag} />)}
     <meta name="twitter:card" content="summary_large_image" />
+    {twitterSite && <meta name="twitter:site" content={twitterSite} />}
     <meta name="twitter:title" content={ogTitle} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImage} />
+    <ClientRouter />
+    {
+      jsonLdBlocks.map((block) => (
+        <script is:inline type="application/ld+json" set:html={JSON.stringify(block)} />
+      ))
+    }
   </head>
   <body class="min-h-screen flex flex-col bg-paper text-ink">
     <a
@@ -86,7 +109,7 @@ const pathname = Astro.url.pathname.replace(/\/$/, "") || "/";
     >
       Skip to content
     </a>
-    <Header categories={categories} pathname={pathname} client:load />
+    <Header categories={categories} pathname={pathname} client:idle />
     <main id="main-content" class="flex-1">
       <slot />
     </main>

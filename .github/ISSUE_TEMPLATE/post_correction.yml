@@ -1,0 +1,41 @@
+name: Post correction
+description: A published post has a factual error
+labels: ["correction", "content"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Corrections are welcome and get fixed quickly. Analysis and opinion are
+        not errors — if you just disagree with a take, the comments on the post
+        are the better venue.
+
+  - type: input
+    id: post
+    attributes:
+      label: Which post
+      description: The URL, or the filename under `posts/`.
+      placeholder: "posts/week-01-pros-cons-pats-vs-seahawks.md"
+    validations:
+      required: true
+
+  - type: textarea
+    id: incorrect
+    attributes:
+      label: What it currently says
+      description: Quote the sentence.
+    validations:
+      required: true
+
+  - type: textarea
+    id: correct
+    attributes:
+      label: What it should say
+    validations:
+      required: true
+
+  - type: input
+    id: source
+    attributes:
+      label: Source
+      description: A box score, play-by-play, or transaction log that settles it.
+      placeholder: "https://www.pro-football-reference.com/boxscores/..."

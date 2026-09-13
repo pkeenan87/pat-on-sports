@@ -1,0 +1,30 @@
+name: Feature request
+description: Suggest something the site should do
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: What are you trying to do
+      description: The situation you're in as a reader, not the solution you have in mind.
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: What you'd like it to do
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: scope
+    attributes:
+      label: Scope
+      description: |
+        The site is statically generated and ships almost no client-side
+        JavaScript on purpose — the only React islands are the header and the
+        comment box. Proposals that keep it that way are much easier to land.
+      options:
+        - label: This works without adding a server, a database, or a login
+        - label: This works with JavaScript disabled, or degrades gracefully

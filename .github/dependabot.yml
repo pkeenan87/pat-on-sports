@@ -1,0 +1,47 @@
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: "chore"
+    groups:
+      # Astro's integrations are versioned against the core package; a solo
+      # bump of @astrojs/react or @astrojs/sitemap can land on a core it
+      # doesn't support, so they travel together.
+      astro:
+        patterns:
+          - "astro"
+          - "@astrojs/*"
+      # React's peer-dep requires react and react-dom to be exact-version
+      # matched — a solo react-dom bump fails `npm ci` with ERESOLVE. The
+      # @types packages ride along so the types don't drift behind runtime.
+      react:
+        patterns:
+          - "react"
+          - "react-dom"
+          - "@types/react"
+          - "@types/react-dom"
+      # Tailwind v4 ships the engine and the Vite plugin as separate packages
+      # that must stay on the same minor.
+      tailwind:
+        patterns:
+          - "tailwindcss"
+          - "@tailwindcss/*"
+      # Vitest and its coverage provider are lockstep by major.
+      testing:
+        patterns:
+          - "vitest"
+          - "@vitest/*"
+          - "@testing-library/*"
+          - "jsdom"
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: "chore"

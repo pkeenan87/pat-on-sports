@@ -1,0 +1,69 @@
+name: Bug report
+description: A page, filter, feed, or build behaves incorrectly
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        For a factual error in a post — a wrong score, name, or date — use the
+        **Post correction** template instead. For a security issue, see
+        [SECURITY.md](https://github.com/pkeenan87/pat-on-sports/blob/main/SECURITY.md)
+        rather than a public issue.
+
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened
+      description: What you did, what you expected, and what you got instead.
+    validations:
+      required: true
+
+  - type: input
+    id: url
+    attributes:
+      label: Page
+      description: The URL it happens on, including any `?q=` or `?category=` in the address bar.
+      placeholder: "https://patonsports.com/blog?category=pros-cons"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: where
+    attributes:
+      label: Where does it go wrong
+      options:
+        - A post page
+        - Homepage or one of its shelves
+        - Blog index — search or category filter
+        - Category or tag page
+        - RSS feed / sitemap
+        - Audio player
+        - Comments
+        - The build or dev server
+        - Somewhere else
+    validations:
+      required: true
+
+  - type: input
+    id: environment
+    attributes:
+      label: Browser and OS
+      placeholder: "Safari 18 on iOS 26, Chrome 141 on macOS"
+
+  - type: textarea
+    id: console
+    attributes:
+      label: Console output
+      description: |
+        For anything interactive — search, filters, the audio player — the
+        browser console usually names the cause. For a build failure, paste
+        the output of `npm run build`.
+      render: text
+
+  - type: checkboxes
+    id: checked
+    attributes:
+      label: Before filing
+      options:
+        - label: I reloaded the page with a hard refresh and it still happens
+          required: true

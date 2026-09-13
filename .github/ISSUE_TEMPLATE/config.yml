@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Security vulnerability
+    url: https://github.com/pkeenan87/pat-on-sports/security/advisories/new
+    about: Report privately — never in a public issue.
+  - name: React to a post
+    url: https://patonsports.com/blog
+    about: Every post has a comment thread. Takes, arguments and predictions belong there.
+  - name: Astro documentation
+    url: https://docs.astro.build
+    about: Questions about the framework itself, as opposed to this site.

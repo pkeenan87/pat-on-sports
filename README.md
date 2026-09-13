@@ -151,7 +151,8 @@ Source code is [MIT](LICENSE).
 
 The editorial content — the posts under `posts/` and the images under
 `public/images/` — is © 2026 Patrick Keenan, all rights reserved. Quote it with
-attribution and a link, as you would any article.
+attribution and a link, as you would any article. See
+[CONTENT_LICENSE.md](CONTENT_LICENSE.md).
 
 Independent commentary. Not affiliated with the NFL, the New England Patriots,
 the NCAA, or UCLA.

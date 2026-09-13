@@ -11,6 +11,10 @@ const commentBoxEntry = fileURLToPath(
 
 export default defineConfig({
   site,
+  prefetch: {
+    prefetchAll: true,
+    defaultStrategy: "viewport",
+  },
   integrations: [
     react(),
     sitemap({

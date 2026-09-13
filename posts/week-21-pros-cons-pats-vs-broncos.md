@@ -6,6 +6,13 @@ tags: ["NFL", "Pros & Cons", "New England Patriots", "Denver Broncos"]
 heroImage: "/images/2025/prosandcons/week-21/pats-vs-broncos-hero.webp"
 heroAlt: "Patriots celebrate in the locker room after winning the conference championship in Denver"
 heroCaption: "Mike Vrabel and the Patriots advance to the Super Bowl in his first year as a coach."
+season: 2025
+week: 21
+opponent: "Denver Broncos"
+scoreUs: 10
+scoreThem: 7
+result: "W"
+round: "Conference Championship"
 ---
 ## Introduction
 

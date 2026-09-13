@@ -5,6 +5,12 @@ description: "Maye completed 91 percent of his throws as the line dominated Tenn
 tags: ["NFL", "Pros & Cons", "New England Patriots", "Tennessee Titans"]
 heroImage: "/images/2025/prosandcons/week-07/pats-vs-titans-hero.jpg"
 heroAlt: "Patriots vs Titans Week 7 action"
+season: 2025
+week: 7
+opponent: "Tennessee Titans"
+scoreUs: 31
+scoreThem: 13
+result: "W"
 ---
 ## Pros
 

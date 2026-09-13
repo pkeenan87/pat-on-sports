@@ -5,6 +5,12 @@ description: "A game-winning drive in Buffalo. Gonzalez and Diggs delivered; Gib
 tags: ["NFL", "Pros & Cons", "New England Patriots", "Buffalo Bills"]
 heroImage: "/images/2025/prosandcons/week-05/pats-vs-bills-hero.jpg"
 heroAlt: "Patriots vs Bills Week 5 action"
+season: 2025
+week: 5
+opponent: "Buffalo Bills"
+scoreUs: 23
+scoreThem: 20
+result: "W"
 ---
 ## Pros
 

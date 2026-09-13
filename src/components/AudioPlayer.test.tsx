@@ -68,4 +68,13 @@ describe("AudioPlayer", () => {
       screen.getByRole("button", { name: "Listen to this article" })
     ).toHaveAttribute("aria-pressed", "false");
   });
+
+  it("cycles playback speed", () => {
+    render(<AudioPlayer src="/audio/test.m4a" title="Week 21 recap" />);
+    const speed = screen.getByRole("button", { name: "Playback speed 1x" });
+    fireEvent.click(speed);
+    expect(
+      screen.getByRole("button", { name: "Playback speed 1.25x" })
+    ).toBeInTheDocument();
+  });
 });

@@ -1,5 +1,13 @@
 ---
+import { getCollection } from "astro:content";
+import PostCard from "../components/PostCard.astro";
 import BaseLayout from "../layouts/BaseLayout.astro";
+import { sortPostsByDate, toPostMeta } from "../lib/posts";
+
+const latest = sortPostsByDate((await getCollection("blog")).map(toPostMeta)).slice(
+  0,
+  3
+);
 ---
 
 <BaseLayout title="Page not found">
@@ -29,5 +37,20 @@ import BaseLayout from "../layouts/BaseLayout.astro";
         Browse archive
       </a>
     </div>
+
+    {
+      latest.length > 0 && (
+        <section class="mt-12">
+          <h2 class="font-display text-xl font-bold tracking-wide uppercase text-navy mb-4">
+            Latest posts
+          </h2>
+          <div class="grid gap-6 sm:grid-cols-3">
+            {latest.map((post) => (
+              <PostCard post={post} />
+            ))}
+          </div>
+        </section>
+      )
+    }
   </div>
 </BaseLayout>

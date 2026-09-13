@@ -6,6 +6,12 @@ tags: ["NFL", "Pros & Cons", "New England Patriots", "Miami Dolphins"]
 heroImage: "/images/2025/prosandcons/week-18/pats-vs-dolphins-hero.webp"
 heroAlt: "Patriots RB Stevenson scores a touchdown"
 heroCaption: "Patriots close out the season with a nice over the dolphins. Stevenson could not be stopped."
+season: 2025
+week: 18
+opponent: "Miami Dolphins"
+scoreUs: 38
+scoreThem: 10
+result: "W"
 ---
 ## Pros
 

@@ -5,6 +5,12 @@ description: "Stevenson ran well and the passing game was efficient in a 33–27
 tags: ["NFL", "Pros & Cons", "New England Patriots", "Miami Dolphins"]
 heroImage: "/images/2025/prosandcons/week-02/pats-vs-dolphins-hero.jpg"
 heroAlt: "Patriots vs Dolphins Week 2 action"
+season: 2025
+week: 2
+opponent: "Miami Dolphins"
+scoreUs: 33
+scoreThem: 27
+result: "W"
 ---
 ## Pros
 

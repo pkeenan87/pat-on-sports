@@ -5,6 +5,12 @@ description: "Maye’s deep ball opened up, and the defense bent without breakin
 tags: ["NFL", "Pros & Cons", "New England Patriots", "New Orleans Saints"]
 heroImage: "/images/2025/prosandcons/week-06/pats-vs-saints-hero.jpg"
 heroAlt: "Patriots vs Saints Week 6 action"
+season: 2025
+week: 6
+opponent: "New Orleans Saints"
+scoreUs: 25
+scoreThem: 19
+result: "W"
 ---
 ## Pros
 

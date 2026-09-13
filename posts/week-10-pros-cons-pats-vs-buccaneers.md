@@ -5,6 +5,12 @@ description: "A road win in Tampa. Hollins topped 100 yards and the line allowed
 tags: ["NFL", "Pros & Cons", "New England Patriots", "Tampa Bay Buccaneers"]
 heroImage: "/images/2025/prosandcons/week-10/pats-vs-buccaneers-hero.jpg"
 heroAlt: "Patriots vs Buccaneers Week 10 action"
+season: 2025
+week: 10
+opponent: "Tampa Bay Buccaneers"
+scoreUs: 28
+scoreThem: 23
+result: "W"
 ---
 ## Pros
 

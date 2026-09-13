@@ -6,6 +6,8 @@ tags: ["NFL", "Preview", "New England Patriots", "Houston Texans", "Buffalo Bill
 heroImage: "/images/2025/previews/divisional/divisional-round-hero.webp"
 heroAlt: "Three playoff quarterbacks get ready to play this weekend"
 heroCaption: "It's the most wonderful time of the year, the divisional round is here."
+season: 2025
+round: "Divisional Round"
 ---
 The Divisional Round of the playoffs is here! Some say this is the best weekend of football in the entire year and with the NCAA National Championship game being played on Monday Night I think I may have to agree with them. This year is especially interesting for the NFL because it is the first year in a long time that we do not have a clear cut favorite. For the past twenty years there has always been a team with a stud QB like Tom Brady, Patrick Mahommes, Peyton Manning, Drew Brees, etc. Of all the teams remaining, the only starting QB who has won a super bowl before is Matthew Stafford. I think it is very likely that we see a first time Super Bowl winning QB this year. Let’s get into the matchups!
 

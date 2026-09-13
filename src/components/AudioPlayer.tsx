@@ -5,6 +5,8 @@ type AudioPlayerProps = {
   title: string;
 };
 
+const SPEEDS = [1, 1.25, 1.5, 1.75, 2] as const;
+
 function formatTime(seconds: number): string {
   if (!Number.isFinite(seconds) || seconds < 0) return "0:00";
   const mins = Math.floor(seconds / 60);
@@ -18,6 +20,7 @@ export default function AudioPlayer({ src, title }: AudioPlayerProps) {
   const [playing, setPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
+  const [speed, setSpeed] = useState<(typeof SPEEDS)[number]>(1);
 
   useEffect(() => {
     const audio = audioRef.current;
@@ -51,6 +54,11 @@ export default function AudioPlayer({ src, title }: AudioPlayerProps) {
     };
   }, []);
 
+  useEffect(() => {
+    const audio = audioRef.current;
+    if (audio) audio.playbackRate = speed;
+  }, [speed]);
+
   const togglePlayback = useCallback(() => {
     const audio = audioRef.current;
     if (!audio) return;
@@ -69,6 +77,21 @@ export default function AudioPlayer({ src, title }: AudioPlayerProps) {
     setCurrentTime(value);
   }, []);
 
+  const skip = useCallback((delta: number) => {
+    const audio = audioRef.current;
+    if (!audio) return;
+    const next = Math.max(0, Math.min(audio.duration || 0, audio.currentTime + delta));
+    audio.currentTime = next;
+    setCurrentTime(next);
+  }, []);
+
+  const cycleSpeed = useCallback(() => {
+    setSpeed((current) => {
+      const index = SPEEDS.indexOf(current);
+      return SPEEDS[(index + 1) % SPEEDS.length];
+    });
+  }, []);
+
   const max = duration > 0 ? duration : 0;
   const label = playing ? "Pause" : "Listen to this article";
 
@@ -84,22 +107,44 @@ export default function AudioPlayer({ src, title }: AudioPlayerProps) {
       <div className="flex items-center gap-3">
         <button
           type="button"
+          onClick={() => skip(-15)}
+          aria-label="Rewind 15 seconds"
+          className="hidden sm:flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-silver/50 text-xs font-semibold text-navy hover:border-navy/30"
+        >
+          −15
+        </button>
+        <button
+          type="button"
           onClick={togglePlayback}
           aria-label={label}
           aria-pressed={playing}
           className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-navy text-white transition-colors hover:bg-navy-muted focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red"
         >
-          {playing ? (
-            <PauseIcon />
-          ) : (
-            <PlayIcon />
-          )}
+          {playing ? <PauseIcon /> : <PlayIcon />}
+        </button>
+        <button
+          type="button"
+          onClick={() => skip(15)}
+          aria-label="Forward 15 seconds"
+          className="hidden sm:flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-silver/50 text-xs font-semibold text-navy hover:border-navy/30"
+        >
+          +15
         </button>
 
         <div className="min-w-0 flex-1">
-          <p className="text-sm font-semibold text-navy">
-            Listen to this article
-          </p>
+          <div className="flex items-center justify-between gap-2">
+            <p className="text-sm font-semibold text-navy">
+              Listen to this article
+            </p>
+            <button
+              type="button"
+              onClick={cycleSpeed}
+              aria-label={`Playback speed ${speed}x`}
+              className="rounded-full border border-silver/50 px-2.5 py-0.5 text-xs font-semibold tabular-nums text-navy hover:border-navy/30"
+            >
+              {speed}x
+            </button>
+          </div>
           <div className="mt-2 flex items-center gap-2">
             <span className="w-10 shrink-0 text-xs tabular-nums text-navy-muted">
               {formatTime(currentTime)}

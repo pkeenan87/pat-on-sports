@@ -5,6 +5,12 @@ description: "Five turnovers wasted a statistically dominant night against Pitts
 tags: ["NFL", "Pros & Cons", "New England Patriots", "Pittsburgh Steelers"]
 heroImage: "/images/2025/prosandcons/week-03/pats-vs-steelers-hero.jpg"
 heroAlt: "Patriots vs Steelers Week 3 action"
+season: 2025
+week: 3
+opponent: "Pittsburgh Steelers"
+scoreUs: 14
+scoreThem: 14
+result: "T"
 ---
 ## Pros
 

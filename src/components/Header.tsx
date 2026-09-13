@@ -2,7 +2,11 @@ import { useEffect, useState } from "react";
 import {
   BLOG_FILTER_EVENT,
   blogFilterUrl,
+  categoryUrl,
+  normalizeCategoryParam,
   readFilterParams,
+  slugToCategory,
+  type CategoryLabel,
 } from "../lib/posts";
 
 type HeaderProps = {
@@ -10,21 +14,61 @@ type HeaderProps = {
   pathname: string;
 };
 
+function categoryFromPath(pathname: string): CategoryLabel | "" {
+  const match = pathname.match(/^\/category\/([^/]+)/);
+  if (!match) return "";
+  return slugToCategory(decodeURIComponent(match[1]));
+}
+
 export default function Header({ categories, pathname }: HeaderProps) {
   const [q, setQ] = useState("");
   const [activeCategory, setActiveCategory] = useState("");
 
   useEffect(() => {
+    const fromPath = categoryFromPath(pathname);
+    if (fromPath) {
+      setQ("");
+      setActiveCategory(fromPath);
+      return;
+    }
     const next = readFilterParams(window.location.search);
     setQ(next.q);
     setActiveCategory(next.category);
-  }, []);
+  }, [pathname]);
 
   const isArchive = pathname === "/blog";
-  const showCategoryBar = pathname === "/" || isArchive;
+  const isCategoryPage = pathname.startsWith("/category/");
+  const isTagPage = pathname.startsWith("/tag/");
+  const showCategoryBar =
+    pathname === "/" || isArchive || isCategoryPage || isTagPage;
 
   function commit(nextQ: string, nextCategory: string) {
-    const url = blogFilterUrl(nextQ, nextCategory);
+    const trimmedQ = nextQ.trim();
+
+    // Prefer real category URLs when there is no search query.
+    if (!trimmedQ && nextCategory) {
+      const url = categoryUrl(normalizeCategoryParam(nextCategory));
+      if (isCategoryPage && categoryFromPath(pathname) === nextCategory) {
+        setActiveCategory(nextCategory);
+        return;
+      }
+      window.location.assign(url);
+      return;
+    }
+
+    if (!trimmedQ && !nextCategory) {
+      if (isArchive) {
+        setQ("");
+        setActiveCategory("");
+        window.history.replaceState({}, "", "/blog");
+        window.dispatchEvent(new Event(BLOG_FILTER_EVENT));
+        return;
+      }
+      window.location.assign("/blog");
+      return;
+    }
+
+    const url = blogFilterUrl(trimmedQ, nextCategory);
     if (isArchive) {
       setQ(nextQ);
       setActiveCategory(nextCategory);
@@ -106,7 +150,7 @@ export default function Header({ categories, pathname }: HeaderProps) {
       {showCategoryBar && (
         <div className="bg-navy-deep border-b border-white/10">
           <div
-            className="max-w-7xl mx-auto px-4 sm:px-6 py-2 flex items-center gap-2"
+            className="max-w-7xl mx-auto px-4 sm:px-6 py-2 flex items-center gap-2 overflow-x-auto"
             role="group"
             aria-label="Filter by category"
           >
@@ -114,7 +158,7 @@ export default function Header({ categories, pathname }: HeaderProps) {
               type="button"
               onClick={() => commit(isArchive ? q : "", "")}
               aria-pressed={!activeCategory}
-              className={`rounded-full px-3 py-1 text-xs font-semibold tracking-wide transition ${
+              className={`shrink-0 rounded-full px-3 py-1 text-xs font-semibold tracking-wide transition ${
                 !activeCategory
                   ? "bg-white text-navy"
                   : "text-white/75 hover:text-white hover:bg-white/10"
@@ -132,7 +176,7 @@ export default function Header({ categories, pathname }: HeaderProps) {
                     commit(isArchive ? q : "", selected ? "" : category)
                   }
                   aria-pressed={selected}
-                  className={`rounded-full px-3 py-1 text-xs font-semibold tracking-wide transition ${
+                  className={`shrink-0 rounded-full px-3 py-1 text-xs font-semibold tracking-wide transition ${
                     selected
                       ? category === "Preview"
                         ? "bg-red text-white"

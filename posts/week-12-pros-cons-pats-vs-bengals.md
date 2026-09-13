@@ -5,6 +5,12 @@ description: "Marcus Jones’s pick-six and a stout night against Flacco, even a
 tags: ["NFL", "Pros & Cons", "New England Patriots", "Cincinnati Bengals"]
 heroImage: "/images/2025/prosandcons/week-12/pats-vs-bengals-hero.jpg"
 heroAlt: "Patriots vs Bengals Week 12 action"
+season: 2025
+week: 12
+opponent: "Cincinnati Bengals"
+scoreUs: 26
+scoreThem: 20
+result: "W"
 ---
 ## Pros
 

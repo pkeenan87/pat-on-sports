@@ -5,6 +5,12 @@ description: "A 21-point collapse in Buffalo. The run game finally showed up; th
 tags: ["NFL", "Pros & Cons", "New England Patriots", "Buffalo Bills"]
 heroImage: "/images/2025/prosandcons/week-15/pats-vs-bills-hero.jpg"
 heroAlt: "Patriots vs Bills Week 15 action"
+season: 2025
+week: 15
+opponent: "Buffalo Bills"
+scoreUs: 31
+scoreThem: 35
+result: "L"
 ---
 ## Pros
 

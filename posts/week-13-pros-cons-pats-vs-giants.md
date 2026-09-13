@@ -5,6 +5,12 @@ description: "Special teams blew it open early and the defense laid the lumber a
 tags: ["NFL", "Pros & Cons", "New England Patriots", "New York Giants"]
 heroImage: "/images/2025/prosandcons/week-13/pats-vs-giants-hero.jpg"
 heroAlt: "Patriots vs Giants Week 13 action"
+season: 2025
+week: 13
+opponent: "New York Giants"
+scoreUs: 33
+scoreThem: 15
+result: "W"
 ---
 ## Pros
 

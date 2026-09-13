@@ -5,6 +5,12 @@ description: "An ugly 24–23 win: the run defense stuffed Bijan, but the offens
 tags: ["NFL", "Pros & Cons", "New England Patriots", "Atlanta Falcons"]
 heroImage: "/images/2025/prosandcons/week-09/pats-vs-falcons-hero.jpg"
 heroAlt: "Patriots vs Falcons Week 9 action"
+season: 2025
+week: 9
+opponent: "Atlanta Falcons"
+scoreUs: 24
+scoreThem: 23
+result: "W"
 ---
 ## Pros
 

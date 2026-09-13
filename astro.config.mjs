@@ -3,6 +3,8 @@ import { defineConfig } from "astro/config";
 import react from "@astrojs/react";
 import sitemap from "@astrojs/sitemap";
 import tailwindcss from "@tailwindcss/vite";
+import { satteri } from "@astrojs/markdown-satteri";
+import { newTabLinks } from "./src/lib/newTabLinks";
 
 const site = process.env.PUBLIC_SITE_URL ?? "https://patonsports.com";
 const commentBoxEntry = fileURLToPath(
@@ -14,6 +16,11 @@ export default defineConfig({
   prefetch: {
     prefetchAll: true,
     defaultStrategy: "viewport",
+  },
+  markdown: {
+    processor: satteri({
+      hastPlugins: [newTabLinks],
+    }),
   },
   integrations: [
     react(),

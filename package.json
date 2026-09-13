@@ -27,8 +27,8 @@
     "astro": "^7.3.2",
     "commentbox.io": "^2.1.0",
     "node-html-parser": "^7.0.2",
-    "react": "19.2.3",
-    "react-dom": "19.2.3",
+    "react": "19.3.0",
+    "react-dom": "19.3.0",
     "tailwindcss": "^4.1.18"
   },
   "devDependencies": {

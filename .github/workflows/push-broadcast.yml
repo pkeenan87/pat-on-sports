@@ -20,8 +20,9 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          # Need the previous tip to diff for added Markdown posts.
-          fetch-depth: 2
+          # Full history: the diff below runs against github.event.before, which
+          # a shallow clone cannot reach when a push carries several commits.
+          fetch-depth: 0
 
       - name: Broadcast for each added post
         env:

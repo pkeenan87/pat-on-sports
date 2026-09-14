@@ -1,7 +1,7 @@
 ---
 import { getCollection, render } from "astro:content";
 import AudioPlayer from "../../components/AudioPlayer";
-import CommentBox from "../../components/CommentBox";
+import Comments from "../../components/Comments";
 import PostCard from "../../components/PostCard.astro";
 import ProsCons from "../../components/ProsCons.astro";
 import ShareButtons from "../../components/ShareButtons.astro";
@@ -47,7 +47,6 @@ const siteUrl = Astro.site ?? new URL("https://patonsports.com");
 const canonicalPath = `/blog/${meta.slug}`;
 const pageUrl = new URL(canonicalPath, siteUrl).href;
 const heroImage = meta.heroImage?.trim() || "/images/patriots-og-default.webp";
-const commentProjectId = import.meta.env.PUBLIC_COMMENTBOX_PROJECT_ID;
 const prosCons =
   category.label === "Pros & Cons" && post.body
     ? parseProsConsMarkdown(post.body)
@@ -295,27 +294,14 @@ const jsonLd = {
       )
     }
 
-    {
-      commentProjectId ? (
-        <section class="mt-12 border-t border-silver/40 pt-8">
-          <h2 class="font-display text-2xl font-bold tracking-wide text-navy">
-            Comments
-          </h2>
-          <p class="mt-2 text-sm text-navy-muted">
-            Agree with the Cons? Drop a take below.
-          </p>
-          <CommentBox client:visible boxId={meta.slug} />
-        </section>
-      ) : (
-        <section class="mt-12 border-t border-silver/40 pt-8">
-          <h2 class="font-display text-2xl font-bold tracking-wide text-navy">
-            Comments
-          </h2>
-          <p class="mt-3 text-sm text-navy-muted">
-            Comments are coming soon. Meanwhile, share the recap with a friend.
-          </p>
-        </section>
-      )
-    }
+    <section class="mt-12 border-t border-silver/40 pt-8">
+      <h2 class="font-display text-2xl font-bold tracking-wide text-navy">
+        Comments
+      </h2>
+      <p class="mt-2 text-sm text-navy-muted">
+        Agree with the Cons? Drop a take below.
+      </p>
+      <Comments client:visible slug={meta.slug} />
+    </section>
   </div>
 </BaseLayout>

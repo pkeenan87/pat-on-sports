@@ -1,0 +1,260 @@
+---
+export const prerender = false;
+
+import { and, desc, eq, gt } from "drizzle-orm";
+import { getDb } from "../../db";
+import { comments } from "../../db/schema";
+import { linkifyPlainText } from "../../lib/comments";
+import { requireAdminHtml } from "../../lib/comments/adminAuth";
+
+const denied = requireAdminHtml(Astro);
+if (denied) return denied;
+
+const db = getDb();
+
+const pending = await db
+  .select()
+  .from(comments)
+  .where(eq(comments.status, "pending"))
+  .orderBy(desc(comments.createdAt))
+  .limit(100);
+
+const reported = await db
+  .select()
+  .from(comments)
+  .where(
+    and(eq(comments.status, "approved"), gt(comments.reportCount, 0))
+  )
+  .orderBy(desc(comments.reportCount), desc(comments.createdAt))
+  .limit(50);
+
+const recent = await db
+  .select()
+  .from(comments)
+  .where(eq(comments.status, "approved"))
+  .orderBy(desc(comments.createdAt))
+  .limit(40);
+
+function formatWhen(d: Date) {
+  return d.toISOString().replace("T", " ").slice(0, 16) + " UTC";
+}
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>Moderate comments | Pat on Sports</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --navy: #0c2340;
+        --navy-muted: #1b3654;
+        --red: #c8102e;
+        --paper: #f7f5f1;
+        --silver: #c5c7c9;
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        font-family: "IBM Plex Sans", system-ui, sans-serif;
+        background: var(--paper);
+        color: var(--navy);
+        padding: 1.5rem;
+      }
+      header {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+        align-items: baseline;
+        justify-content: space-between;
+        margin-bottom: 2rem;
+      }
+      h1, h2 {
+        font-family: "Barlow Condensed", sans-serif;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        margin: 0;
+      }
+      h1 { font-size: 1.75rem; }
+      h2 { font-size: 1.25rem; margin: 2rem 0 0.75rem; }
+      a { color: var(--navy); }
+      .item {
+        border-top: 1px solid color-mix(in srgb, var(--silver) 60%, transparent);
+        padding: 1rem 0;
+      }
+      .meta {
+        font-size: 0.8rem;
+        color: var(--navy-muted);
+        margin-bottom: 0.35rem;
+      }
+      .body {
+        white-space: pre-wrap;
+        margin: 0.5rem 0 0.75rem;
+        line-height: 1.45;
+      }
+      .actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        align-items: center;
+      }
+      button, .actions input[type="submit"] {
+        border: 0;
+        background: var(--navy);
+        color: white;
+        font: inherit;
+        font-size: 0.8rem;
+        font-weight: 600;
+        padding: 0.4rem 0.7rem;
+        cursor: pointer;
+      }
+      button.danger { background: var(--red); }
+      button.muted { background: var(--navy-muted); }
+      textarea, input[type="text"] {
+        width: 100%;
+        max-width: 36rem;
+        border: 1px solid color-mix(in srgb, var(--silver) 70%, transparent);
+        padding: 0.5rem;
+        font: inherit;
+        margin-top: 0.35rem;
+      }
+      .empty { color: var(--navy-muted); font-size: 0.9rem; }
+      .badge {
+        display: inline-block;
+        font-size: 0.7rem;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        background: var(--navy);
+        color: white;
+        padding: 0.15rem 0.4rem;
+        margin-left: 0.35rem;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>Comments</h1>
+      <p>
+        <form method="post" action="/admin/logout" style="display:inline">
+          <button class="muted" type="submit">Sign out</button>
+        </form>
+      </p>
+    </header>
+
+    <h2>Pending ({pending.length})</h2>
+    {
+      pending.length === 0 ? (
+        <p class="empty">Queue is clear.</p>
+      ) : (
+        pending.map((c) => (
+          <article class="item">
+            <p class="meta">
+              <strong>{c.authorName}</strong> on{" "}
+              <a href={`/blog/${c.postSlug}`}>{c.postSlug}</a>
+              {" · "}
+              {formatWhen(c.createdAt)}
+              {c.parentId ? " · reply" : ""}
+              {c.reportCount > 0 ? ` · ${c.reportCount} reports` : ""}
+            </p>
+            <p class="body" set:html={linkifyPlainText(c.body)} />
+            <div class="actions">
+              <form method="post" action={`/admin/comments/${c.id}/approve`}>
+                <button type="submit">Approve</button>
+              </form>
+              <form method="post" action={`/admin/comments/${c.id}/spam`}>
+                <button class="muted" type="submit">Spam</button>
+              </form>
+              <form method="post" action={`/admin/comments/${c.id}/delete`}>
+                <button class="danger" type="submit">Delete</button>
+              </form>
+              <form method="post" action={`/admin/comments/${c.id}/block`}>
+                <button class="danger" type="submit">Block</button>
+              </form>
+            </div>
+            <form method="post" action={`/admin/comments/${c.id}/reply`}>
+              <label>
+                Author reply
+                <textarea name="body" rows="3" maxlength="2000" required />
+              </label>
+              <div class="actions" style="margin-top:0.5rem">
+                <button type="submit">Post as Pat</button>
+              </div>
+            </form>
+          </article>
+        ))
+      )
+    }
+
+    <h2>Reported ({reported.length})</h2>
+    {
+      reported.length === 0 ? (
+        <p class="empty">No reported comments.</p>
+      ) : (
+        reported.map((c) => (
+          <article class="item">
+            <p class="meta">
+              <strong>{c.authorName}</strong> on{" "}
+              <a href={`/blog/${c.postSlug}`}>{c.postSlug}</a>
+              {" · "}
+              {c.reportCount} reports · {formatWhen(c.createdAt)}
+            </p>
+            <p class="body" set:html={linkifyPlainText(c.body)} />
+            <div class="actions">
+              <form method="post" action={`/admin/comments/${c.id}/approve`}>
+                <button type="submit">Keep approved</button>
+              </form>
+              <form method="post" action={`/admin/comments/${c.id}/spam`}>
+                <button class="muted" type="submit">Spam</button>
+              </form>
+              <form method="post" action={`/admin/comments/${c.id}/delete`}>
+                <button class="danger" type="submit">Delete</button>
+              </form>
+              <form method="post" action={`/admin/comments/${c.id}/block`}>
+                <button class="danger" type="submit">Block</button>
+              </form>
+            </div>
+          </article>
+        ))
+      )
+    }
+
+    <h2>Recent approved</h2>
+    {
+      recent.length === 0 ? (
+        <p class="empty">None yet.</p>
+      ) : (
+        recent.map((c) => (
+          <article class="item">
+            <p class="meta">
+              <strong>{c.authorName}</strong>
+              {c.isAuthor ? <span class="badge">Pat</span> : null}
+              {" on "}
+              <a href={`/blog/${c.postSlug}`}>{c.postSlug}</a>
+              {" · "}
+              {formatWhen(c.createdAt)}
+            </p>
+            <p class="body" set:html={linkifyPlainText(c.body)} />
+            <div class="actions">
+              <form method="post" action={`/admin/comments/${c.id}/spam`}>
+                <button class="muted" type="submit">Spam</button>
+              </form>
+              <form method="post" action={`/admin/comments/${c.id}/delete`}>
+                <button class="danger" type="submit">Delete</button>
+              </form>
+              <form method="post" action={`/admin/comments/${c.id}/block`}>
+                <button class="danger" type="submit">Block</button>
+              </form>
+            </div>
+          </article>
+        ))
+      )
+    }
+  </body>
+</html>

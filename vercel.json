@@ -2,8 +2,33 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "framework": "astro",
   "buildCommand": "npm run build",
-  "outputDirectory": "dist",
+  "redirects": [
+    {
+      "source": "/audio/:file",
+      "destination": "https://5a8kwvvlim3wfoud.public.blob.vercel-storage.com/audio/:file",
+      "permanent": true
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/149e9513-01fa-4fb0-aad4-566afd725d1b/2d206a39-8ed7-437e-a3be-862e0f06eea3/a-4-a/c.js",
+      "destination": "https://api.vercel.com/bot-protection/v1/challenge"
+    },
+    {
+      "source": "/149e9513-01fa-4fb0-aad4-566afd725d1b/2d206a39-8ed7-437e-a3be-862e0f06eea3/:path*",
+      "destination": "https://api.vercel.com/bot-protection/v1/proxy/:path*"
+    }
+  ],
   "headers": [
+    {
+      "source": "/149e9513-01fa-4fb0-aad4-566afd725d1b/2d206a39-8ed7-437e-a3be-862e0f06eea3/:path*",
+      "headers": [
+        {
+          "key": "X-Frame-Options",
+          "value": "SAMEORIGIN"
+        }
+      ]
+    },
     {
       "source": "/api/v1/(.*)",
       "headers": [
@@ -25,6 +50,12 @@
           "value": "application/json"
         }
       ]
+    }
+  ],
+  "crons": [
+    {
+      "path": "/api/cron/prune",
+      "schedule": "0 5 * * *"
     }
   ]
 }

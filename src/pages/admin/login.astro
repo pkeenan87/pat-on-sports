@@ -1,0 +1,131 @@
+---
+export const prerender = false;
+
+import {
+  clientIpFromHeaders,
+  hashIp,
+  loginWithPassword,
+  rateLimit,
+  readSessionCookie,
+  verifySessionToken,
+} from "../../lib/comments";
+
+if (Astro.request.method === "POST") {
+  try {
+    const ipHash = hashIp(clientIpFromHeaders(Astro.request.headers));
+    const limited = await rateLimit(`admin-login:${ipHash}`, 10);
+    if (!limited.allowed) {
+      return Astro.redirect("/admin/login?error=1", 303);
+    }
+  } catch {
+    return Astro.redirect("/admin/login?error=1", 303);
+  }
+
+  const form = await Astro.request.formData();
+  const password = String(form.get("password") ?? "");
+  const headers = loginWithPassword(password);
+  if (!headers) {
+    return Astro.redirect("/admin/login?error=1", 303);
+  }
+  return new Response(null, {
+    status: 303,
+    headers: {
+      Location: "/admin/comments",
+      "Set-Cookie": headers.get("Set-Cookie")!,
+    },
+  });
+}
+
+const token = readSessionCookie(Astro.request.headers.get("cookie"));
+if (verifySessionToken(token)) {
+  return Astro.redirect("/admin/comments", 302);
+}
+
+const error = Astro.url.searchParams.get("error");
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>Admin login | Pat on Sports</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --navy: #0c2340;
+        --navy-muted: #1b3654;
+        --red: #c8102e;
+        --paper: #f7f5f1;
+        --silver: #c5c7c9;
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        min-height: 100vh;
+        font-family: "IBM Plex Sans", system-ui, sans-serif;
+        background: var(--paper);
+        color: var(--navy);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 1.5rem;
+      }
+      form {
+        width: 100%;
+        max-width: 22rem;
+      }
+      h1 {
+        font-family: "Barlow Condensed", sans-serif;
+        font-size: 1.75rem;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        margin: 0 0 1rem;
+      }
+      label {
+        display: block;
+        font-size: 0.875rem;
+        font-weight: 600;
+        margin-bottom: 0.35rem;
+      }
+      input {
+        width: 100%;
+        border: 1px solid color-mix(in srgb, var(--silver) 70%, transparent);
+        background: white;
+        padding: 0.65rem 0.75rem;
+        font: inherit;
+        color: var(--navy);
+      }
+      button {
+        margin-top: 1rem;
+        width: 100%;
+        border: 0;
+        background: var(--navy);
+        color: white;
+        font: inherit;
+        font-weight: 600;
+        padding: 0.7rem 1rem;
+        cursor: pointer;
+      }
+      button:hover { background: var(--navy-muted); }
+      .err {
+        color: var(--red);
+        font-size: 0.875rem;
+        margin-bottom: 0.75rem;
+      }
+    </style>
+  </head>
+  <body>
+    <form method="post" action="/admin/login">
+      <h1>Admin</h1>
+      {error ? <p class="err">Invalid password.</p> : null}
+      <label for="password">Password</label>
+      <input id="password" name="password" type="password" required autocomplete="current-password" />
+      <button type="submit">Sign in</button>
+    </form>
+  </body>
+</html>

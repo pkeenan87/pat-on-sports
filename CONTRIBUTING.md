@@ -32,7 +32,7 @@ pat-on-sports/
 **Pages are static HTML; JavaScript is the exception, not the default.**
 
 Only two components hydrate in the browser: `Header.tsx` (search box and
-category filters) and `CommentBox.tsx` (the comment thread). Everything else —
+category filters) and `Comments.tsx` (the comment thread). Everything else —
 post pages, the homepage shelves, category and tag pages, Pros & Cons blocks,
 share buttons — renders to plain HTML at build time and ships no JavaScript.
 
@@ -55,9 +55,9 @@ cp .env.example .env
 npm run dev      # http://localhost:4321
 ```
 
-The `.env` file is optional — every variable has a working default, and the
-comment box simply doesn't render without a project ID. Nothing here is a
-secret; see [SECURITY.md](SECURITY.md).
+The `.env.local` file holds server secrets for comments and the audio upload
+script. Copy from `.env.example` or run `vercel env pull .env.local`. The build
+itself still needs no secrets — see [SECURITY.md](SECURITY.md).
 
 ## Adding a post
 
@@ -116,6 +116,21 @@ npm run new-post -- ./export.zip
 
 It writes a post into `posts/` with front matter scaffolded. Read the result
 before committing — it's a starting point, not a finished post.
+
+## Adding a recording
+
+Recordings are **not** committed under `public/audio/`. Upload them to Vercel
+Blob and let the script write the front-matter fields the player and RSS feed
+need:
+
+```bash
+vercel env pull .env.local   # once; needs BLOB_READ_WRITE_TOKEN
+npm run upload-audio -- ./recording.m4a --post <slug>
+```
+
+That sets `audio` (Blob URL), `audioBytes`, `audioDurationSeconds`, and
+`audioType`. Commit the updated Markdown post — not the binary. Legacy
+`/audio/:file` URLs permanently redirect to the Blob store.
 
 ## Tests
 

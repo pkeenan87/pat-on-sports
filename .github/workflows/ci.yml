@@ -28,6 +28,17 @@ jobs:
       - name: Install
         run: npm ci
 
+      - name: Guard against large public assets
+        run: |
+          # Recordings belong on Vercel Blob (`npm run upload-audio`), not in git.
+          # Hero images today are well under 2 MB; fail closed if something big lands in public/.
+          found="$(find public -type f -size +2M -print)"
+          if [ -n "$found" ]; then
+            echo "Files under public/ exceed 2 MB:"
+            echo "$found"
+            exit 1
+          fi
+
       # `astro check` typechecks .astro/.ts/.tsx *and* validates every post in
       # `posts/` against the Zod schema in src/content.config.ts. A post with a
       # malformed date or a missing description fails here rather than at deploy.
@@ -58,10 +69,9 @@ jobs:
       - name: Install
         run: npm ci
 
-      # Fail-closed at high+. This is a static site with no server runtime, so
-      # the realistic blast radius of a dependency advisory is the build
-      # toolchain; `overrides` in package.json already pins the transitive
-      # packages Dependabot cannot reach on its own.
+      # Fail-closed at high+. The blast radius of a dependency advisory is the build
+      # toolchain plus the comment API runtime; `overrides` in package.json already
+      # pins the transitive packages Dependabot cannot reach on its own.
       - name: npm audit (high+)
         run: npm audit --audit-level=high
 

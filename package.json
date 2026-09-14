@@ -14,30 +14,43 @@
     "test": "vitest",
     "test:run": "vitest run",
     "test:coverage": "vitest run --coverage",
-    "new-post": "tsx scripts/gdoc-to-post.ts"
+    "new-post": "tsx scripts/gdoc-to-post.ts",
+    "upload-audio": "dotenv -e .env.local -- tsx scripts/upload-audio.ts",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "dotenv -e .env.local -- drizzle-kit migrate"
   },
   "dependencies": {
     "@astrojs/check": "^0.9.10",
     "@astrojs/react": "^6.0.5",
     "@astrojs/sitemap": "^3.7.4",
+    "@astrojs/vercel": "^11.0.10",
+    "@neondatabase/serverless": "^1.1.0",
     "@tailwindcss/typography": "^0.5.20",
     "@tailwindcss/vite": "^4.1.18",
     "@vercel/analytics": "^1.6.1",
+    "@vercel/blob": "^2.8.0",
     "adm-zip": "^0.6.0",
     "astro": "^7.3.2",
-    "commentbox.io": "^2.1.0",
+    "botid": "^1.5.11",
+    "drizzle-orm": "^0.45.2",
+    "music-metadata": "^11.15.0",
     "node-html-parser": "^9.0.4",
     "react": "19.3.0",
     "react-dom": "19.3.0",
-    "tailwindcss": "^4.3.3"
+    "tailwindcss": "^4.3.3",
+    "zod": "^4.6.5"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^7.0.1",
     "@testing-library/react": "^16.3.3",
+    "@testing-library/user-event": "^14.6.7",
+    "@types/adm-zip": "^0.5.8",
     "@types/node": "^24.13.3",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "@vitest/coverage-v8": "^5.0.0",
+    "dotenv-cli": "^11.0.0",
+    "drizzle-kit": "^0.31.10",
     "jsdom": "^30.0.1",
     "tsx": "^4.21.0",
     "typescript": "^5",
@@ -45,6 +58,9 @@
   },
   "overrides": {
     "@babel/core": "7.29.7",
+    "@vercel/routing-utils": {
+      "path-to-regexp": "6.3.0"
+    },
     "anymatch": {
       "picomatch": "2.3.2"
     },

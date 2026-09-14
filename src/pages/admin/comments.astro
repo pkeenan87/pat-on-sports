@@ -142,7 +142,9 @@ function formatWhen(d: Date) {
     <header>
       <h1>Comments</h1>
       <p>
-        <a href="/admin/login?logout=1">Sign out</a>
+        <form method="post" action="/admin/logout" style="display:inline">
+          <button class="muted" type="submit">Sign out</button>
+        </form>
       </p>
     </header>
 

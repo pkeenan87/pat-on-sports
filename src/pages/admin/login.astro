@@ -2,7 +2,6 @@
 export const prerender = false;
 
 import {
-  clearSessionCookieHeader,
   clientIpFromHeaders,
   hashIp,
   loginWithPassword,
@@ -38,14 +37,11 @@ if (Astro.request.method === "POST") {
 }
 
 const token = readSessionCookie(Astro.request.headers.get("cookie"));
-if (verifySessionToken(token) && !Astro.url.searchParams.get("logout")) {
+if (verifySessionToken(token)) {
   return Astro.redirect("/admin/comments", 302);
 }
 
 const error = Astro.url.searchParams.get("error");
-if (Astro.url.searchParams.get("logout")) {
-  Astro.response.headers.set("Set-Cookie", clearSessionCookieHeader());
-}
 ---
 
 <!doctype html>

@@ -1,0 +1,139 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+---
+
+<BaseLayout
+  title="Privacy"
+  description="What Pat on Sports and the Pat on Sports app collect, and how to request deletion."
+  canonical="/privacy"
+>
+  <div class="max-w-3xl mx-auto px-4 sm:px-6 py-12 sm:py-16">
+    <p class="text-[11px] font-display font-bold tracking-[0.18em] uppercase text-red mb-3">
+      Privacy
+    </p>
+    <h1 class="font-display text-4xl sm:text-5xl font-bold tracking-wide text-navy">
+      Privacy policy
+    </h1>
+    <p class="mt-3 text-sm text-navy-muted">
+      Last updated: September 14, 2026
+    </p>
+
+    <div class="mt-8 space-y-5 text-lg text-navy-muted font-serif">
+      <p>
+        Pat on Sports is a personal sports column at
+        <a class="text-navy underline underline-offset-2 hover:text-red" href="https://patonsports.com"
+          >patonsports.com</a
+        >
+        and companion mobile apps for iOS and Android. This page covers the
+        website and the apps. It is written for readers and for App Store /
+        Play Store review.
+      </p>
+
+      <h2 class="font-display text-2xl font-bold tracking-wide text-navy pt-4">
+        What we collect
+      </h2>
+      <p>By default, almost nothing.</p>
+      <ul class="list-disc pl-6 space-y-2">
+        <li>
+          <strong class="text-navy font-sans font-semibold">Website.</strong>
+          The site is static HTML. Pages do not require an account. Vercel may
+          log standard request metadata (IP address, user agent, path) for
+          hosting and abuse prevention. Vercel Analytics records anonymised
+          page views.
+        </li>
+        <li>
+          <strong class="text-navy font-sans font-semibold">Comments.</strong>
+          If you leave a comment, the name (and optional email) you enter is
+          stored with that comment so the thread can show who wrote what. Email,
+          when provided, is used only for moderation contact and is not shown
+          publicly. Comment data currently lives with CommentBox.io; when
+          first-party comments ship, it will live in a database we operate.
+        </li>
+        <li>
+          <strong class="text-navy font-sans font-semibold">App push
+            notifications.</strong>
+          If you opt in, the app registers an Expo push token so we can send one
+          notification when a new post is published. The token is a device
+          identifier used only for that purpose. It is not linked to your name
+          or email.
+        </li>
+      </ul>
+
+      <h2 class="font-display text-2xl font-bold tracking-wide text-navy pt-4">
+        What we do not collect
+      </h2>
+      <ul class="list-disc pl-6 space-y-2">
+        <li>No accounts, sign-in, or paywalls.</li>
+        <li>No advertising SDKs and no ad tracking.</li>
+        <li>
+          No third-party analytics SDK in the mobile apps (v1). The website uses
+          Vercel Analytics only.
+        </li>
+        <li>No sale of personal data.</li>
+      </ul>
+
+      <h2 class="font-display text-2xl font-bold tracking-wide text-navy pt-4">
+        How we use it
+      </h2>
+      <p>
+        Push tokens deliver new-post alerts you asked for. Comment fields display
+        and moderate the thread. Hosting logs keep the site online and safe.
+        Nothing else.
+      </p>
+
+      <h2 class="font-display text-2xl font-bold tracking-wide text-navy pt-4">
+        Retention and deletion
+      </h2>
+      <p>
+        Push tokens are kept while notifications stay enabled and are removed
+        when you opt out or when the push service reports the token as invalid.
+        Comments remain with the post unless you ask for removal.
+      </p>
+      <p>
+        To request deletion of a comment, a push token, or any other personal
+        data we hold, email
+        <a
+          class="text-navy underline underline-offset-2 hover:text-red"
+          href="mailto:pat@patonsports.com"
+          >pat@patonsports.com</a
+        >
+        from the address you used (if any) and say what you want removed. I aim
+        to respond within 5 business days.
+      </p>
+
+      <h2 class="font-display text-2xl font-bold tracking-wide text-navy pt-4">
+        Children
+      </h2>
+      <p>
+        The site and app are general-audience sports commentary. They are not
+        directed at children under 13, and we do not knowingly collect data from
+        children.
+      </p>
+
+      <h2 class="font-display text-2xl font-bold tracking-wide text-navy pt-4">
+        Changes
+      </h2>
+      <p>
+        If this policy changes in a material way, the date at the top of this
+        page will update and, for app users, a short notice may appear via the
+        app manifest banner.
+      </p>
+
+      <h2 class="font-display text-2xl font-bold tracking-wide text-navy pt-4">
+        Contact
+      </h2>
+      <p>
+        Questions:
+        <a
+          class="text-navy underline underline-offset-2 hover:text-red"
+          href="mailto:pat@patonsports.com"
+          >pat@patonsports.com</a
+        >
+        ·
+        <a class="text-navy underline underline-offset-2 hover:text-red" href="/support"
+          >Support</a
+        >
+      </p>
+    </div>
+  </div>
+</BaseLayout>

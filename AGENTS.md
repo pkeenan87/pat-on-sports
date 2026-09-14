@@ -34,5 +34,5 @@
 
 ## Configuration & Secrets
 - Local configuration can use `.env`; never commit secrets.
-- Public runtime vars use the `PUBLIC_` prefix (`PUBLIC_SITE_URL`, `PUBLIC_COMMENTBOX_PROJECT_ID`).
+- Public runtime vars use the `PUBLIC_` prefix (`PUBLIC_SITE_URL`, `PUBLIC_COMMENTBOX_PROJECT_ID`, `PUBLIC_COMMENTS_API_BASE`, `PUBLIC_APP_BANNER_MESSAGE`).
 - Deployment builds should rely on `npm run build` with environment variables set by the host (Vercel).

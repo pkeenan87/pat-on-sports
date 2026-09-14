@@ -70,7 +70,8 @@ The slug is the filename (without `.md`). No registry file is required.
 - Posts are statically generated at build time via `getStaticPaths()`
 - Search and tag filters are client-side (`?q=` and `?tag=` on `/blog`)
 - Header and CommentBox are React islands; everything else is static HTML
-- Public env vars: `PUBLIC_SITE_URL`, `PUBLIC_COMMENTBOX_PROJECT_ID`
+- Public env vars: `PUBLIC_SITE_URL`, `PUBLIC_COMMENTBOX_PROJECT_ID`, `PUBLIC_COMMENTS_API_BASE`, `PUBLIC_APP_BANNER_MESSAGE`
+- App content API (static JSON): `/api/v1/posts.json`, `/api/v1/posts/[slug].json`, `/api/v1/manifest.json`
 
 ## Testing
 

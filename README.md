@@ -42,6 +42,7 @@ reproducible by opening the built file in `dist/`.
 | **Homepage shelves** | A featured lead, a latest feed, and a separate shelf for the 2025 playoff run. |
 | **Audio** | Posts can carry a narrated version, surfaced with a custom player. |
 | **Feeds and SEO** | RSS, a sitemap, `robots.txt`, canonical URLs, Open Graph and Twitter cards, all generated. |
+| **App JSON API** | Build-time `/api/v1/posts.json`, per-post detail, and `manifest.json` for the native apps — Zod-validated so a bad shape fails the build. |
 | **Comments** | A CommentBox.io thread per post. |
 
 ## Stack
@@ -58,7 +59,9 @@ npm run dev      # http://localhost:4321
 ```
 
 No configuration required — every environment variable has a working default.
-Copy `.env.example` to `.env` if you want to override one.
+Copy `.env.example` to `.env` if you want to override one. Public vars:
+`PUBLIC_SITE_URL`, `PUBLIC_COMMENTBOX_PROJECT_ID`, `PUBLIC_COMMENTS_API_BASE`
+(app manifest), and `PUBLIC_APP_BANNER_MESSAGE` (optional app banner).
 
 ### Commands
 

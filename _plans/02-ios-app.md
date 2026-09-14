@@ -2,6 +2,8 @@
 
 **Status:** proposed · **Written:** 2026-09-14 · **Depends on:** nothing to start; Plan 1 (comments API) for in-app comments
 
+> **Phase 0 / Part A note (site repo):** A1–A4 (privacy, support, `/api/v1/*`, AASA, tests) ship on their own. **A5** (push broadcast endpoint + GitHub Action) stays with **Plan 1 / Phase 4** — it needs the Vercel adapter, Neon `push_tokens`, and Expo Push secrets that Plan 1 introduces.
+
 ## Goal
 
 An App Store app that readers install to read every article, listen to the

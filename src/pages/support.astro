@@ -1,0 +1,91 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+---
+
+<BaseLayout
+  title="Support"
+  description="Contact Pat on Sports and open a GitHub issue for bugs, features, or post corrections."
+  canonical="/support"
+>
+  <div class="max-w-3xl mx-auto px-4 sm:px-6 py-12 sm:py-16">
+    <p class="text-[11px] font-display font-bold tracking-[0.18em] uppercase text-red mb-3">
+      Support
+    </p>
+    <h1 class="font-display text-4xl sm:text-5xl font-bold tracking-wide text-navy">
+      Help and contact
+    </h1>
+
+    <div class="mt-8 space-y-5 text-lg text-navy-muted font-serif">
+      <p>
+        For anything about the site or the Pat on Sports app — a broken page, a
+        wrong score, an App Store question, or a privacy request — email:
+      </p>
+      <p>
+        <a
+          class="font-display text-2xl font-bold tracking-wide text-navy hover:text-red"
+          href="mailto:pat@patonsports.com"
+          >pat@patonsports.com</a
+        >
+      </p>
+      <p>
+        I read every message. Expect a reply within a few business days; faster
+        during the season when a game just landed.
+      </p>
+
+      <h2 class="font-display text-2xl font-bold tracking-wide text-navy pt-4">
+        Report on GitHub
+      </h2>
+      <p>
+        Prefer a tracked issue? Use the templates on the public repo:
+      </p>
+      <ul class="list-disc pl-6 space-y-2">
+        <li>
+          <a
+            class="text-navy underline underline-offset-2 hover:text-red"
+            href="https://github.com/pkeenan87/pat-on-sports/issues/new/choose"
+            target="_blank"
+            rel="noopener noreferrer"
+            >Open an issue</a
+          >
+          — bug report, feature request, or post correction.
+        </li>
+        <li>
+          <a
+            class="text-navy underline underline-offset-2 hover:text-red"
+            href="https://github.com/pkeenan87/pat-on-sports/security/advisories/new"
+            target="_blank"
+            rel="noopener noreferrer"
+            >Security advisory</a
+          >
+          — private, not a public issue.
+        </li>
+      </ul>
+
+      <h2 class="font-display text-2xl font-bold tracking-wide text-navy pt-4">
+        Useful links
+      </h2>
+      <ul class="list-disc pl-6 space-y-2">
+        <li>
+          <a class="text-navy underline underline-offset-2 hover:text-red" href="/privacy"
+            >Privacy policy</a
+          >
+        </li>
+        <li>
+          <a class="text-navy underline underline-offset-2 hover:text-red" href="/about"
+            >About</a
+          >
+        </li>
+        <li>
+          <a class="text-navy underline underline-offset-2 hover:text-red" href="/blog"
+            >Archive</a
+          >
+        </li>
+        <li>
+          <a class="text-navy underline underline-offset-2 hover:text-red" href="/rss.xml"
+            >RSS feed</a
+          >
+        </li>
+      </ul>
+    </div>
+  </div>
+</BaseLayout>

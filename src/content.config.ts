@@ -13,6 +13,7 @@ const blog = defineCollection({
     heroAlt: z.string().optional(),
     heroCaption: z.string().optional(),
     audio: z.string().optional(),
+    audioDurationSeconds: z.number().int().positive().optional(),
     season: z.number().int().optional(),
     week: z.number().int().optional(),
     opponent: z.string().optional(),

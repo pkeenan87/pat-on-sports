@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import { createReadStream, existsSync, readFileSync, writeFileSync } from "node:fs";
+import { readFileSync, writeFileSync } from "node:fs";
 import { basename, extname, resolve } from "node:path";
 import { put } from "@vercel/blob";
 import { parseBuffer } from "music-metadata";
@@ -88,20 +88,31 @@ export function rewriteAudioFrontMatter(
   return `---\n${lines.join("\n")}\n---\n${body}`;
 }
 
+function readFile(path: string, missingMessage: string): Buffer {
+  try {
+    return readFileSync(path);
+  } catch (err) {
+    if ((err as NodeJS.ErrnoException).code === "ENOENT") {
+      throw new Error(missingMessage);
+    }
+    throw err;
+  }
+}
+
 async function main() {
   const { filePath, postSlug } = parseUploadAudioArgs(process.argv.slice(2));
   const absFile = resolve(filePath);
   const ext = extname(absFile);
   const contentType = contentTypeForExtension(ext);
 
-  if (!existsSync(absFile)) {
-    throw new Error(`Audio file not found: ${absFile}`);
-  }
-
+  // Read both inputs up front (no exists-then-read race): a missing file
+  // fails here, before anything is uploaded.
+  const buffer = readFile(absFile, `Audio file not found: ${absFile}`);
   const postPath = resolve("posts", `${postSlug}.md`);
-  if (!existsSync(postPath)) {
-    throw new Error(`Post not found: posts/${postSlug}.md`);
-  }
+  const postMarkdown = readFile(
+    postPath,
+    `Post not found: posts/${postSlug}.md`
+  ).toString("utf8");
 
   if (!process.env.BLOB_READ_WRITE_TOKEN) {
     throw new Error(
@@ -109,7 +120,6 @@ async function main() {
     );
   }
 
-  const buffer = readFileSync(absFile);
   const metadata = await parseBuffer(buffer, { mimeType: contentType });
   const durationSeconds = Math.max(
     1,
@@ -117,7 +127,7 @@ async function main() {
   );
   const pathname = `audio/${postSlug}${ext.toLowerCase()}`;
 
-  const blob = await put(pathname, createReadStream(absFile), {
+  const blob = await put(pathname, buffer, {
     access: "public",
     addRandomSuffix: false,
     allowOverwrite: true,
@@ -126,7 +136,7 @@ async function main() {
     token: process.env.BLOB_READ_WRITE_TOKEN,
   });
 
-  const updated = rewriteAudioFrontMatter(readFileSync(postPath, "utf8"), {
+  const updated = rewriteAudioFrontMatter(postMarkdown, {
     audio: blob.url,
     audioBytes: buffer.byteLength,
     audioDurationSeconds: durationSeconds,

@@ -43,6 +43,7 @@ reproducible by opening the built file in `dist/`.
 | **Audio** | Narrated recordings live on Vercel Blob; front matter carries the URL, byte length, and duration for the player and RSS enclosure. |
 | **Feeds and SEO** | RSS, a sitemap, `robots.txt`, canonical URLs, Open Graph and Twitter cards, all generated. |
 | **App JSON API** | Build-time `/api/v1/posts.json`, per-post detail, and `manifest.json` for the native apps — Zod-validated so a bad shape fails the build. |
+| **Push** | Device tokens in Neon; `POST /api/push/register` / `unregister` from the app; `POST /api/push/broadcast` (secret-protected) sends via Expo when a new `posts/*.md` lands on `main`. |
 | **Comments** | First-party threads on Neon Postgres via Vercel Functions, with moderation at `/admin/comments`. |
 
 ## Stack
@@ -59,8 +60,9 @@ vercel link && vercel env pull .env.local   # for comments + audio upload
 npm run dev      # http://localhost:4321
 ```
 
-Static pages work with no env file. Comments, admin, and `upload-audio` need
-the server vars in `.env.local` (see `.env.example`). Public vars:
+Static pages work with no env file. Comments, admin, push broadcast, and
+`upload-audio` need the server vars in `.env.local` (see `.env.example`),
+including `PUSH_BROADCAST_SECRET` for `POST /api/push/broadcast`. Public vars:
 `PUBLIC_SITE_URL`, `PUBLIC_TWITTER_SITE`, `PUBLIC_COMMENTS_API_BASE`
 (app manifest), and `PUBLIC_APP_BANNER_MESSAGE` (optional app banner).
 

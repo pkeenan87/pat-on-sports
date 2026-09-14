@@ -70,5 +70,27 @@ export const rateLimits = pgTable("rate_limits", {
   count: integer("count").notNull(),
 });
 
+export const pushTokens = pgTable(
+  "push_tokens",
+  {
+    token: text("token").primaryKey(),
+    platform: text("platform").notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+    lastSeen: timestamp("last_seen", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+  },
+  (table) => [
+    check(
+      "push_tokens_platform_check",
+      sql`${table.platform} IN ('ios', 'android', 'web')`
+    ),
+  ]
+);
+
 export type Comment = typeof comments.$inferSelect;
 export type NewComment = typeof comments.$inferInsert;
+export type PushToken = typeof pushTokens.$inferSelect;
+export type NewPushToken = typeof pushTokens.$inferInsert;

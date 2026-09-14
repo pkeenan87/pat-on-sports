@@ -1,0 +1,85 @@
+name: Broadcast push for new posts
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "posts/**"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: push-broadcast-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  broadcast:
+    name: Notify devices of new posts
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          # Full history: the diff below runs against github.event.before, which
+          # a shallow clone cannot reach when a push carries several commits.
+          fetch-depth: 0
+
+      - name: Broadcast for each added post
+        env:
+          PUSH_BROADCAST_SECRET: ${{ secrets.PUSH_BROADCAST_SECRET }}
+          SITE_URL: ${{ vars.SITE_URL }}
+        run: |
+          set -euo pipefail
+
+          if [ -z "${PUSH_BROADCAST_SECRET:-}" ]; then
+            echo "PUSH_BROADCAST_SECRET is not set; skipping broadcast."
+            exit 0
+          fi
+
+          SITE_URL="${SITE_URL:-https://patonsports.com}"
+
+          before="${{ github.event.before }}"
+          if [ -z "$before" ] || [ "$before" = "0000000000000000000000000000000000000000" ]; then
+            before="$(git rev-parse HEAD^)"
+          fi
+
+          mapfile -t added < <(
+            git diff --name-only --diff-filter=A "$before" "${{ github.sha }}" -- 'posts/*.md' \
+              | sed -n 's|^posts/\(.*\)\.md$|\1|p'
+          )
+
+          if [ "${#added[@]}" -eq 0 ]; then
+            echo "No new posts/*.md files in this push."
+            exit 0
+          fi
+
+          # Deploy and this workflow race; retry 404s until the new post is live.
+          for slug in "${added[@]}"; do
+            echo "Broadcasting slug=$slug"
+            payload="$(jq -cn --arg s "$slug" '{slug:$s}')"
+            ok=0
+            for attempt in $(seq 1 12); do
+              code="$(curl -sS -o /tmp/push-broadcast-body.json -w '%{http_code}' \
+                -X POST "${SITE_URL%/}/api/push/broadcast" \
+                -H "Authorization: Bearer ${PUSH_BROADCAST_SECRET}" \
+                -H "Content-Type: application/json" \
+                -d "$payload" || true)"
+              if [ "$code" = "200" ]; then
+                cat /tmp/push-broadcast-body.json
+                echo
+                ok=1
+                break
+              fi
+              if [ "$code" != "404" ]; then
+                echo "Broadcast failed with HTTP $code:" >&2
+                cat /tmp/push-broadcast-body.json >&2 || true
+                exit 1
+              fi
+              echo "Post not deployed yet (404); waiting (attempt $attempt/12)…"
+              sleep 20
+            done
+            if [ "$ok" -ne 1 ]; then
+              echo "Timed out waiting for slug=$slug to deploy" >&2
+              exit 1
+            fi
+          done

@@ -72,8 +72,11 @@ The slug is the filename (without `.md`). No registry file is required.
 - Header and Comments are React islands; everything else is static HTML
 - Public env vars: `PUBLIC_SITE_URL`, `PUBLIC_TWITTER_SITE`, `PUBLIC_COMMENTS_API_BASE`, `PUBLIC_APP_BANNER_MESSAGE`
 - App content API (static JSON): `/api/v1/posts.json`, `/api/v1/posts/[slug].json`, `/api/v1/manifest.json`
-- Server secrets (comments / upload script only): `DATABASE_URL`, `ADMIN_PASSWORD`,
-  `SESSION_SECRET`, `IP_HASH_SALT`, `CRON_SECRET`, `BLOB_READ_WRITE_TOKEN`
+- Push API (on-demand): `POST /api/push/register`, `POST /api/push/unregister`,
+  `POST /api/push/broadcast` (bearer `PUSH_BROADCAST_SECRET`)
+- Server secrets (comments / push / upload script): `DATABASE_URL`, `ADMIN_PASSWORD`,
+  `SESSION_SECRET`, `IP_HASH_SALT`, `CRON_SECRET`, `PUSH_BROADCAST_SECRET`,
+  `BLOB_READ_WRITE_TOKEN` (optional: `EXPO_ACCESS_TOKEN`)
 - `npm run build` needs no secrets; `/api/*` and `/admin/*` opt out of prerender
 
 ## Testing

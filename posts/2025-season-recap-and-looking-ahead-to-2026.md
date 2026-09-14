@@ -6,11 +6,13 @@ tags: ["NFL", "New England Patriots"]
 heroImage: "/images/2026/recaps/season-recap/2025-season-recap-hero.jpg"
 heroAlt: "Drake Maye throws a pass while Will Campbell blocks in pass protection"
 heroCaption: "Year two of the Maye era starts with a better supporting cast around him."
-audio: "/audio/2025-season-recap-and-looking-ahead-to-2026.m4a"
+audio: "https://5a8kwvvlim3wfoud.public.blob.vercel-storage.com/audio/2025-season-recap-and-looking-ahead-to-2026.m4a"
+audioBytes: 6933289
+audioDurationSeconds: 501
+audioType: "audio/mp4"
 season: 2025
 round: "Season Recap"
 ---
-
 Welcome back to Pat on Sports, our staff (me) has done a lot of work (AI did it in ten minutes) to give the site a fresh new look for the season. While AI will do all of the coding and design work, it will never write a single word I write on this site. All thoughts and opinions are my own. Let’s start with a look back at the 2025 Cinderella Season for the New England Patriots
 
 ## 2025 Season Recap

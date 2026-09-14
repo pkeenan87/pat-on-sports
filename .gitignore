@@ -63,3 +63,12 @@ test-results/
 # Optional: Markdown drafts
 # =========================
 posts/_drafts/
+
+# =========================
+# Vercel
+# =========================
+.vercel/
+
+# Recordings live on Vercel Blob — use npm run upload-audio
+public/audio/
+.env*

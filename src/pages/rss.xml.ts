@@ -1,32 +1,7 @@
 import type { APIRoute } from "astro";
 import { getCollection } from "astro:content";
-import { statSync } from "node:fs";
-import { join } from "node:path";
 import { formatPostDate, sortPostsByDate, toPostMeta } from "../lib/posts";
-
-function escapeXml(value: string): string {
-  return value
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&apos;");
-}
-
-function audioEnclosure(site: string, audioPath: string | undefined): string {
-  if (!audioPath?.trim()) return "";
-  const relative = audioPath.replace(/^\//, "");
-  const filePath = join(process.cwd(), "public", relative);
-  let length = 0;
-  try {
-    length = statSync(filePath).size;
-  } catch {
-    length = 0;
-  }
-  const url = `${site}/${relative}`;
-  const type = relative.endsWith(".m4a") ? "audio/mp4" : "audio/mpeg";
-  return `      <enclosure url="${escapeXml(url)}" length="${length}" type="${type}" />`;
-}
+import { audioEnclosure, escapeXml } from "../lib/rss";
 
 export const GET: APIRoute = async () => {
   const site = (
@@ -45,7 +20,7 @@ export const GET: APIRoute = async () => {
       const date = formatPostDate(post.date);
       const body = bodyBySlug.get(post.slug) ?? "";
       const safeCdata = body.replaceAll("]]>", "]]]]><![CDATA[>");
-      const enclosure = audioEnclosure(site, post.audio);
+      const enclosure = audioEnclosure(post);
       return `    <item>
       <title>${escapeXml(post.title)}</title>
       <link>${url}</link>

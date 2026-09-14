@@ -15,7 +15,9 @@ export type PostMeta = {
   heroAlt?: string;
   heroCaption?: string;
   audio?: string;
+  audioBytes?: number;
   audioDurationSeconds?: number;
+  audioType?: "audio/mp4" | "audio/mpeg";
   season?: number;
   week?: number;
   opponent?: string;
@@ -38,7 +40,9 @@ export type BlogEntry = {
     heroAlt?: string;
     heroCaption?: string;
     audio?: string;
+    audioBytes?: number;
     audioDurationSeconds?: number;
+    audioType?: "audio/mp4" | "audio/mpeg";
     season?: number;
     week?: number;
     opponent?: string;
@@ -153,7 +157,9 @@ export function toPostMeta(entry: BlogEntry): PostMeta {
     heroAlt: entry.data.heroAlt,
     heroCaption: entry.data.heroCaption,
     audio: entry.data.audio,
+    audioBytes: entry.data.audioBytes,
     audioDurationSeconds: entry.data.audioDurationSeconds,
+    audioType: entry.data.audioType,
     season: entry.data.season,
     week: entry.data.week,
     opponent: entry.data.opponent,

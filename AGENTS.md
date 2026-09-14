@@ -34,5 +34,8 @@
 
 ## Configuration & Secrets
 - Local configuration can use `.env`; never commit secrets.
-- Public runtime vars use the `PUBLIC_` prefix (`PUBLIC_SITE_URL`, `PUBLIC_COMMENTBOX_PROJECT_ID`, `PUBLIC_COMMENTS_API_BASE`, `PUBLIC_APP_BANNER_MESSAGE`).
+- Public runtime vars use the `PUBLIC_` prefix (`PUBLIC_SITE_URL`, `PUBLIC_TWITTER_SITE`, `PUBLIC_COMMENTS_API_BASE`, `PUBLIC_APP_BANNER_MESSAGE`).
+- Comment/admin secrets (`DATABASE_URL`, `ADMIN_PASSWORD`, `SESSION_SECRET`,
+  `IP_HASH_SALT`, `CRON_SECRET`) and `BLOB_READ_WRITE_TOKEN` stay server-side /
+  local-only — never `PUBLIC_`, never required for `npm run build`.
 - Deployment builds should rely on `npm run build` with environment variables set by the host (Vercel).

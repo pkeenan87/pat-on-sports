@@ -24,7 +24,7 @@ npm run new-post -- ./export.zip # Convert a Google Doc HTML/zip export to Markd
 ```
 src/                  # Astro app (pages, layouts, components, content config)
   pages/              # File-based routes
-  components/         # Astro + React islands (Header, CommentBox, PostCard)
+  components/         # Astro + React islands (Header, Comments, PostCard)
   layouts/            # BaseLayout
   lib/                # Post helpers (sort, tags, search filter)
   content.config.ts   # Blog collection schema
@@ -69,9 +69,12 @@ The slug is the filename (without `.md`). No registry file is required.
 - All post metadata flows through the `blog` content collection
 - Posts are statically generated at build time via `getStaticPaths()`
 - Search and tag filters are client-side (`?q=` and `?tag=` on `/blog`)
-- Header and CommentBox are React islands; everything else is static HTML
-- Public env vars: `PUBLIC_SITE_URL`, `PUBLIC_COMMENTBOX_PROJECT_ID`, `PUBLIC_COMMENTS_API_BASE`, `PUBLIC_APP_BANNER_MESSAGE`
+- Header and Comments are React islands; everything else is static HTML
+- Public env vars: `PUBLIC_SITE_URL`, `PUBLIC_TWITTER_SITE`, `PUBLIC_COMMENTS_API_BASE`, `PUBLIC_APP_BANNER_MESSAGE`
 - App content API (static JSON): `/api/v1/posts.json`, `/api/v1/posts/[slug].json`, `/api/v1/manifest.json`
+- Server secrets (comments / upload script only): `DATABASE_URL`, `ADMIN_PASSWORD`,
+  `SESSION_SECRET`, `IP_HASH_SALT`, `CRON_SECRET`, `BLOB_READ_WRITE_TOKEN`
+- `npm run build` needs no secrets; `/api/*` and `/admin/*` opt out of prerender
 
 ## Testing
 

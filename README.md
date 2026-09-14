@@ -40,10 +40,10 @@ reproducible by opening the built file in `dist/`.
 | **Search and filters** | Client-side, over titles, descriptions, tags and post bodies, driven by `?q=` and `?category=` so any filtered view is a shareable URL. |
 | **Related posts** | Scored by shared opponent, category and season, so a Bills recap surfaces the other Bills games. |
 | **Homepage shelves** | A featured lead, a latest feed, and a separate shelf for the 2025 playoff run. |
-| **Audio** | Posts can carry a narrated version, surfaced with a custom player. |
+| **Audio** | Narrated recordings live on Vercel Blob; front matter carries the URL, byte length, and duration for the player and RSS enclosure. |
 | **Feeds and SEO** | RSS, a sitemap, `robots.txt`, canonical URLs, Open Graph and Twitter cards, all generated. |
 | **App JSON API** | Build-time `/api/v1/posts.json`, per-post detail, and `manifest.json` for the native apps — Zod-validated so a bad shape fails the build. |
-| **Comments** | A CommentBox.io thread per post. |
+| **Comments** | First-party threads on Neon Postgres via Vercel Functions, with moderation at `/admin/comments`. |
 
 ## Stack
 
@@ -55,12 +55,13 @@ Vitest · deployed on Vercel · Node 24.
 ```bash
 nvm use          # Node 24, pinned in .nvmrc
 npm install
+vercel link && vercel env pull .env.local   # for comments + audio upload
 npm run dev      # http://localhost:4321
 ```
 
-No configuration required — every environment variable has a working default.
-Copy `.env.example` to `.env` if you want to override one. Public vars:
-`PUBLIC_SITE_URL`, `PUBLIC_COMMENTBOX_PROJECT_ID`, `PUBLIC_COMMENTS_API_BASE`
+Static pages work with no env file. Comments, admin, and `upload-audio` need
+the server vars in `.env.local` (see `.env.example`). Public vars:
+`PUBLIC_SITE_URL`, `PUBLIC_TWITTER_SITE`, `PUBLIC_COMMENTS_API_BASE`
 (app manifest), and `PUBLIC_APP_BANNER_MESSAGE` (optional app banner).
 
 ### Commands
@@ -75,6 +76,10 @@ Copy `.env.example` to `.env` if you want to override one. Public vars:
 | `npm run test:run` | Vitest once (what CI runs) |
 | `npm run test:coverage` | Coverage report |
 | `npm run new-post -- ./export.zip` | Convert a Google Doc export into a Markdown post |
+| `npm run upload-audio -- ./recording.m4a --post <slug>` | Upload a recording to Vercel Blob and write front matter |
+| `npm run db:migrate` | Apply Drizzle migrations (needs `DATABASE_URL` in `.env.local`) |
+
+`astro preview` does not run the Vercel adapter's on-demand routes. Use `npm run dev` (with `.env.local`) or `vercel dev` to exercise `/api/*` and `/admin/*`.
 
 ## Writing a post
 

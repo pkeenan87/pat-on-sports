@@ -13,6 +13,50 @@ type Props = {
   slug: string;
 };
 
+const SUBMIT_TIMEOUT_MS = 15_000;
+
+declare global {
+  interface Window {
+    __posBotIdInit?: boolean;
+  }
+}
+
+/**
+ * Initialise the BotID client exactly once per page lifetime.
+ *
+ * initBotId() wraps window.fetch and creates a challenge instance each time it
+ * is called, but only the most recent instance ever receives the challenge
+ * result. Every earlier wrapper then awaits a promise that never resolves, so
+ * a second call (this island remounts on every view-transition navigation)
+ * makes all later protected fetches hang. A window-level flag survives soft
+ * navigations, unlike module state, so the guard holds across the session.
+ */
+function ensureBotId(): void {
+  if (!import.meta.env.PROD) return;
+  if (typeof window === "undefined" || window.__posBotIdInit) return;
+  window.__posBotIdInit = true;
+  import("botid/client/core")
+    .then(({ initBotId }) => {
+      initBotId({
+        protect: [{ path: "/api/comments/*", method: "POST" }],
+      });
+    })
+    .catch(() => {
+      // BotID client is optional if the package path changes; the server
+      // check decides what to do without it.
+      window.__posBotIdInit = false;
+    });
+}
+
+/** fetch with a hard timeout so a stalled request surfaces as an error. */
+function fetchWithTimeout(input: string, init: RequestInit): Promise<Response> {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), SUBMIT_TIMEOUT_MS);
+  return fetch(input, { ...init, signal: controller.signal }).finally(() =>
+    clearTimeout(timer)
+  );
+}
+
 type Status = { tone: "info" | "error" | "success"; message: string } | null;
 
 function formatWhen(iso: string): string {
@@ -39,26 +83,8 @@ export default function Comments({ slug }: Props) {
   const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
-    if (!import.meta.env.PROD) return;
-    let cancelled = false;
-    (async () => {
-      try {
-        const { initBotId } = await import("botid/client/core");
-        if (cancelled) return;
-        initBotId({
-          protect: [
-            { path: `/api/comments/${slug}`, method: "POST" },
-            { path: "/api/comments/*", method: "POST" },
-          ],
-        });
-      } catch {
-        // BotID client is optional if the package path changes.
-      }
-    })();
-    return () => {
-      cancelled = true;
-    };
-  }, [slug]);
+    ensureBotId();
+  }, []);
 
   useEffect(() => {
     let cancelled = false;
@@ -100,11 +126,14 @@ export default function Comments({ slug }: Props) {
     };
 
     try {
-      const res = await fetch(`/api/comments/${encodeURIComponent(slug)}`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
+      const res = await fetchWithTimeout(
+        `/api/comments/${encodeURIComponent(slug)}`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        }
+      );
       const data = (await res.json().catch(() => ({}))) as {
         status?: string;
         error?: string;
@@ -148,10 +177,13 @@ export default function Comments({ slug }: Props) {
           ? "Thanks — your comment is awaiting moderation."
           : "Posted.",
       });
-    } catch {
+    } catch (err) {
+      const timedOut = err instanceof DOMException && err.name === "AbortError";
       setStatus({
         tone: "error",
-        message: "Could not post comment. Try again.",
+        message: timedOut
+          ? "Posting timed out. Reload the page and try again."
+          : "Could not post comment. Try again.",
       });
     } finally {
       setSubmitting(false);
@@ -161,7 +193,7 @@ export default function Comments({ slug }: Props) {
   async function report(id: string) {
     if (reported.has(id)) return;
     try {
-      const res = await fetch(
+      const res = await fetchWithTimeout(
         `/api/comments/${encodeURIComponent(id)}/report`,
         { method: "POST", headers: { "Content-Type": "application/json" }, body: "{}" }
       );

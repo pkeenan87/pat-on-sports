@@ -7,6 +7,13 @@ updates:
     open-pull-requests-limit: 5
     commit-message:
       prefix: "chore"
+    ignore:
+      # TypeScript 7 is the native Go compiler and does not yet expose the
+      # Language Service API that @astrojs/check (Volar) needs. Its peer range
+      # is typescript ^5 || ^6, so a 7.x bump fails `npm ci`. Revisit when
+      # Astro supports TS 7 (withastro/roadmap#1321).
+      - dependency-name: "typescript"
+        versions: [">=7"]
     groups:
       # Astro's integrations are versioned against the core package; a solo
       # bump of @astrojs/react or @astrojs/sitemap can land on a core it

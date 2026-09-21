@@ -52,3 +52,10 @@ updates:
     open-pull-requests-limit: 5
     commit-message:
       prefix: "chore"
+    groups:
+      # CodeQL refuses to run when init and analyze (or any other
+      # codeql-action/* step) are pinned to different versions. A solo bump
+      # of one step fails the analyze job, so they travel together.
+      codeql-action:
+        patterns:
+          - "github/codeql-action/*"

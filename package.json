@@ -21,7 +21,7 @@
   },
   "dependencies": {
     "@astrojs/check": "^0.9.10",
-    "@astrojs/react": "^6.0.5",
+    "@astrojs/react": "^6.0.6",
     "@astrojs/sitemap": "^3.7.4",
     "@astrojs/vercel": "^11.0.10",
     "@neondatabase/serverless": "^1.1.0",
@@ -30,7 +30,7 @@
     "@vercel/analytics": "^1.6.1",
     "@vercel/blob": "^2.8.0",
     "adm-zip": "^0.6.0",
-    "astro": "^7.3.2",
+    "astro": "^7.3.3",
     "botid": "^1.5.11",
     "drizzle-orm": "^0.45.2",
     "music-metadata": "^11.15.0",

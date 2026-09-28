@@ -4,7 +4,7 @@
 
 This is an **Astro sports blog** focused on New England Patriots analysis. It's a content-driven static site that transforms Markdown posts into a searchable, filterable blog.
 
-**Tech Stack**: Astro 5, React 19 (islands), TypeScript 5 (strict), Tailwind CSS 4, Vitest
+**Tech Stack**: Astro 5, React 19 (islands), TypeScript 6 (strict), Tailwind CSS 4, Vitest
 
 ## Quick Commands
 

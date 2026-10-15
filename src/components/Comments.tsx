@@ -1,4 +1,6 @@
 import { useEffect, useId, useRef, useState } from "react";
+import { isObviousBot } from "../lib/comments/bots";
+import { isRecentFreshToken } from "../lib/comments/readCache";
 
 export type PublicComment = {
   id: string;
@@ -14,6 +16,47 @@ type Props = {
 };
 
 const SUBMIT_TIMEOUT_MS = 15_000;
+const FRESH_STORAGE_PREFIX = "pos-comments-fresh:";
+/** Start the read slightly before the section is on screen, still not on page load. */
+const VIEW_MARGIN_PX = 200;
+
+function readFreshToken(slug: string): string | null {
+  try {
+    const value = sessionStorage.getItem(FRESH_STORAGE_PREFIX + slug);
+    if (!value || !isRecentFreshToken(value)) {
+      if (value) sessionStorage.removeItem(FRESH_STORAGE_PREFIX + slug);
+      return null;
+    }
+    return value;
+  } catch {
+    return null;
+  }
+}
+
+/** Remember a just-approved comment so the next read skips the shared CDN entry. */
+function rememberFreshCommentRead(slug: string): void {
+  try {
+    sessionStorage.setItem(FRESH_STORAGE_PREFIX + slug, String(Date.now()));
+  } catch {
+    // Private browsing can reject sessionStorage; the optimistic comment still shows.
+  }
+}
+
+function commentReadRequest(slug: string): { url: string; bypass: boolean } {
+  const base = `/api/comments/${encodeURIComponent(slug)}.json`;
+  const token = readFreshToken(slug);
+  if (!token) return { url: base, bypass: false };
+  return { url: `${base}?fresh=${token}`, bypass: true };
+}
+
+function isNearViewport(el: Element): boolean {
+  const rect = el.getBoundingClientRect();
+  // jsdom and not-yet-laid-out nodes report an empty box. Let the observer decide.
+  if (rect.width === 0 && rect.height === 0) return false;
+  return (
+    rect.top < window.innerHeight + VIEW_MARGIN_PX && rect.bottom > -VIEW_MARGIN_PX
+  );
+}
 
 declare global {
   interface Window {
@@ -74,6 +117,8 @@ function formatWhen(iso: string): string {
 export default function Comments({ slug }: Props) {
   const statusId = useId();
   const statusRef = useRef<HTMLParagraphElement>(null);
+  const sectionRef = useRef<HTMLDivElement>(null);
+  const [inView, setInView] = useState(false);
   const [comments, setComments] = useState<PublicComment[]>([]);
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState(false);
@@ -87,12 +132,44 @@ export default function Comments({ slug }: Props) {
   }, []);
 
   useEffect(() => {
+    const el = sectionRef.current;
+    if (!el || typeof IntersectionObserver === "undefined") {
+      setInView(true);
+      return;
+    }
+    if (isNearViewport(el)) {
+      setInView(true);
+      return;
+    }
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((entry) => entry.isIntersecting)) {
+          setInView(true);
+          observer.disconnect();
+        }
+      },
+      { rootMargin: `${VIEW_MARGIN_PX}px 0px`, threshold: 0 }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    if (!inView) return;
+    if (isObviousBot(navigator.userAgent)) {
+      setLoading(false);
+      setLoadError(false);
+      setComments([]);
+      return;
+    }
+
     let cancelled = false;
+    const { url, bypass } = commentReadRequest(slug);
     (async () => {
       setLoading(true);
       setLoadError(false);
       try {
-        const res = await fetch(`/api/comments/${encodeURIComponent(slug)}.json`);
+        const res = await fetch(url, bypass ? { cache: "no-store" } : undefined);
         if (!res.ok) throw new Error("load failed");
         const data = (await res.json()) as { comments: PublicComment[] };
         if (!cancelled) setComments(data.comments ?? []);
@@ -105,7 +182,7 @@ export default function Comments({ slug }: Props) {
     return () => {
       cancelled = true;
     };
-  }, [slug]);
+  }, [slug, inView]);
 
   useEffect(() => {
     if (status && statusRef.current) {
@@ -147,6 +224,7 @@ export default function Comments({ slug }: Props) {
       }
 
       const pending = data.status === "pending";
+      if (!pending) rememberFreshCommentRead(slug);
       const optimistic: PublicComment = {
         id: `local-${Date.now()}`,
         authorName: payload.name.trim(),
@@ -206,7 +284,7 @@ export default function Comments({ slug }: Props) {
   }
 
   return (
-    <div className="mt-6">
+    <div className="mt-6" ref={sectionRef}>
       <p
         ref={statusRef}
         id={statusId}

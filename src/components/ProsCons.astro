@@ -1,4 +1,6 @@
 ---
+import { renderInlineMarkdown } from "../lib/inlineMarkdown";
+
 type Props = {
   pros: string[];
   cons: string[];
@@ -17,7 +19,7 @@ const { pros, cons } = Astro.props;
         pros.map((item) => (
           <li class="flex gap-2.5 text-[0.95rem] leading-relaxed text-ink font-serif">
             <span class="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-navy" aria-hidden="true" />
-            <span>{item}</span>
+            <span set:html={renderInlineMarkdown(item)} />
           </li>
         ))
       }
@@ -33,10 +35,28 @@ const { pros, cons } = Astro.props;
         cons.map((item) => (
           <li class="flex gap-2.5 text-[0.95rem] leading-relaxed text-ink font-serif">
             <span class="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-red" aria-hidden="true" />
-            <span>{item}</span>
+            <span set:html={renderInlineMarkdown(item)} />
           </li>
         ))
       }
     </ul>
   </section>
 </div>
+
+<style>
+  /* set:html children are not scoped, so these selectors stay global. */
+  .pros-cons :global(strong) {
+    font-weight: 700;
+  }
+  .pros-cons :global(em) {
+    font-style: italic;
+  }
+  .pros-cons :global(a) {
+    color: var(--color-navy);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+  .pros-cons :global(a:hover) {
+    color: var(--color-red);
+  }
+</style>

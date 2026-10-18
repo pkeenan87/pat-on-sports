@@ -6,6 +6,7 @@ import PostCard from "../../components/PostCard.astro";
 import ProsCons from "../../components/ProsCons.astro";
 import ShareButtons from "../../components/ShareButtons.astro";
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import { renderInlineMarkdown } from "../../lib/inlineMarkdown";
 import { parseProsConsMarkdown } from "../../lib/prosCons";
 import {
   categoryUrl,
@@ -214,11 +215,11 @@ const jsonLd = {
                   ) : block.type === "list" ? (
                     <ul>
                       {block.items.map((item) => (
-                        <li>{item}</li>
+                        <li set:html={renderInlineMarkdown(item)} />
                       ))}
                     </ul>
                   ) : (
-                    <p>{block.text}</p>
+                    <p set:html={renderInlineMarkdown(block.text)} />
                   )
                 )}
               </div>

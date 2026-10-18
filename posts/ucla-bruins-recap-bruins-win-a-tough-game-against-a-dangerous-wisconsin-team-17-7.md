@@ -3,6 +3,9 @@ title: "UCLA Bruins Recap: Bruins win a tough game against a dangerous Wisconsin
 date: 2026-10-18
 description: "A 17–7 home win over Wisconsin without Nico, with the defense keeping the Bruins unbeaten."
 tags: ["NCAAF", "UCLA Bruins", "Wisconsin Badgers"]
+heroImage: "/images/2026/ucla/bruins-vs-wisconsin-hero.jpg"
+heroAlt: "UCLA wide receiver Landon Ellis reaches up to catch a pass against Wisconsin at the Rose Bowl"
+heroCaption: "Landon Ellis hauls one in as the Bruins move to 6-0. Photo: Ross Turteltaub / UCLA Athletics."
 season: 2026
 week: 7
 opponent: "Wisconsin Badgers"

@@ -2,7 +2,7 @@ import type { APIRoute } from "astro";
 import { timingSafeEqual } from "node:crypto";
 import { lt } from "drizzle-orm";
 import { getDb } from "../../../db";
-import { comments, rateLimits } from "../../../db/schema";
+import { commentModerationTokens, comments, rateLimits } from "../../../db/schema";
 
 export const prerender = false;
 
@@ -46,6 +46,10 @@ export const GET: APIRoute = async ({ request }) => {
     .where(lt(comments.createdAt, thirtyDaysAgo));
 
   await db.delete(rateLimits).where(lt(rateLimits.windowStart, oneDayAgo));
+
+  await db
+    .delete(commentModerationTokens)
+    .where(lt(commentModerationTokens.expiresAt, oneDayAgo));
 
   return new Response(JSON.stringify({ ok: true }), {
     status: 200,

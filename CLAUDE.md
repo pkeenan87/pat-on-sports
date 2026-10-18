@@ -75,8 +75,10 @@ The slug is the filename (without `.md`). No registry file is required.
 - Push API (on-demand): `POST /api/push/register`, `POST /api/push/unregister`,
   `POST /api/push/broadcast` (bearer `PUSH_BROADCAST_SECRET`)
 - Server secrets (comments / push / upload script): `DATABASE_URL`, `ADMIN_PASSWORD`,
-  `SESSION_SECRET`, `IP_HASH_SALT`, `CRON_SECRET`, `PUSH_BROADCAST_SECRET`,
-  `BLOB_READ_WRITE_TOKEN` (optional: `EXPO_ACCESS_TOKEN`)
+ `SESSION_SECRET`, `IP_HASH_SALT`, `CRON_SECRET`, `PUSH_BROADCAST_SECRET`,
+ `BLOB_READ_WRITE_TOKEN` (optional: `EXPO_ACCESS_TOKEN`)
+- Comment email (server-only, never `PUBLIC_`): `RESEND_API_KEY`, `COMMENT_NOTIFY_TO`,
+ `COMMENT_NOTIFY_FROM`, `COMMENT_APPROVAL_SECRET`
 - `npm run build` needs no secrets; `/api/*` and `/admin/*` opt out of prerender
 
 ## Testing

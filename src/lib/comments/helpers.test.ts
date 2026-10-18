@@ -2,7 +2,7 @@ import { createHash } from "node:crypto";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { clientIpFromHeaders, hashEmail, hashIp } from "./hash";
 import { linkifyPlainText } from "./linkify";
-import { checkOrigin } from "./origin";
+import { checkOrigin, checkOriginOrReferer } from "./origin";
 import {
   createSessionToken,
   passwordsMatch,
@@ -58,6 +58,24 @@ describe("checkOrigin", () => {
     });
     expect(checkOrigin(bad)).toBe(false);
     expect(checkOrigin(missing)).toBe(false);
+  });
+});
+
+describe("checkOriginOrReferer", () => {
+  it("accepts a same-origin Referer when Origin is missing", () => {
+    const req = new Request("https://patonsports.com/comments/moderate", {
+      method: "POST",
+      headers: { referer: "https://patonsports.com/comments/moderate?token=1" },
+    });
+    expect(checkOriginOrReferer(req)).toBe(true);
+  });
+
+  it("rejects a cross-site Referer", () => {
+    const req = new Request("https://patonsports.com/comments/moderate", {
+      method: "POST",
+      headers: { referer: "https://evil.example/phish" },
+    });
+    expect(checkOriginOrReferer(req)).toBe(false);
   });
 });
 

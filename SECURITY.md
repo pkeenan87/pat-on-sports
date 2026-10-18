@@ -22,7 +22,9 @@ metadata lives in post front matter, and comment data is loaded at request time.
 `PUBLIC_*` environment variables are inlined into the built HTML by design —
 see `.env.example`. Treat all of them as published. Server secrets
 (`DATABASE_URL`, `ADMIN_PASSWORD`, `SESSION_SECRET`, `IP_HASH_SALT`,
-`CRON_SECRET`, `BLOB_READ_WRITE_TOKEN`) must never use the `PUBLIC_` prefix.
+`CRON_SECRET`, `PUSH_BROADCAST_SECRET`, `BLOB_READ_WRITE_TOKEN`,
+`RESEND_API_KEY`, `COMMENT_NOTIFY_TO`, `COMMENT_NOTIFY_FROM`,
+`COMMENT_APPROVAL_SECRET`) must never use the `PUBLIC_` prefix.
 
 ## Threat model
 
@@ -32,7 +34,7 @@ see `.env.example`. Treat all of them as published. Server secrets
 | A credential committed by accident | gitleaks scans the full commit range on every push and PR, and GitHub push protection blocks known credential formats before they land. No `.env` file is tracked. |
 | Injected markup through post content | Posts are authored in this repo and reviewed in a PR before they build — the content pipeline is not open to the public. Markdown rendering is Astro's default, which escapes raw HTML it isn't told to trust. |
 | Injected markup through comments | Comment bodies are plain text only (no HTML/Markdown). Rendering escapes everything, preserves line breaks, and autolinks URLs with `rel="nofollow ugc noopener"`. |
-| Comment spam / abuse | Origin checks on POSTs, honeypot field, Vercel BotID, per-IP rate limits, moderate-first for new commenters, report + block, and an admin queue behind a signed cookie. |
+| Comment spam / abuse | Origin checks on POSTs, honeypot field, Vercel BotID, per-IP rate limits, moderate-first for new commenters, report + block, and an admin queue behind a signed cookie. Email approve/reject links are HMAC-signed, single-use, and expire; opening the link does not change the comment. |
 | A vulnerability in the site's own client-side code | CodeQL runs `security-extended` over the JavaScript/TypeScript on every push and PR. Only two React islands ship to the browser (the header and comments); every other page is static HTML. |
 | Third-party script behaviour | Vercel Analytics runs in the reader's browser. BotID client signals run on comment forms. |
 | A workflow being used to escalate into the repo | `permissions: contents: read` at the top of the workflow, widened only for the CodeQL job that needs `security-events: write`. No workflow runs on `pull_request_target`, and no secret is exposed to a fork's PR. |

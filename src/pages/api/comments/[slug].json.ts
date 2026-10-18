@@ -1,4 +1,8 @@
 import type { APIRoute } from "astro";
+import {
+  tagSharedCommentRead,
+  withSharedCommentCacheTag,
+} from "../../../lib/comments/commentCache";
 import { decideCommentRead } from "../../../lib/comments/readCache";
 import { getApprovedCommentTree } from "../../../lib/comments/service";
 
@@ -28,13 +32,22 @@ export const GET: APIRoute = async ({ params, request }) => {
     });
   }
 
+  const headers =
+    decision.type === "query"
+      ? withSharedCommentCacheTag(decision.headers, slug, decision.bypass)
+      : decision.headers;
+
+  if (decision.type === "query") {
+    await tagSharedCommentRead(slug, decision.bypass);
+  }
+
   if (decision.type === "empty") {
-    return json({ comments: [] }, 200, decision.headers);
+    return json({ comments: [] }, 200, headers);
   }
 
   try {
     const tree = await getApprovedCommentTree(slug);
-    return json({ comments: tree }, 200, decision.headers);
+    return json({ comments: tree }, 200, headers);
   } catch (err) {
     console.error("GET comments failed", err);
     return json({ error: "Unavailable" }, 503, {

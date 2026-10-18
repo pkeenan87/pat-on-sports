@@ -9,6 +9,7 @@ import {
   rateLimit,
   reportCommentSchema,
 } from "../../../../lib/comments";
+import { invalidateCommentThread } from "../../../../lib/comments/commentCache";
 import { statusAfterReport } from "../../../../lib/comments/service";
 
 export const prerender = false;
@@ -52,6 +53,7 @@ export const POST: APIRoute = async ({ params, request }) => {
   const rows = await db
     .select({
       id: comments.id,
+      postSlug: comments.postSlug,
       reportCount: comments.reportCount,
       status: comments.status,
       isAuthor: comments.isAuthor,
@@ -80,6 +82,10 @@ export const POST: APIRoute = async ({ params, request }) => {
       approvedAt: nextStatus === "pending" ? null : undefined,
     })
     .where(eq(comments.id, id));
+
+  if (nextStatus !== row.status) {
+    await invalidateCommentThread(row.postSlug);
+  }
 
   return json({ ok: true, reportCount: nextCount }, 200);
 };

@@ -8,7 +8,10 @@ import { isObviousBot } from "./bots";
  * requested, so compute never reached that window. 15 minutes is long enough
  * for compute to suspend between reader-driven revalidations. A commenter
  * still sees their own approved comment immediately, and everyone else sees
- * a newly approved comment on the next cache refresh.
+ * a newly approved comment on the next cache refresh. Approving or rejecting
+ * from the email link deletes that post's cache tag so the refresh does not
+ * wait out the full 15 minutes. Obvious crawlers still get an empty body and
+ * never open a database connection.
  */
 export const COMMENT_READ_S_MAXAGE_SECONDS = 15 * 60;
 

@@ -8,6 +8,7 @@ import {
   pgTable,
   text,
   timestamp,
+  uniqueIndex,
   uuid,
 } from "drizzle-orm/pg-core";
 
@@ -45,6 +46,38 @@ export const comments = pgTable(
       table.status,
       table.createdAt
     ),
+  ]
+);
+
+/**
+ * Single-use hashes for email approve/reject links.
+ * Existing comment rows are not modified: approved comments stay approved.
+ */
+export const commentModerationTokens = pgTable(
+  "comment_moderation_tokens",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    commentId: uuid("comment_id").notNull(),
+    action: text("action").notNull(),
+    tokenHash: text("token_hash").notNull(),
+    expiresAt: timestamp("expires_at", { withTimezone: true }).notNull(),
+    usedAt: timestamp("used_at", { withTimezone: true }),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+  },
+  (table) => [
+    check(
+      "comment_moderation_tokens_action_check",
+      sql`${table.action} IN ('approve', 'reject')`
+    ),
+    foreignKey({
+      columns: [table.commentId],
+      foreignColumns: [comments.id],
+      name: "comment_moderation_tokens_comment_id_fkey",
+    }).onDelete("cascade"),
+    uniqueIndex("comment_moderation_tokens_hash_uq").on(table.tokenHash),
+    index("comment_moderation_tokens_expires_idx").on(table.expiresAt),
   ]
 );
 

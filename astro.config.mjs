@@ -27,7 +27,8 @@ export default defineConfig({
         !page.endsWith("/404") &&
         !page.includes("/404/") &&
         !page.includes("/admin") &&
-        !page.includes("/api/"),
+        !page.includes("/api/") &&
+        !page.includes("/comments/moderate"),
     }),
   ],
   vite: {

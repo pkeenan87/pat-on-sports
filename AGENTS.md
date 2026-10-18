@@ -39,6 +39,9 @@
   `IP_HASH_SALT`, `CRON_SECRET`, `PUSH_BROADCAST_SECRET`) and
   `BLOB_READ_WRITE_TOKEN` stay server-side / local-only — never `PUBLIC_`,
   never required for `npm run build`. Optional: `EXPO_ACCESS_TOKEN` for Expo Push.
+- Comment email (`RESEND_API_KEY`, `COMMENT_NOTIFY_TO`, `COMMENT_NOTIFY_FROM`,
+  `COMMENT_APPROVAL_SECRET`) is server-only too. Never `PUBLIC_`. Mail failure
+  must not fail comment submission.
 - Push routes: `POST /api/push/register`, `POST /api/push/unregister`,
   `POST /api/push/broadcast` (GitHub Action on new `posts/*.md` on `main`).
 - Deployment builds should rely on `npm run build` with environment variables set by the host (Vercel).

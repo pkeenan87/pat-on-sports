@@ -7,6 +7,7 @@ import {
   trustedCommenters,
 } from "../../../../db/schema";
 import { requireAdminForm } from "../../../../lib/comments/adminAuth";
+import { invalidateCommentThread } from "../../../../lib/comments/commentCache";
 
 export const prerender = false;
 
@@ -25,6 +26,11 @@ function redirectBack() {
     status: 303,
     headers: { Location: "/admin/comments" },
   });
+}
+
+async function finish(postSlug: string) {
+  await invalidateCommentThread(postSlug);
+  return redirectBack();
 }
 
 export const POST: APIRoute = async ({ params, request, url }) => {
@@ -52,7 +58,7 @@ export const POST: APIRoute = async ({ params, request, url }) => {
         .values({ emailHash: comment.authorEmailHash, approvedAt: now })
         .onConflictDoNothing();
     }
-    return redirectBack();
+    return finish(comment.postSlug);
   }
 
   if (action === "spam") {
@@ -60,7 +66,7 @@ export const POST: APIRoute = async ({ params, request, url }) => {
       .update(comments)
       .set({ status: "spam", approvedAt: null })
       .where(eq(comments.id, id));
-    return redirectBack();
+    return finish(comment.postSlug);
   }
 
   if (action === "delete") {
@@ -68,7 +74,7 @@ export const POST: APIRoute = async ({ params, request, url }) => {
       .update(comments)
       .set({ status: "deleted", approvedAt: null })
       .where(eq(comments.id, id));
-    return redirectBack();
+    return finish(comment.postSlug);
   }
 
   if (action === "block") {
@@ -81,7 +87,7 @@ export const POST: APIRoute = async ({ params, request, url }) => {
       .update(comments)
       .set({ status: "spam", approvedAt: null })
       .where(eq(comments.id, id));
-    return redirectBack();
+    return finish(comment.postSlug);
   }
 
   if (action === "reply") {
@@ -102,7 +108,7 @@ export const POST: APIRoute = async ({ params, request, url }) => {
       userAgent: null,
       approvedAt: now,
     });
-    return redirectBack();
+    return finish(comment.postSlug);
   }
 
   return new Response("Unknown action", { status: 404 });

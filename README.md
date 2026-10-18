@@ -44,7 +44,7 @@ reproducible by opening the built file in `dist/`.
 | **Feeds and SEO** | RSS, a sitemap, `robots.txt`, canonical URLs, Open Graph and Twitter cards, all generated. |
 | **App JSON API** | Build-time `/api/v1/posts.json`, per-post detail, and `manifest.json` for the native apps — Zod-validated so a bad shape fails the build. |
 | **Push** | Device tokens in Neon; `POST /api/push/register` / `unregister` from the app; `POST /api/push/broadcast` (secret-protected) sends via Expo when a new `posts/*.md` lands on `main`. |
-| **Comments** | First-party threads on Neon Postgres via Vercel Functions, with moderation at `/admin/comments`. |
+| **Comments** | First-party threads on Neon Postgres via Vercel Functions. New commenters stay pending until approved. Moderation is at `/admin/comments`, and each new comment can email an approve/reject link. |
 
 ## Stack
 
@@ -65,6 +65,40 @@ Static pages work with no env file. Comments, admin, push broadcast, and
 including `PUSH_BROADCAST_SECRET` for `POST /api/push/broadcast`. Public vars:
 `PUBLIC_SITE_URL`, `PUBLIC_TWITTER_SITE`, `PUBLIC_COMMENTS_API_BASE`
 (app manifest), and `PUBLIC_APP_BANNER_MESSAGE` (optional app banner).
+
+### Comment notifications
+
+A new comment emails `COMMENT_NOTIFY_TO` through [Resend](https://resend.com).
+The message includes the post title and link, the commenter name, and the
+comment text as plain text (HTML is escaped, and URLs in the comment are not
+clickable). Approve and Reject open a confirmation page; the comment does not
+change until the button is pressed. Each link is an HMAC signed with
+`COMMENT_APPROVAL_SECRET`, stored only as a hash, and works once for 7 days.
+
+The comment is saved even when Resend is down or the mail env vars are unset.
+That failure is logged and does not change the HTTP response.
+
+Set these on Vercel as encrypted server env vars (Production, and Preview if
+preview deployments should send mail). Do not use the `PUBLIC_` prefix.
+
+| Variable | Value |
+|---|---|
+| `RESEND_API_KEY` | Resend API key with sending access |
+| `COMMENT_NOTIFY_TO` | Inbox that receives new-comment mail. Comma-separated for more than one. |
+| `COMMENT_NOTIFY_FROM` | Verified sender, e.g. `Pat on Sports <comments@patonsports.com>` |
+| `COMMENT_APPROVAL_SECRET` | Long random secret (`openssl rand -base64 32`) |
+
+Resend only delivers from a verified domain. Add the domain used in
+`COMMENT_NOTIFY_FROM` (for example `patonsports.com`) and publish the DNS
+records Resend shows, including DKIM. The sandbox sender
+`onboarding@resend.dev` only delivers to the Resend account email, so it is
+not a production from-address. Approve links use `PUBLIC_SITE_URL`.
+
+Apply the `comment_moderation_tokens` migration (`npm run db:migrate`) before
+relying on the links. Existing comments stay as they are: approved rows stay
+approved, and new comments still default to pending. Public reads still return
+only approved comments. Approving or rejecting deletes that post's comment
+cache tag so the 15-minute CDN cache refreshes without waiting it out.
 
 ### Commands
 

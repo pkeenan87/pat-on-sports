@@ -2,12 +2,15 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { defineConfig } from "vitest/config";
 
-const srcDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "./src");
+const rootDir = path.dirname(fileURLToPath(import.meta.url));
+const srcDir = path.resolve(rootDir, "./src");
 
 export default defineConfig({
   resolve: {
     alias: {
       "@": srcDir,
+      // Server routes import this virtual module. Unit tests stub it.
+      "astro:content": path.resolve(rootDir, "./test/astro-content-stub.ts"),
     },
   },
   test: {

@@ -6,6 +6,7 @@ export const GET: APIRoute = () => {
 Allow: /
 Disallow: /admin
 Disallow: /api
+Disallow: /comments/moderate
 
 Sitemap: ${site}/sitemap-index.xml
 `;

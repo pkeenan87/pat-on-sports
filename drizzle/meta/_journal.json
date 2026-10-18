@@ -15,6 +15,13 @@
       "when": 1789414242330,
       "tag": "0001_broad_punisher",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1792357953893,
+      "tag": "0002_comment_moderation_tokens",
+      "breakpoints": true
     }
   ]
 }

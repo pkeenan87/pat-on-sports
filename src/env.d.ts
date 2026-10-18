@@ -21,5 +21,13 @@ declare namespace NodeJS {
     IP_HASH_SALT?: string;
     CRON_SECRET?: string;
     BLOB_READ_WRITE_TOKEN?: string;
+    /** Server-only. Resend API key for new-comment mail. Never PUBLIC_. */
+    RESEND_API_KEY?: string;
+    /** Inbox that receives new-comment notifications. */
+    COMMENT_NOTIFY_TO?: string;
+    /** Verified Resend sender, e.g. Pat on Sports <comments@patonsports.com>. */
+    COMMENT_NOTIFY_FROM?: string;
+    /** HMAC secret for one-time comment approve/reject links. */
+    COMMENT_APPROVAL_SECRET?: string;
   }
 }

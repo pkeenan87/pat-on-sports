@@ -1,4 +1,5 @@
 import type { APIRoute } from "astro";
+import { randomUUID } from "node:crypto";
 import { and, eq } from "drizzle-orm";
 import { getDb } from "../../../db";
 import { comments } from "../../../db/schema";
@@ -15,6 +16,7 @@ import {
   isTrusted,
   verifyBotIdOrBypass,
 } from "../../../lib/comments/service";
+import { scheduleCommentNotification } from "../../../lib/comments/notify";
 
 export const prerender = false;
 
@@ -94,7 +96,9 @@ export const POST: APIRoute = async ({ params, request }) => {
   const now = new Date();
 
   const db = getDb();
+  const commentId = randomUUID();
   await db.insert(comments).values({
+    id: commentId,
     postSlug: slug,
     parentId: data.parentId ?? null,
     authorName: data.name,
@@ -106,6 +110,19 @@ export const POST: APIRoute = async ({ params, request }) => {
     userAgent: request.headers.get("user-agent")?.slice(0, 500) ?? null,
     approvedAt: trusted ? now : null,
   });
+
+  // Email is best-effort. A Resend or token-store failure must not fail the post.
+  try {
+    scheduleCommentNotification({
+      commentId,
+      postSlug: slug,
+      authorName: data.name,
+      body: data.body,
+      status,
+    });
+  } catch (err) {
+    console.error("comment notification failed to schedule", err);
+  }
 
   return json({ status }, 201);
 };

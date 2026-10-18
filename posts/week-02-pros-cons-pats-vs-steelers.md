@@ -3,6 +3,9 @@ title: "Week 2: Patriots 20 – Steelers 3"
 date: 2026-09-21
 description: "A 20–3 home opener: the defense scored and held Pittsburgh to a field goal, while the offense managed one touchdown."
 tags: ["NFL", "Pros & Cons", "New England Patriots", "Pittsburgh Steelers"]
+heroImage: "/images/2026/prosandcons/week-02/pats-vs-steelers-hero.jpg"
+heroAlt: "Elijah Ponder runs the ball toward the end zone after a fumble recovery as Steelers players chase and Christian Elliss raises his arm"
+heroCaption: "The defense did the scoring, Elijah Ponder takes the Barmore strip-sack to the house. Photo: Eric J. Adler / New England Patriots."
 season: 2026
 week: 2
 opponent: "Pittsburgh Steelers"

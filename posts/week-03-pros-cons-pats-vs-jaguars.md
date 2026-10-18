@@ -3,6 +3,9 @@ title: "Week 3: Patriots 6 – Jaguars 35"
 date: 2026-09-28
 description: "A 6–35 loss in Jacksonville: three Maye turnovers, no offensive touchdowns, and another ugly September trip to Florida."
 tags: ["NFL", "Pros & Cons", "New England Patriots", "Jacksonville Jaguars"]
+heroImage: "/images/2026/prosandcons/week-03/pats-vs-jaguars-hero.jpg"
+heroAlt: "Drake Maye throws a pass as Jaguars defenders push through the Patriots offensive line in Jacksonville"
+heroCaption: "Three turnovers and no touchdowns, another ugly September trip to Florida. Photo: Eric J. Adler / New England Patriots."
 season: 2026
 week: 3
 opponent: "Jacksonville Jaguars"

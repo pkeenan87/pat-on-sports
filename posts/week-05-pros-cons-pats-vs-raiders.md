@@ -3,6 +3,9 @@ title: "Week 5: Patriots 45 – Raiders 17"
 date: 2026-10-12
 description: "A 45–17 home win, and in this recap the best game of Drake Maye's career: 374 yards and four touchdowns."
 tags: ["NFL", "Pros & Cons", "New England Patriots", "Las Vegas Raiders"]
+heroImage: "/images/2026/prosandcons/week-05/pats-vs-raiders-hero.jpg"
+heroAlt: "Drake Maye stretches the ball toward the goal line by the pylon as a Raiders defender reaches for him"
+heroCaption: "Drake Maye was unstoppable, four touchdown passes and one more on the ground. Photo: Adam Richins / New England Patriots."
 season: 2026
 week: 5
 opponent: "Las Vegas Raiders"

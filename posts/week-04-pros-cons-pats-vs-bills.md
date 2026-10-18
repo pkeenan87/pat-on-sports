@@ -3,6 +3,9 @@ title: "Week 4: Patriots 29 – Bills 26"
 date: 2026-10-05
 description: "A 29–26 win in Buffalo on Efton Chism's one-handed touchdown, with Maye throwing three scores after a rough start to the year."
 tags: ["NFL", "Pros & Cons", "New England Patriots", "Buffalo Bills"]
+heroImage: "/images/2026/prosandcons/week-04/pats-vs-bills-hero.jpg"
+heroAlt: "Efton Chism III reaches up with one hand to catch a touchdown pass over a Bills defender in the end zone"
+heroCaption: "Efton Chism III's one-handed grab wins it in Buffalo. Photo: Lexi Ehle / New England Patriots."
 season: 2026
 week: 4
 opponent: "Buffalo Bills"

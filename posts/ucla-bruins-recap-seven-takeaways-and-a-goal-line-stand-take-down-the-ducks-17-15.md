@@ -3,6 +3,9 @@ title: "UCLA Bruins Recap: Seven Takeaways and a Goal Line Stand Take Down the D
 date: 2026-10-11
 description: "A 17–15 win at Autzen: seven takeaways, a goal-line stand, and UCLA's first win at Oregon since 2004."
 tags: ["NCAAF", "UCLA Bruins", "Oregon Ducks"]
+heroImage: "/images/2026/ucla/bruins-vs-oregon-hero.jpg"
+heroAlt: "UCLA running back Wayne Knight runs toward the end zone ahead of Oregon defenders at Autzen Stadium"
+heroCaption: "Wayne Knight breaks loose for a touchdown as the Bruins finally win in Eugene. Photo: Tom Hauck / Getty Images."
 season: 2026
 week: 6
 opponent: "Oregon Ducks"

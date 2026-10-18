@@ -3,6 +3,9 @@ title: "Week 6: Patriots 26 – Jets 19"
 date: 2026-10-19
 description: "A 26–19 home win over the Jets that came down to drops, injuries, and a clock-killing drive."
 tags: ["NFL", "Pros & Cons", "New England Patriots", "New York Jets"]
+heroImage: "/images/2026/prosandcons/week-06/pats-vs-jets-hero.jpg"
+heroAlt: "Romeo Doubs dives to catch a touchdown pass in the end zone as Jets cornerback Brandon Stephens trails the play"
+heroCaption: "Romeo Doubs gets the Patriots on the board in a brutal win over the Jets. Photo: Maddie Meyer / Getty Images."
 season: 2026
 week: 6
 opponent: "New York Jets"

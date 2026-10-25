@@ -39,7 +39,7 @@
     "react": "19.3.0",
     "react-dom": "19.3.0",
     "tailwindcss": "^4.3.3",
-    "zod": "^4.6.5"
+    "zod": "^4.6.6"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^7.0.1",
@@ -67,12 +67,14 @@
     },
     "browserslist": "4.28.9",
     "esbuild": "0.28.2",
-    "fast-uri": "3.1.8",
+    "fast-uri": "3.1.9",
     "js-yaml": "4.3.2",
     "nanoid": "3.3.18",
     "postcss": "8.5.28",
+    "postcss-selector-parser": "7.1.6",
     "qs": "6.16.0",
     "sharp": "0.35.5",
-    "ws": "8.21.3"
+    "ws": "8.21.3",
+    "zod": "^4.6.6"
   }
 }

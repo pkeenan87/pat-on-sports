@@ -31,7 +31,7 @@
     "@vercel/blob": "^2.8.0",
     "@vercel/functions": "3.9.7",
     "adm-zip": "^0.6.0",
-    "astro": "^7.3.3",
+    "astro": "^7.4.12",
     "botid": "^1.5.11",
     "drizzle-orm": "^0.45.2",
     "music-metadata": "^11.15.0",
